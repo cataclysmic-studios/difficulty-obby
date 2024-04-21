@@ -17,9 +17,9 @@ interface Attributes {
   defaults: {
     SpringScaleAnimation_ScaleIncrement: 0.2,
     SpringScaleAnimation_Mass: 5,
-    SpringScaleAnimation_Force: 90,
+    SpringScaleAnimation_Force: 100,
     SpringScaleAnimation_Damping: 3,
-    SpringScaleAnimation_Speed: 7
+    SpringScaleAnimation_Speed: 7.5
   }
 })
 export class SpringScaleAnimation extends BaseButtonAnimation<Attributes> implements OnStart, OnRender {
