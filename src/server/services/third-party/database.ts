@@ -52,9 +52,9 @@ export class DatabaseService implements OnInit, LogStart {
 	}
 
 	private setup(player: Player): void {
-		// Initialize your values here.
 		this.initialize(player, "stage", 1);
 		this.initialize(player, "coins", 0);
+
 		this.loaded.Fire(player);
 		Log.info("Initialized data");
 	}
