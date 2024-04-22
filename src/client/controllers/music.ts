@@ -13,7 +13,7 @@ import type { ZonesController } from "./zones";
 export class MusicController implements OnInit, LogStart {
   private songIndex = 0;
   private zoneIndex = 0;
-  private currentSong!: Sound;
+  private currentSong?: Sound;
   private lastZoneMusic?: Folder;
 
   public constructor(
@@ -27,6 +27,11 @@ export class MusicController implements OnInit, LogStart {
       else
         this.currentSong.Stop();
     });
+    task.delay(1, () => {
+      if (this.currentSong?.IsPlaying) return;
+      if (this.currentSong !== undefined) return;
+      this.playCurrentSong();
+    });
   }
 
   public async playCurrentSong(): Promise<void> {
@@ -36,9 +41,13 @@ export class MusicController implements OnInit, LogStart {
 
     const janitor = new Janitor;
     this.currentSong = <Sound>zoneMusic.GetChildren()[this.songIndex];
+    if (this.currentSong === undefined)
+      return this.failedToFindSong();
+
     janitor.Add(this.currentSong.Ended.Once(() => this.nextSong()));
     janitor.Add(this.currentSong.Stopped.Once(() => this.nextSong()));
     this.currentSong.Play();
+    Log.info(`Played song "${this.currentSong.Name}"`);
   }
 
   private async nextSong(): Promise<void> {
@@ -48,6 +57,7 @@ export class MusicController implements OnInit, LogStart {
 
     if (zoneMusic !== this.lastZoneMusic)
       this.songIndex = 0;
+
 
     this.songIndex += 1
     this.songIndex %= zoneMusic.GetChildren().size();
@@ -67,5 +77,9 @@ export class MusicController implements OnInit, LogStart {
 
   private failedToFindMusic(): void {
     Log.warning(`Failed to find music for "${ZONE_INFO[this.zoneIndex]}" zone`);
+  }
+
+  private failedToFindSong(): void {
+    Log.warning(`Failed to find song at index ${this.songIndex} in zone "${ZONE_INFO[this.zoneIndex]}"`);
   }
 }
