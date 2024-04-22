@@ -31,8 +31,8 @@ export class Checkpoint extends BaseComponent<{}, SpawnLocation> implements OnSt
       this.db.set<number>(player, "stage", checkpointStage);
       Events.playSoundEffect(player, "StageCompleted");
 
-      const scaling = checkpointStage ** 0.4;
-      const coinsReward = math.round((new Random).NextNumber(scaling * checkpointStage * 1.5, scaling * 15));
+      const scaling = checkpointStage ** 0.25;
+      const coinsReward = math.round((new Random).NextNumber(scaling * checkpointStage * 1.5, scaling * 15) / 2);
       this.db.increment(player, "coins", coinsReward);
     });
   }
