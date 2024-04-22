@@ -27,9 +27,9 @@ export class ToggleSwitch extends DestroyableComponent<Attributes, ReplicatedFir
   public readonly toggled = new Signal<(on: boolean) => void>;
 
   private readonly tweenInfo = new TweenInfoBuilder()
-    .SetTime(0.15)
+    .SetTime(0.2)
     .SetEasingStyle(Enum.EasingStyle.Cubic)
-    .SetEasingDirection(Enum.EasingDirection.In);
+    .SetEasingDirection(Enum.EasingDirection.Out);
 
   private on = this.attributes.ToggleSwitch_InitialState;
 
