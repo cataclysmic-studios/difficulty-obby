@@ -2,9 +2,10 @@ import { Dependency, type OnRender } from "@flamework/core";
 import { Component, type Components } from "@flamework/components";
 import { Workspace as World } from "@rbxts/services";
 
-import { Character, Player } from "shared/utility/client";
+import { Player } from "shared/utility/client";
 import { CameraControllerComponent } from "client/base-components/camera-controller-component";
 import type { CameraController } from "client/controllers/camera";
+import type { CharacterController } from "client/controllers/character";
 
 interface Attributes {
   AerialCamera_Height: number;
@@ -27,8 +28,12 @@ export class AerialCamera extends CameraControllerComponent<Attributes> implemen
     return components.addComponent(camera);
   }
 
+  public constructor(
+    private readonly character: CharacterController
+  ) { super(); }
+
   public onRender(dt: number): void {
-    const root = Character?.Humanoid?.RootPart;
+    const root = this.character.get()?.Humanoid?.RootPart;
     if (root === undefined) return;
 
     const position = root.Position.add(new Vector3(0, this.getHeight(), 0));

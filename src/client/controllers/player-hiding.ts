@@ -1,10 +1,14 @@
 import { Controller, type OnInit } from "@flamework/core";
 import { Players } from "@rbxts/services";
 
-import { Character } from "shared/utility/client";
+import type { CharacterController } from "./character";
 
 @Controller()
 export class PlayerHidingController implements OnInit {
+  public constructor(
+    private readonly character: CharacterController
+  ) { }
+
   public onInit(): void {
     for (const character of this.getAllCharacters())
       task.spawn(() => {
@@ -32,6 +36,6 @@ export class PlayerHidingController implements OnInit {
   private getAllCharacters() {
     return Players.GetPlayers()
       .map(player => player.Character!)
-      .filter(character => character !== Character);
+      .filter(character => character !== this.character.get());
   }
 }
