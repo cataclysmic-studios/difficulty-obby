@@ -13,7 +13,7 @@ const enum ProductIDs {
   Coins25000 = 1813571863,
   Coins250 = 1813571864,
   Coins100 = 1813571865,
-  Coins1000 = 1813571866,
+  Coins1000 = 1813571866
 }
 
 @Service()

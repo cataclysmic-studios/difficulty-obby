@@ -3,5 +3,6 @@ export const DEVELOPERS = [CREATOR_ID]; // add extra developer user IDs here
 
 export const STAGES_PER_ZONE = 20;
 export const ZONE_INFO = <const>[
-  "Newside"
+  "Newside",
+  "Gloomy Caves"
 ];

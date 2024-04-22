@@ -1,10 +1,11 @@
 import { Controller, type OnInit } from "@flamework/core";
-import { Workspace as World } from "@rbxts/services";
+import { CollectionService } from "@rbxts/services";
 import { endsWith } from "@rbxts/string-utils";
 
 import type { LogStart } from "shared/hooks";
 import { Events } from "client/network";
 import { Character } from "shared/utility/client";
+import Log from "shared/logger";
 
 @Controller()
 export class CheckpointSpawnController implements OnInit, LogStart {
@@ -16,7 +17,11 @@ export class CheckpointSpawnController implements OnInit, LogStart {
       if (value === 0) return;
 
       conn.Disconnect();
-      const checkpoint = <SpawnLocation>World.Checkpoints.FindFirstChild(tostring(value));
+      const checkpoints = <SpawnLocation[]>CollectionService.GetTagged("Checkpoint");
+      const checkpoint = checkpoints.find(checkpoint => checkpoint.Name === tostring(value));
+      if (checkpoint === undefined)
+        return Log.warning(`Failed to find checkpoint ${value}`);
+
       Character.Humanoid.RootPart.CFrame = checkpoint.CFrame;
     });
   }
