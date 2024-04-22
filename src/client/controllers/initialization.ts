@@ -3,7 +3,7 @@ import { Controller, type OnInit, type OnStart } from "@flamework/core";
 import { Functions } from "client/network";
 import type { CameraController } from "./camera";
 
-@Controller({ loadOrder: 1 })
+@Controller({ loadOrder: 2 })
 export class InitializationController implements OnInit, OnStart {
   public constructor(
     private readonly camera: CameraController

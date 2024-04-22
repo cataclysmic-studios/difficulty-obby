@@ -26,9 +26,11 @@ export class DatabaseService implements OnInit, LogStart {
 		return db.get(fullDirectory) ?? <T>defaultValue;
 	}
 
-	public set<T>(player: Player, directory: string, value: T): void {
+	public set<T>(player: Player, directory: string, value: T, noRequest = false): void {
 		const fullDirectory = this.getDirectoryForPlayer(player, directory);
-		db.set(fullDirectory, value);
+		if (!noRequest)
+			db.set(fullDirectory, value);
+
 		this.update(player, fullDirectory, value);
 	}
 
@@ -72,7 +74,7 @@ export class DatabaseService implements OnInit, LogStart {
 	private initialize<T>(player: Player, directory: string, initialValue: T): void {
 		const fullDirectory = this.getDirectoryForPlayer(player, directory);
 		const value = db.get<Maybe<T>>(fullDirectory) ?? initialValue;
-		this.set(player, directory, value);
+		this.set(player, directory, value, value !== initialValue);
 	}
 
 	private getDirectoryForPlayer(player: Player, directory: string): string {

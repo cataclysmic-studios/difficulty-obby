@@ -1,11 +1,11 @@
-import { Controller, Modding, type OnStart } from "@flamework/core";
+import { Controller, Modding, type OnInit } from "@flamework/core";
 
 import type { OnDataUpdate } from "client/hooks";
-import { Events } from "client/network";
+import { Events, Functions } from "client/network";
 
-@Controller()
-export class DataUpdateController implements OnStart {
-  public onStart(): void {
+@Controller({ loadOrder: 1 })
+export class DataUpdateController implements OnInit {
+  public onInit(): void {
     const dataUpdateListeners = new Set<OnDataUpdate>;
     Modding.onListenerAdded<OnDataUpdate>(object => dataUpdateListeners.add(object));
     Modding.onListenerRemoved<OnDataUpdate>(object => dataUpdateListeners.delete(object));
@@ -14,5 +14,7 @@ export class DataUpdateController implements OnStart {
       for (const listener of dataUpdateListeners)
         listener.onDataUpdate(directory, value);
     });
+
+    task.delay(1, () => Functions.data.initialize());
   }
 }
