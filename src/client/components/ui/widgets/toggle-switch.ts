@@ -26,6 +26,7 @@ interface Attributes {
 })
 export class ToggleSwitch extends DestroyableComponent<Attributes, ReplicatedFirst["Assets"]["UI"]["ToggleSwitch"]> implements OnStart {
   public readonly toggled = new Signal<(on: boolean) => void>;
+  private firstToggle = true;
 
   private readonly tweenInfo = new TweenInfoBuilder()
     .SetTime(0.2)
@@ -42,8 +43,10 @@ export class ToggleSwitch extends DestroyableComponent<Attributes, ReplicatedFir
   public toggle(on: boolean): void {
     this.on = on;
     this.toggled.Fire(this.on);
-    Sound.SoundEffects.UIToggleSwitch.Play();
+    if (!this.firstToggle)
+      Sound.SoundEffects.UIToggleSwitch.Play();
 
+    this.firstToggle = false;
     tween(this.instance, this.tweenInfo, {
       BackgroundColor3: this.on ? this.attributes.ToggleSwitch_EnabledColor : this.attributes.ToggleSwitch_DisabledColor
     });
