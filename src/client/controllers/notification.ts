@@ -8,6 +8,8 @@ import { Assets } from "shared/utility/instances";
 import { tween } from "shared/utility/ui";
 import { getZoneName, STAGES_PER_ZONE } from "shared/constants";
 
+import type { ZonesController } from "./zones";
+
 @Controller()
 export class NotificationController implements OnInit {
   private readonly screen = <ScreenGui>PlayerGui.WaitForChild("Notifications");
@@ -15,20 +17,12 @@ export class NotificationController implements OnInit {
     .SetTime(0.15)
     .SetEasingStyle(Enum.EasingStyle.Quad);
 
-  private lastZoneName?: string;
+  public constructor(
+    private readonly zones: ZonesController
+  ) { }
 
   public onInit(): void {
-    Events.data.updated.connect((directory, value) => {
-      if (!endsWith(directory, "stage")) return;
-
-      const stage = <number>value;
-      const zoneName = getZoneName(stage);
-      if (zoneName === this.lastZoneName) return;
-      this.lastZoneName = zoneName;
-
-      if (stage % (STAGES_PER_ZONE + 1) !== 0) return;
-      this.send(`New zone discovered: ${zoneName}`);
-    });
+    this.zones.discovered.Connect(name => this.send(`New zone discovered: ${name}`));
   }
 
   public send(message: string): void {
