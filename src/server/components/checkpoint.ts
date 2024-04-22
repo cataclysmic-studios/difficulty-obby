@@ -1,14 +1,11 @@
 import type { OnStart } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
-import { Players } from "@rbxts/services";
-import { DatabaseService } from "server/services/third-party/database";
+import { Players, Workspace as World } from "@rbxts/services";
 
-interface Attributes {
-  readonly Checkpoint_Number: number;
-}
+import type { DatabaseService } from "server/services/third-party/database";
 
 @Component({ tag: "Checkpoint" })
-export class Checkpoint extends BaseComponent<Attributes, BasePart> implements OnStart {
+export class Checkpoint extends BaseComponent<{}, SpawnLocation> implements OnStart {
   public constructor(
     private readonly db: DatabaseService
   ) { super(); }
@@ -20,10 +17,14 @@ export class Checkpoint extends BaseComponent<Attributes, BasePart> implements O
       const player = Players.GetPlayerFromCharacter(character);
       if (humanoid === undefined || player === undefined) return;
 
-      const stageNumber = this.attributes.Checkpoint_Number;
+      const allSpawns = World.GetDescendants().filter((i): i is SpawnLocation => i.IsA("SpawnLocation"));
+      for (const spawn of allSpawns)
+        spawn.Enabled = spawn.Name === this.instance.Name;
+
+      const stageNumber = tonumber(this.instance.Name)!;
       const currentStage = this.db.get<number>(player, "stage");
       if (currentStage >= stageNumber || stageNumber - 1 !== currentStage) return;
-      this.db.set<number>(player, "stage", stageNumber)
+      this.db.set<number>(player, "stage", stageNumber);
     });
   }
 }

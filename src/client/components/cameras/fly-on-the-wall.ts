@@ -19,8 +19,10 @@ export class FlyOnTheWallCamera extends CameraControllerComponent implements OnR
   }
 
   public onRender(dt: number): void {
-    const characterPosition = Character.PrimaryPart.Position;
-    this.lookAt(characterPosition);
+    const root = Character?.Humanoid?.RootPart;
+    if (root === undefined) return;
+
+    this.lookAt(root.Position);
   }
 
   public override toggle(on: boolean): void {

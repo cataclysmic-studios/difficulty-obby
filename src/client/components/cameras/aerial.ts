@@ -28,9 +28,11 @@ export class AerialCamera extends CameraControllerComponent<Attributes> implemen
   }
 
   public onRender(dt: number): void {
-    const characterPosition = Character.PrimaryPart.Position;
-    const position = characterPosition.add(new Vector3(0, this.getHeight(), 0));
-    this.setCFrame(CFrame.lookAt(position, characterPosition));
+    const root = Character?.Humanoid?.RootPart;
+    if (root === undefined) return;
+
+    const position = root.Position.add(new Vector3(0, this.getHeight(), 0));
+    this.setCFrame(CFrame.lookAt(position, root.Position));
   }
 
   public override toggle(on: boolean): void {
