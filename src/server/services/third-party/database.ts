@@ -54,9 +54,16 @@ export class DatabaseService implements OnInit, LogStart {
 	private setup(player: Player): void {
 		this.initialize(player, "stage", 1);
 		this.initialize(player, "coins", 0);
+		this.initializeSettings(player);
 
 		this.loaded.Fire(player);
 		Log.info("Initialized data");
+	}
+
+	private initializeSettings(player: Player) {
+		this.initialize(player, "settings/soundEffects", true);
+		this.initialize(player, "settings/music", true);
+		this.initialize(player, "settings/hidePlayers", false);
 	}
 
 	private initialize<T>(player: Player, directory: string, initialValue: T): void {
