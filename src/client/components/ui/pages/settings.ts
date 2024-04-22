@@ -32,10 +32,10 @@ export class SettingsPage extends BaseComponent<{}, PlayerGui["Main"]["Settings"
 
   private async syncSettings(): Promise<void> {
     const settings = <SettingData>await Functions.data.get("settings");
+    let layoutOrder = 0;
 
     this.syncJanitor.Cleanup();
     for (const setting of pairs(settings)) {
-      let layoutOrder = 0;
       const settingFrame = this.syncJanitor.Add(Assets.UI.Setting.Clone());
       const settingPath = `settings/${setting[0]}`;
       this.createSetting(settingFrame, setting, settingPath);
