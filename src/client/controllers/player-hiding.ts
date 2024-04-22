@@ -1,32 +1,37 @@
-import { Controller } from "@flamework/core";
+import { Controller, type OnInit } from "@flamework/core";
 import { Players } from "@rbxts/services";
 
 import { Character } from "shared/utility/client";
 
 @Controller()
-export class PlayerHidingController {
-  public toggle(on: boolean): void {
-    const characters = Players.GetPlayers()
-      .map(player => player.Character!)
-      .filter(character => character !== Character);
-
-    const getCharacterParts = (character: Model): BasePart[] => {
-      return character.GetDescendants().filter((i): i is BasePart => i.IsA("BasePart"));
-    }
-
-    task.spawn(() => {
-      for (const character of characters) {
-        const parts = getCharacterParts(character);
+export class PlayerHidingController implements OnInit {
+  public onInit(): void {
+    for (const character of this.getAllCharacters())
+      task.spawn(() => {
+        const parts = this.getCharacterParts(character);
         for (const part of parts)
           part.SetAttribute("DefaultTransparency", part.Transparency);
-      }
+      });
+  }
 
-      for (const character of characters)
+  public toggle(on: boolean): void {
+    task.spawn(() => {
+      for (const character of this.getAllCharacters())
         task.spawn(() => {
-          const parts = getCharacterParts(character);
+          const parts = this.getCharacterParts(character);
           for (const part of parts)
-            part.Transparency = on ? 1 : <number>part.GetAttribute("DefaultTransparency");
+            part.Transparency = on ? 1 : (<number>part.GetAttribute("DefaultTransparency") ?? 0);
         });
     });
+  }
+
+  private getCharacterParts(character: Model): BasePart[] {
+    return character.GetDescendants().filter((i): i is BasePart => i.IsA("BasePart"));
+  }
+
+  private getAllCharacters() {
+    return Players.GetPlayers()
+      .map(player => player.Character!)
+      .filter(character => character !== Character);
   }
 }
