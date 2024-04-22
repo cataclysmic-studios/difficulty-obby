@@ -1,5 +1,6 @@
 import type { OnStart } from "@flamework/core";
 import { Component } from "@flamework/components";
+import { SoundService as Sound } from "@rbxts/services";
 import { TweenInfoBuilder } from "@rbxts/builders";
 import Signal from "@rbxts/signal";
 
@@ -40,6 +41,9 @@ export class ToggleSwitch extends DestroyableComponent<Attributes, ReplicatedFir
 
   public toggle(on: boolean): void {
     this.on = on;
+    this.toggled.Fire(this.on);
+    Sound.SoundEffects.UIToggleSwitch.Play();
+
     tween(this.instance, this.tweenInfo, {
       BackgroundColor3: this.on ? this.attributes.ToggleSwitch_EnabledColor : this.attributes.ToggleSwitch_DisabledColor
     });
@@ -47,6 +51,5 @@ export class ToggleSwitch extends DestroyableComponent<Attributes, ReplicatedFir
       AnchorPoint: new Vector2(on ? 1 : 0, 0.5),
       Position: UDim2.fromScale(on ? 1 : 0, 0.5)
     });
-    this.toggled.Fire(this.on);
   }
 }
