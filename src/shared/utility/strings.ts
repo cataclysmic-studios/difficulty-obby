@@ -5,3 +5,7 @@ export function slugToPascal(slug: string): string {
     .map(word => word.sub(1, 1).upper() + slice(word, 1))
     .join("");
 }
+
+export function camelCaseToSpaced(camelCased: string): string {
+  return camelCased.gsub("%u", " %1")[0];
+}
