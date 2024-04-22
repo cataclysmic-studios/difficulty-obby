@@ -4,6 +4,7 @@ import { Player } from "shared/utility/client";
 interface CharacterModel extends Model {
   PrimaryPart: Part;
   Humanoid: Humanoid;
+  Head: Part;
 }
 
 @Controller()

@@ -8,3 +8,25 @@ interface PortalModel extends Model {
     };
   };
 }
+
+interface NPCModel extends Model {
+  RootPart: Part & {
+    spine: Bone & {
+      ["spine.001"]: Bone & {
+        ["spine.002"]: Bone & {
+          ["spine.003"]: Bone & {
+            ["spine.005"]: Bone & {
+              ["spine.006"]: Bone; // neck bone
+            };
+          };
+        };
+      };
+    };
+  };
+  AnimationController: AnimationController & {
+    Animator: Animator;
+  };
+  Animations: Folder & {
+    Idle: Animation;
+  };
+}
