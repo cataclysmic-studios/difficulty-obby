@@ -24,13 +24,15 @@ export class ShopPage extends BaseComponent<{}, PlayerGui["Main"]["Shop"]> imple
   private createGamepassFrame({ name, id }: GamepassInfo): void {
     const purchasableFrame = Assets.UI.Purchasable.Clone();
     purchasableFrame.Title.Text = name;
+    purchasableFrame.Icon.Image = `rbxthumb://type=GamePass&id=${id}&w=150&h=150`;
     purchasableFrame.Buy.MouseButton1Click.Connect(() => Market.PromptGamePassPurchase(Player, id));
     purchasableFrame.Parent = this.instance.List;
   }
 
-  private createDevProductFrame({ Name, ProductId }: DevProductInfo): void {
+  private createDevProductFrame({ Name, ProductId, IconImageAssetId }: DevProductInfo): void {
     const purchasableFrame = Assets.UI.Purchasable.Clone();
     purchasableFrame.Title.Text = Name;
+    purchasableFrame.Icon.Image = `rbxassetid://${IconImageAssetId}`;
     purchasableFrame.Buy.MouseButton1Click.Connect(() => Market.PromptProductPurchase(Player, ProductId));
     purchasableFrame.Parent = this.instance.List;
   }
