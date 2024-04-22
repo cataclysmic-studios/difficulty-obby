@@ -5,12 +5,18 @@ import type { LogStart } from "shared/hooks";
 import { Events } from "client/network";
 import { reverse } from "shared/utility/array";
 
+import type { PlayerHidingController } from "./player-hiding";
+
 type SettingValue = boolean;
 
 @Controller()
 export class SettingsController implements OnInit, LogStart {
   private readonly originalMusicVolume = Sound.Music.Volume;
   private readonly originalFXVolume = Sound.SoundEffects.Volume;
+
+  public constructor(
+    private readonly playerHiding: PlayerHidingController
+  ) { }
 
   public onInit(): void {
     Events.data.updated.connect((directory, value) => {
@@ -31,7 +37,8 @@ export class SettingsController implements OnInit, LogStart {
         break;
       }
       case "hidePlayers": {
-        // TODO
+        this.playerHiding.toggle(<boolean>value);
+        break;
       }
     }
   }
