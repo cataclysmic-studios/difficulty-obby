@@ -25,15 +25,15 @@ interface ClientEvents {
 }
 
 interface ServerFunctions {
-  roblox: {
-    getGamepasses(amount?: number): GamepassInfo[];
-  };
   data: {
     initialize(): void;
     get(directory: string): unknown;
   };
   github: {
     getInfo(): GitHubInfo;
+  };
+  roblox: {
+    getGamepasses(amount?: number): GamepassInfo[];
   };
 }
 

@@ -19,13 +19,15 @@ export class Checkpoint extends BaseComponent<{}, SpawnLocation> implements OnSt
       const player = Players.GetPlayerFromCharacter(character);
       if (humanoid === undefined || player === undefined) return;
 
+      const checkpointStage = tonumber(this.instance.Name)!;
+      const currentStage = this.db.get<number>(player, "stage", 0);
+      if (currentStage >= checkpointStage || checkpointStage - 1 !== currentStage) return;
+
+      // Enable this spawn, disable all others
       const allSpawns = World.GetDescendants().filter((i): i is SpawnLocation => i.IsA("SpawnLocation"));
       for (const spawn of allSpawns)
         spawn.Enabled = spawn.Name === this.instance.Name;
 
-      const checkpointStage = tonumber(this.instance.Name)!;
-      const currentStage = this.db.get<number>(player, "stage", 0);
-      if (currentStage >= checkpointStage || checkpointStage - 1 !== currentStage) return;
       this.db.set<number>(player, "stage", checkpointStage);
       Events.playSoundEffect(player, "StageCompleted");
 

@@ -13,7 +13,7 @@ const MOUSE_RAY_DISTANCE = 1000;
 
 export const enum MouseIcon {
   Default,
-  Drag,
+  Drag
 }
 
 @Controller()

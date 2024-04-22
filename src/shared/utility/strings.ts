@@ -9,3 +9,7 @@ export function slugToPascal(slug: string): string {
 export function camelCaseToSpaced(camelCased: string): string {
   return camelCased.gsub("%u", " %1")[0];
 }
+
+export function pascalCaseToSpaced(pascalCased: string): string {
+  return camelCaseToSpaced(pascalCased).sub(2);
+}
