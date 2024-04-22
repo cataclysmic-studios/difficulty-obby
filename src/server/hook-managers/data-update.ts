@@ -1,7 +1,7 @@
 import { Service, Modding, type OnStart } from "@flamework/core";
 import { DatabaseService } from "server/services/third-party/database";
 
-import type { OnDataUpdate } from "shared/hooks";
+import type { OnDataUpdate } from "server/hooks";
 
 @Service()
 export class DataUpdateService implements OnStart {
@@ -14,9 +14,9 @@ export class DataUpdateService implements OnStart {
     Modding.onListenerAdded<OnDataUpdate>(object => dataUpdateListeners.add(object));
     Modding.onListenerRemoved<OnDataUpdate>(object => dataUpdateListeners.delete(object));
 
-    this.database.updated.Connect((directory, value) => {
+    this.database.updated.Connect((player, directory, value) => {
       for (const listener of dataUpdateListeners)
-        listener.onDataUpdate(directory, value);
+        listener.onDataUpdate(player, directory, value);
     });
   }
 }
