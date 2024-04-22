@@ -1,9 +1,10 @@
 import type { OnStart } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
-import { Players, Workspace as World } from "@rbxts/services";
+import { Players } from "@rbxts/services";
+
+import { Events } from "server/network";
 
 import type { DatabaseService } from "server/services/third-party/database";
-import { Events } from "server/network";
 
 @Component({ tag: "Checkpoint" })
 export class Checkpoint extends BaseComponent<{}, SpawnLocation> implements OnStart {
@@ -22,11 +23,6 @@ export class Checkpoint extends BaseComponent<{}, SpawnLocation> implements OnSt
       const checkpointStage = tonumber(this.instance.Name)!;
       const currentStage = this.db.get<number>(player, "stage", 0);
       if (currentStage >= checkpointStage || checkpointStage - 1 !== currentStage) return;
-
-      // Enable this spawn, disable all others
-      const allSpawns = World.GetDescendants().filter((i): i is SpawnLocation => i.IsA("SpawnLocation"));
-      for (const spawn of allSpawns)
-        spawn.Enabled = spawn.Name === this.instance.Name;
 
       this.db.set<number>(player, "stage", checkpointStage);
       Events.playSoundEffect(player, "StageCompleted");

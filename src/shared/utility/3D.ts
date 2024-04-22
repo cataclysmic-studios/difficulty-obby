@@ -1,4 +1,5 @@
 import type { StorableVector3 } from "shared/data-models/common";
+import { doubleSidedLimit } from "./numbers";
 
 const { abs } = math;
 
@@ -14,6 +15,16 @@ export function toRegion3({ CFrame, Size }: Part, areaShrink = 0): Region3 {
     new Vector3(x - wsx + areaShrink, y - wsy, z - wsz + areaShrink),
     new Vector3(x + wsx - areaShrink, y + wsy, z + wsz - areaShrink)
   );
+}
+
+export function uniformlyLimitVector(vector: Vector3, limit: number, excludeY = false): Vector3 {
+  const { X, Y, Z } = vector;
+  const coordLimit = limit / 3;
+  return new Vector3(
+    doubleSidedLimit(X, coordLimit),
+    excludeY ? Y : doubleSidedLimit(Y, coordLimit),
+    doubleSidedLimit(Z, coordLimit)
+  )
 }
 
 export const STUDS_TO_METERS_CONSTANT = 3.571;

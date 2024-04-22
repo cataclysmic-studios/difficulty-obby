@@ -1,5 +1,5 @@
 import { type OnInit, Service } from "@flamework/core";
-import { endsWith } from "@rbxts/string-utils";
+import { endsWith, startsWith } from "@rbxts/string-utils";
 import Signal from "@rbxts/signal";
 
 import type { LogStart } from "shared/hooks";
@@ -17,6 +17,7 @@ export class DatabaseService implements OnInit, LogStart {
 	public onInit(): void {
 		Events.data.set.connect((player, key, value) => this.set(player, key, value));
 		Events.data.increment.connect((player, key, amount) => this.increment(player, key, amount))
+		Events.data.decrement.connect((player, key, amount) => this.decrement(player, key, amount))
 		Functions.data.initialize.setCallback((player) => this.setup(player));
 		Functions.data.get.setCallback((player, key) => this.get(player, key));
 	}
@@ -28,21 +29,23 @@ export class DatabaseService implements OnInit, LogStart {
 
 	public set<T>(player: Player, directory: string, value: T, noRequest = false): void {
 		const fullDirectory = this.getDirectoryForPlayer(player, directory);
-		if (!noRequest)
-			db.set(fullDirectory, value);
-
+		db.set(fullDirectory, value);
 		this.update(player, fullDirectory, value);
 	}
 
 	public increment(player: Player, directory: string, amount = 1): number {
 		const fullDirectory = this.getDirectoryForPlayer(player, directory);
 		const value = db.increment(fullDirectory, amount);
-		this.update(player, fullDirectory, value);
 
 		if (endsWith(directory, "coins"))
 			Events.playSoundEffect(player, "GainCoins");
 
+		this.update(player, fullDirectory, value);
 		return value;
+	}
+
+	public decrement(player: Player, directory: string, amount = -1): number {
+		return this.increment(player, directory, amount);
 	}
 
 	public delete(player: Player, directory: string): void {
@@ -78,6 +81,9 @@ export class DatabaseService implements OnInit, LogStart {
 	}
 
 	private getDirectoryForPlayer(player: Player, directory: string): string {
+		if (startsWith(directory, `playerData/${player.UserId}/`))
+			return directory;
+
 		return `playerData/${player.UserId}/${directory}`;
 	}
 }

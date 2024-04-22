@@ -46,7 +46,7 @@ export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart,
     const character = this.character.get();
     if (character === undefined || character.Humanoid.RootPart === undefined) return;
 
-    const characterPosition = character.Humanoid.RootPart.Position.add(new Vector3(0, 4, 0));
+    const characterPosition = character.Humanoid.RootPart.Position.add(new Vector3(0, 3.5, 0));
     const positionDifference = characterPosition.sub(this.neckBone.WorldPosition);
     const characterDistance = positionDifference.Magnitude;
     const inRadius = characterDistance <= this.attributes.NPC_CommunicationRadius;
@@ -69,16 +69,16 @@ export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart,
   private onRadiusLeft(): void {
     this.stopAnimation("FreeHead");
     this.proximityPrompt.toggle(false);
-    tween(this.neckBone, new TweenInfoBuilder().SetTime(0.35), {
+    tween(this.neckBone, new TweenInfoBuilder().SetTime(0.55), {
       Orientation: this.idleHeadOrientation
     });
   }
 
   private facePlayer(direction: Vector3) {
     const yaw = doubleSidedLimit(deg(atan2(direction.X, direction.Z)), 60);
-    const pitch = min(deg(asin(direction.Y)), 35);
+    const pitch = min(deg(asin(direction.Y)), 15);
     const orientation = new Vector3(pitch, yaw, 0);
-    this.neckBone.Orientation = this.neckBone.Orientation.Lerp(orientation, 0.25);
+    this.neckBone.Orientation = this.neckBone.Orientation.Lerp(orientation, 0.1);
   }
 
   private loadAnimations(): void {

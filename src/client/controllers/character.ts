@@ -12,4 +12,12 @@ export class CharacterController {
   public get(): Maybe<CharacterModel> {
     return <Maybe<CharacterModel>>Player.Character;
   }
+
+  public getHumanoid(): Maybe<Humanoid> {
+    return this.get()?.Humanoid;
+  }
+
+  public getRoot(): Maybe<BasePart> {
+    return this.getHumanoid()?.RootPart;
+  }
 }

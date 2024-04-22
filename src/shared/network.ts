@@ -8,6 +8,7 @@ interface ServerEvents {
   data: {
     set(directory: string, value: unknown): void;
     increment(directory: string, amount?: number): void;
+    decrement(directory: string, amount?: number): void;
   };
   character: {
     toggleDefaultMovement(on: boolean): void;
@@ -16,6 +17,7 @@ interface ServerEvents {
 
 interface ClientEvents {
   playSoundEffect(soundName: SoundEffectName): void;
+  respawnCharacter(): void;
   uiEffects: {
     fadeBlack(timeBetween?: number, fadeTime?: number): void;
   };
