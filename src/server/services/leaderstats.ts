@@ -17,15 +17,15 @@ export class LeaderstatsService implements OnPlayerJoin, LogStart {
     leaderstats.Name = "leaderstats";
     leaderstats.Parent = player;
 
-    const coinsStat = new Instance("IntValue");
-    coinsStat.Name = "Coins";
-    coinsStat.Value = 0;
-    coinsStat.Parent = leaderstats;
-
     const stageStat = new Instance("IntValue");
     stageStat.Name = "Stage";
     stageStat.Value = 0;
     stageStat.Parent = leaderstats;
+
+    const coinsStat = new Instance("IntValue");
+    coinsStat.Name = "Coins";
+    coinsStat.Value = 0;
+    coinsStat.Parent = leaderstats;
 
     this.db.updated.Connect((p, directory, value) => {
       if (player !== p) return;
