@@ -1,6 +1,9 @@
 interface ReplicatedFirst extends Instance {
   Assets: Folder & {
     UI: Folder & {
+      Notification: TextLabel & {
+        UIStroke: UIStroke;
+      };
       Setting: Frame & {
         Title: TextLabel;
       };
