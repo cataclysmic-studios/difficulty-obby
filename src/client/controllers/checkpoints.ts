@@ -9,7 +9,7 @@ import Log from "shared/logger";
 
 import type { CharacterController } from "./character";
 
-const { clamp } = math;
+const { max, clamp } = math;
 
 @Controller({ loadOrder: 0 })
 export class CheckpointsController implements OnInit, LogStart {
@@ -37,11 +37,13 @@ export class CheckpointsController implements OnInit, LogStart {
   }
 
   public addStageOffset(offset = 1): void {
+    if (this.getStage() + offset > this.stage) return;
     this.stageOffset += offset;
     this.respawn(false);
   }
 
   public subtractStageOffset(offset = 1): void {
+    if (this.getStage() - offset < 0) return;
     this.stageOffset -= offset;
     this.respawn(false);
   }

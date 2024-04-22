@@ -28,27 +28,27 @@ export class StageInfo extends BaseComponent<{}, StageInfoFrame> implements OnSt
 
   public onStart(): void {
     this.instance.NextStage.MouseButton1Click.Connect(() => {
-      if (this.getStage() + 1 > this.stage) return;
       this.checkpoints.addStageOffset();
       this.onDataUpdate("stage", this.stage);
     });
     this.instance.PreviousStage.MouseButton1Click.Connect(() => {
-      if (this.getStage() - 1 < 0) return;
       this.checkpoints.subtractStageOffset();
       this.onDataUpdate("stage", this.stage);
     });
-    this.instance.Next10Stages.MouseButton1Click.Connect(() => this.checkpoints.addStageOffset(10));
-    this.instance.Previous10Stages.MouseButton1Click.Connect(() => this.checkpoints.subtractStageOffset(10));
+    this.instance.Next10Stages.MouseButton1Click.Connect(() => {
+      this.checkpoints.addStageOffset(10)
+      this.onDataUpdate("stage", this.stage);
+    });
+    this.instance.Previous10Stages.MouseButton1Click.Connect(() => {
+      this.checkpoints.subtractStageOffset(10)
+      this.onDataUpdate("stage", this.stage);
+    });
   }
 
   public onDataUpdate(directory: string, stage: number): void {
     if (!endsWith(directory, "stage")) return;
     this.stage = stage;
     this.instance.Visible = true;
-    this.instance.StageNumber.Text = tostring(this.getStage());
-  }
-
-  private getStage(): number {
-    return this.stage + this.checkpoints.getStageOffset();
+    this.instance.StageNumber.Text = tostring(this.stage + this.checkpoints.getStageOffset());
   }
 }
