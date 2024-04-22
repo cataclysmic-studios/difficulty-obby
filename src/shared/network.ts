@@ -2,6 +2,8 @@ import { Networking } from "@flamework/networking";
 import type { GitHubInfo } from "./structs/github";
 import type { GamepassInfo } from "shared/structs/roblox-api";
 
+type SoundEffectName = ExcludeKeys<Omit<SoundService["SoundEffects"], "Parent" | "Changed">, SoundGroup | boolean | string | number | Callback | symbol | RBXScriptSignal>;
+
 interface ServerEvents {
   data: {
     set(directory: string, value: unknown): void;
@@ -13,6 +15,7 @@ interface ServerEvents {
 }
 
 interface ClientEvents {
+  playSoundEffect(soundName: SoundEffectName): void;
   uiEffects: {
     fadeBlack(timeBetween?: number, fadeTime?: number): void;
   };

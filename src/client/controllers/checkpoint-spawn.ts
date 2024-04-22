@@ -7,7 +7,7 @@ import { Events } from "client/network";
 import { Character } from "shared/utility/client";
 import Log from "shared/logger";
 
-@Controller({ loadOrder: 1 })
+@Controller({ loadOrder: 0 })
 export class CheckpointSpawnController implements OnInit, LogStart {
   public onInit(): void {
     const conn = Events.data.updated.connect((directory, value) => {

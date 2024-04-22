@@ -1,11 +1,11 @@
 import { type OnInit, Service } from "@flamework/core";
+import { endsWith } from "@rbxts/string-utils";
 import Signal from "@rbxts/signal";
 
+import type { LogStart } from "shared/hooks";
 import { Events, Functions } from "server/network";
 import Firebase from "server/firebase";
 import Log from "shared/logger";
-
-import type { LogStart } from "shared/hooks";
 
 const db = new Firebase;
 
@@ -36,6 +36,9 @@ export class DatabaseService implements OnInit, LogStart {
 		const fullDirectory = this.getDirectoryForPlayer(player, directory);
 		const value = db.increment(fullDirectory, amount);
 		this.update(player, fullDirectory, value);
+
+		if (endsWith(directory, "coins"))
+			Events.playSoundEffect(player, "GainCoins");
 
 		return value;
 	}

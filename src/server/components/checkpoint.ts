@@ -22,10 +22,14 @@ export class Checkpoint extends BaseComponent<{}, SpawnLocation> implements OnSt
       for (const spawn of allSpawns)
         spawn.Enabled = spawn.Name === this.instance.Name;
 
-      const stageNumber = tonumber(this.instance.Name)!;
+      const checkpointStage = tonumber(this.instance.Name)!;
       const currentStage = this.db.get<number>(player, "stage", 0);
-      if (currentStage >= stageNumber || stageNumber - 1 !== currentStage) return;
-      this.db.set<number>(player, "stage", stageNumber);
+      if (currentStage >= checkpointStage || checkpointStage - 1 !== currentStage) return;
+      this.db.set<number>(player, "stage", checkpointStage);
+
+      const scaling = checkpointStage ** 0.75;
+      const coinsReward = math.round((new Random).NextNumber(scaling * checkpointStage * 1.5, scaling * 15));
+      this.db.increment(player, "coins", coinsReward);
     });
   }
 }
