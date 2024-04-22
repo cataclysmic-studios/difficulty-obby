@@ -1,5 +1,5 @@
 import type { OnStart, OnTick } from "@flamework/core";
-import { Component, BaseComponent } from "@flamework/components";
+import { Component, BaseComponent, type Components } from "@flamework/components";
 import { TweenInfoBuilder } from "@rbxts/builders";
 
 import { doubleSidedLimit } from "shared/utility/numbers";
@@ -7,6 +7,7 @@ import { tween } from "shared/utility/ui";
 
 import type { CharacterController } from "client/controllers/character";
 import type { ProximityPromptController } from "client/controllers/proximity-prompt";
+import { StorePage } from "./ui/pages/store";
 
 const { min, deg, asin, atan2 } = math;
 
@@ -27,6 +28,7 @@ export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart,
   private idleHeadOrientation!: Vector3;
 
   public constructor(
+    private readonly components: Components,
     private readonly character: CharacterController,
     private readonly proximityPrompt: ProximityPromptController
   ) { super(); }
@@ -34,11 +36,11 @@ export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart,
   public onStart(): void {
     this.loadAnimations();
     this.playAnimation("Idle");
-    this.idleHeadOrientation = this.neckBone.Orientation;
 
+    this.idleHeadOrientation = this.neckBone.Orientation;
     this.proximityPrompt.activated.Connect(actionID => {
       if (actionID === undefined || actionID !== this.talkActionID) return;
-      print("talking to NPC");
+      this.components.getAllComponents<StorePage>()[0].toggle(true);
     });
   }
 

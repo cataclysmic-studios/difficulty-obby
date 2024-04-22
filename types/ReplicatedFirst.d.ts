@@ -18,12 +18,14 @@ interface ReplicatedFirst extends Instance {
           UIAspectRatioConstraint: UIAspectRatioConstraint;
         };
       };
+      Price: TextLabel;
       Purchasable: Frame & {
         UIPadding: UIPadding;
         UIGradient: UIGradient;
         Title: TextLabel & {
           UIStroke: UIStroke;
         };
+        Icon: ImageLabel;
         UICorner: UICorner;
         UIStroke: UIStroke;
         UIAspectRatioConstraint: UIAspectRatioConstraint;
@@ -38,5 +40,6 @@ interface ReplicatedFirst extends Instance {
         };
       };
     };
+    StoreItems: Folder;
   };
 }
