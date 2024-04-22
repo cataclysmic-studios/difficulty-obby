@@ -43,11 +43,11 @@ namespace Log {
   }
 
   export function warning(...messages: defined[]): void {
-    log("warning", messages);
+    log("warning", ...messages);
   }
 
   export function fatal(...messages: defined[]): void {
-    log("fatal", messages);
+    log("fatal", ...messages);
   }
 
   /**
