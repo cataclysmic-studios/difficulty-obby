@@ -17,7 +17,7 @@ interface ErrorBody {
 }
 
 interface SuccessBody<T> {
-  readonly data: readonly T[];
+  readonly data: T[];
 }
 
 function didFail(body: object): body is ErrorBody {
@@ -32,7 +32,7 @@ export class RobloxService implements OnInit, LogStart {
     Functions.roblox.getGamepasses.setCallback((_, amount) => this.getGamepasses(amount));
   }
 
-  public async getGamepasses(amount = 100): Promise<readonly GamepassInfo[]> {
+  public async getGamepasses(amount = 100): Promise<GamepassInfo[]> {
     try {
       const json = HTTP.GetAsync(this.gamepassesEndpoint + tostring(amount));
       const body = <object>HTTP.JSONDecode(json);

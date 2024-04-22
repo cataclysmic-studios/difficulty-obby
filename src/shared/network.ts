@@ -20,7 +20,7 @@ interface ClientEvents {
 
 interface ServerFunctions {
   roblox: {
-    getGamepasses(amount?: number): readonly GamepassInfo[];
+    getGamepasses(amount?: number): GamepassInfo[];
   };
   data: {
     initialize(): void;

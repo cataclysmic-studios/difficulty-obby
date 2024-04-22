@@ -13,8 +13,8 @@ import type { GamepassInfo } from "shared/structs/roblox-api";
 })
 export class ShopPage extends BaseComponent<{}, PlayerGui["Main"]["Shop"]> implements OnStart {
   public async onStart(): Promise<void> {
-    const devProducts = getDevProducts();
-    const gamepasses = await Functions.roblox.getGamepasses();
+    const devProducts = getDevProducts().sort((productA, productB) => this.sortPurchasables(productA.Name, productB.Name));
+    const gamepasses = (await Functions.roblox.getGamepasses()).sort((passA, passB) => this.sortPurchasables(passA.name, passB.name));
     for (const gamepass of gamepasses)
       this.createGamepassFrame(gamepass);
     for (const product of devProducts)
@@ -33,5 +33,17 @@ export class ShopPage extends BaseComponent<{}, PlayerGui["Main"]["Shop"]> imple
     purchasableFrame.Title.Text = Name;
     purchasableFrame.Buy.MouseButton1Click.Connect(() => Market.PromptProductPurchase(Player, ProductId));
     purchasableFrame.Parent = this.instance.List;
+  }
+
+  private sortPurchasables(nameA: string, nameB: string): boolean {
+    const getCurrencyAmount = (productName: string): number => {
+      return tonumber(productName.gsub(",", "")[0].split(" ")[0])!;
+    };
+
+    const amountA = getCurrencyAmount(nameA);
+    const amountB = getCurrencyAmount(nameB);
+    return amountA !== undefined && amountB !== undefined ?
+      amountA < amountB
+      : nameA > nameB;
   }
 }

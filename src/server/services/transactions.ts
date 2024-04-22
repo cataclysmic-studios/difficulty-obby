@@ -1,8 +1,10 @@
 import { OnInit, Service } from "@flamework/core";
 import { MarketplaceService as Market, Players } from "@rbxts/services";
 
-import { DatabaseService } from "./third-party/database";
+import type { LogStart } from "shared/hooks";
 import Log from "shared/logger";
+
+import type { DatabaseService } from "./third-party/database";
 
 type RewardHandler = (player: Player) => void;
 const enum ProductIDs {
@@ -17,7 +19,7 @@ const enum ProductIDs {
 }
 
 @Service()
-export class TransactionsService implements OnInit {
+export class TransactionsService implements OnInit, LogStart {
   private readonly rewardHandlers: Record<number, RewardHandler> = {
     [ProductIDs.Coins100]: player => this.db.increment(player, "coins", 100),
     [ProductIDs.Coins250]: player => this.db.increment(player, "coins", 250),
@@ -37,9 +39,10 @@ export class TransactionsService implements OnInit {
     Market.ProcessReceipt = ({ PlayerId, ProductId, PurchaseId }) => {
       const productKey = `${PlayerId}_${PurchaseId}`;
       const player = Players.GetPlayerByUserId(PlayerId);
+      const playerExists = player !== undefined;
       let purchaseRecorded: Maybe<boolean> = true;
-      if (player) {
-        const purchaseHistory = this.db.get<string[]>(player, "purchaseHistory");
+      if (playerExists) {
+        const purchaseHistory = this.db.get<string[]>(player, "purchaseHistory", []);
         const alreadyPurchased = purchaseHistory.includes(productKey);
         if (alreadyPurchased)
           return Enum.ProductPurchaseDecision.PurchaseGranted;
@@ -49,12 +52,12 @@ export class TransactionsService implements OnInit {
       let success = true;
       try {
         const grantReward = this.rewardHandlers[ProductId];
-        if (player && grantReward !== undefined)
+        if (playerExists && grantReward !== undefined)
           grantReward(player);
-      } catch (e) {
+      } catch (err) {
         success = false;
         purchaseRecorded = undefined;
-        Log.warning(`Failed to process purchase for product ${ProductId}: ${e}`);
+        Log.warning(`Failed to process purchase for product ${ProductId}: ${err}`);
       }
 
       return Enum.ProductPurchaseDecision[(!success || purchaseRecorded === undefined) ? "NotProcessedYet" : "PurchaseGranted"];
