@@ -11,6 +11,7 @@ export class Checkpoint extends BaseComponent<{}, SpawnLocation> implements OnSt
   ) { super(); }
 
   public onStart(): void {
+    this.instance.Duration = 0;
     this.instance.Touched.Connect(async hit => {
       const character = hit.FindFirstAncestorOfClass("Model");
       const humanoid = character?.FindFirstChildOfClass("Humanoid");
