@@ -16,10 +16,14 @@ export class ExitPortal extends BaseComponent<Attributes, PortalModel> implement
     const zoneName = this.attributes.ExitPortal_DestinationZone;
     this.instance.ZoneName.GUI.Title.Text = zoneName;
 
+    let db = false;
     this.instance.Collider.Touched.Connect(hit => {
       const character = hit.FindFirstAncestorOfClass("Model");
       const humanoid = character?.FindFirstChildOfClass("Humanoid");
       if (humanoid === undefined) return;
+      if (db) return;
+      db = true;
+      task.delay(1, () => db = false);
 
       const root = humanoid.RootPart;
       if (root === undefined) return;
