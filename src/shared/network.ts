@@ -5,10 +5,12 @@ import type { GamepassInfo } from "shared/structs/roblox-api";
 type SoundEffectName = ExcludeKeys<Omit<SoundService["SoundEffects"], "Parent" | "Changed">, SoundGroup | boolean | string | number | Callback | symbol | RBXScriptSignal>;
 
 interface ServerEvents {
+  updateBackpackItems(): void;
   data: {
     set(directory: string, value: unknown): void;
     increment(directory: string, amount?: number): void;
     decrement(directory: string, amount?: number): void;
+    addToArray(directory: string, value: defined): void;
   };
   character: {
     toggleDefaultMovement(on: boolean): void;
@@ -29,7 +31,7 @@ interface ClientEvents {
 interface ServerFunctions {
   data: {
     initialize(): void;
-    get(directory: string): unknown;
+    get(directory: string, defaultValue?: unknown): unknown;
   };
   github: {
     getInfo(): GitHubInfo;

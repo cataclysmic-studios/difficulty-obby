@@ -15,11 +15,12 @@ export class DatabaseService implements OnInit, LogStart {
 	public readonly updated = new Signal<<T = unknown>(player: Player, directory: string, value: T) => void>;
 
 	public onInit(): void {
-		Events.data.set.connect((player, key, value) => this.set(player, key, value));
-		Events.data.increment.connect((player, key, amount) => this.increment(player, key, amount))
-		Events.data.decrement.connect((player, key, amount) => this.decrement(player, key, amount))
+		Events.data.set.connect((player, directory, value) => this.set(player, directory, value));
+		Events.data.increment.connect((player, directory, amount) => this.increment(player, directory, amount))
+		Events.data.decrement.connect((player, directory, amount) => this.decrement(player, directory, amount))
+		Events.data.addToArray.connect((player, directory, value) => this.addToArray(player, directory, value))
 		Functions.data.initialize.setCallback((player) => this.setup(player));
-		Functions.data.get.setCallback((player, key) => this.get(player, key));
+		Functions.data.get.setCallback((player, directory, defaultValue) => this.get(player, directory, defaultValue));
 	}
 
 	public get<T>(player: Player, directory: string, defaultValue?: T): T {
@@ -44,8 +45,14 @@ export class DatabaseService implements OnInit, LogStart {
 		return value;
 	}
 
-	public decrement(player: Player, directory: string, amount = -1): number {
-		return this.increment(player, directory, amount);
+	public decrement(player: Player, directory: string, amount = 1): number {
+		return this.increment(player, directory, -amount);
+	}
+
+	public addToArray<T extends defined = defined>(player: Player, directory: string, value: T): void {
+		const fullDirectory = this.getDirectoryForPlayer(player, directory);
+		db.addToArray(fullDirectory, value);
+		this.update(player, fullDirectory, value);
 	}
 
 	public delete(player: Player, directory: string): void {
@@ -62,6 +69,7 @@ export class DatabaseService implements OnInit, LogStart {
 	private setup(player: Player): void {
 		this.initialize(player, "stage", 0);
 		this.initialize(player, "coins", 0);
+		this.initialize(player, "ownedItems", []);
 		this.initializeSettings(player);
 
 		this.loaded.Fire(player);

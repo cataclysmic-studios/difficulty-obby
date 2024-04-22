@@ -15,6 +15,6 @@ export class DataUpdateController implements OnInit {
         listener.onDataUpdate(directory, value);
     });
 
-    task.delay(1, () => Functions.data.initialize());
+    task.delay(1.5, () => Functions.data.initialize());
   }
 }
