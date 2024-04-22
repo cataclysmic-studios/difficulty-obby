@@ -10,10 +10,11 @@ const REFRESH_RATE = 180; // seconds (3 mins)
 
 @Component({
   tag: "VersionLabel",
-  ancestorWhitelist: [ PlayerGui ]
+  ancestorWhitelist: [PlayerGui]
 })
 export class VersionLabel extends BaseComponent<{}, TextLabel> implements OnStart, LogStart {
   public onStart(): void {
+    this.instance.Visible = false;
     task.spawn(() => {
       do
         this.update()
@@ -23,6 +24,7 @@ export class VersionLabel extends BaseComponent<{}, TextLabel> implements OnStar
 
   private async update(): Promise<void> {
     const { tags: [tag], commits: [commit] } = await Functions.github.getInfo();
-    this.instance.Text = `${tag.name} (${slice(commit.tree.sha, 0, 7)})`;
+    this.instance.Text = `${tag?.name ?? "unreleased"} (${slice(commit.tree.sha, 0, 7)})`;
+    this.instance.Visible = true;
   }
 }
