@@ -3,6 +3,7 @@ import { Component, BaseComponent } from "@flamework/components";
 import { Players, Workspace as World } from "@rbxts/services";
 
 import type { DatabaseService } from "server/services/third-party/database";
+import { Events } from "server/network";
 
 @Component({ tag: "Checkpoint" })
 export class Checkpoint extends BaseComponent<{}, SpawnLocation> implements OnStart {
@@ -26,6 +27,7 @@ export class Checkpoint extends BaseComponent<{}, SpawnLocation> implements OnSt
       const currentStage = this.db.get<number>(player, "stage", 0);
       if (currentStage >= checkpointStage || checkpointStage - 1 !== currentStage) return;
       this.db.set<number>(player, "stage", checkpointStage);
+      Events.playSoundEffect(player, "StageCompleted");
 
       const scaling = checkpointStage ** 0.75;
       const coinsReward = math.round((new Random).NextNumber(scaling * checkpointStage * 1.5, scaling * 15));
