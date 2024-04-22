@@ -7,14 +7,16 @@ import { Events } from "client/network";
 import { Character } from "shared/utility/client";
 import Log from "shared/logger";
 
-@Controller()
+@Controller({ loadOrder: 1 })
 export class CheckpointSpawnController implements OnInit, LogStart {
   public onInit(): void {
     const conn = Events.data.updated.connect((directory, value) => {
       if (!endsWith(directory, "stage")) return;
+      if (value === 0)
+        return conn.Disconnect();
+
       if (Character === undefined || Character.Humanoid === undefined) return;
       if (Character.Humanoid.RootPart === undefined) return;
-      if (value === 0) return;
 
       conn.Disconnect();
       const checkpoints = <SpawnLocation[]>CollectionService.GetTagged("Checkpoint");

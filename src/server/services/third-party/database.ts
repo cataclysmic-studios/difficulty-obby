@@ -9,15 +9,15 @@ import type { LogStart } from "shared/hooks";
 
 const db = new Firebase;
 
-@Service()
+@Service({ loadOrder: 0 })
 export class DatabaseService implements OnInit, LogStart {
 	public readonly loaded = new Signal<(player: Player) => void>;
 	public readonly updated = new Signal<<T = unknown>(player: Player, directory: string, value: T) => void>;
 
 	public onInit(): void {
-		Events.data.initialize.connect((player) => this.setup(player));
 		Events.data.set.connect((player, key, value) => this.set(player, key, value));
 		Events.data.increment.connect((player, key, amount) => this.increment(player, key, amount))
+		Functions.data.initialize.setCallback((player) => this.setup(player));
 		Functions.data.get.setCallback((player, key) => this.get(player, key));
 	}
 

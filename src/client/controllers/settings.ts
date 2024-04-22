@@ -17,7 +17,7 @@ export class SettingsController implements OnInit, LogStart {
       const [settingName, dataName] = reverse(directory.split("/"));
       if (dataName !== "settings") return;
       this.updateSetting(settingName, <SettingValue>value);
-    })
+    });
   }
 
   private updateSetting(name: string, value: SettingValue): void {

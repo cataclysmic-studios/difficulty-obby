@@ -4,7 +4,6 @@ import type { GamepassInfo } from "shared/structs/roblox-api";
 
 interface ServerEvents {
   data: {
-    initialize(): void;
     set(directory: string, value: unknown): void;
     increment(directory: string, amount?: number): void;
   };
@@ -24,6 +23,7 @@ interface ServerFunctions {
     getGamepasses(amount?: number): readonly GamepassInfo[];
   };
   data: {
+    initialize(): void;
     get(directory: string): unknown;
   };
   github: {

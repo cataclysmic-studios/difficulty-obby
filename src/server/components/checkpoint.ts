@@ -22,7 +22,7 @@ export class Checkpoint extends BaseComponent<{}, SpawnLocation> implements OnSt
         spawn.Enabled = spawn.Name === this.instance.Name;
 
       const stageNumber = tonumber(this.instance.Name)!;
-      const currentStage = this.db.get<number>(player, "stage");
+      const currentStage = this.db.get<number>(player, "stage", 0);
       if (currentStage >= stageNumber || stageNumber - 1 !== currentStage) return;
       this.db.set<number>(player, "stage", stageNumber);
     });

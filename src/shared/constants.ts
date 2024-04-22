@@ -7,3 +7,11 @@ export const ZONE_INFO = [ // only hard coded to keep constant index
   "Whisperwood",
   "Marshwick"
 ];
+
+export function getZoneIndex(stage: number): number {
+  return math.floor(stage <= STAGES_PER_ZONE ? 0 : stage / (STAGES_PER_ZONE + 1));
+}
+
+export function getZoneName(stage: number): string {
+  return ZONE_INFO[getZoneIndex(stage)];
+}

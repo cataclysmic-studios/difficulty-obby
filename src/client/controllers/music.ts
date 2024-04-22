@@ -1,19 +1,19 @@
-import { Controller, type OnInit } from "@flamework/core";
+import { Controller, type OnStart } from "@flamework/core";
 import { SoundService as Sound } from "@rbxts/services";
 
 import type { LogStart } from "shared/hooks";
 import { Functions } from "client/network";
-import { STAGES_PER_ZONE, ZONE_INFO } from "shared/constants";
+import { getZoneIndex, ZONE_INFO } from "shared/constants";
 import Log from "shared/logger";
 
 @Controller()
-export class MusicController implements OnInit, LogStart {
+export class MusicController implements OnStart, LogStart {
   private songIndex = 0;
-  private zoneNumber = 0;
+  private zoneIndex = 0;
   private currentSong!: Sound;
   private lastZoneMusic?: Folder;
 
-  public onInit(): void {
+  public onStart(): void {
     this.playCurrentSong();
   }
 
@@ -43,8 +43,8 @@ export class MusicController implements OnInit, LogStart {
 
   private async getZoneMusic(): Promise<Folder> {
     const stage = <number>await Functions.data.get("stage");
-    this.zoneNumber = math.floor(stage <= STAGES_PER_ZONE ? 0 : stage / (STAGES_PER_ZONE + 1));
-    const zoneName = ZONE_INFO[this.zoneNumber];
+    this.zoneIndex = getZoneIndex(stage);
+    const zoneName = ZONE_INFO[this.zoneIndex];
     if (zoneName === undefined)
       return <Folder><unknown>undefined;
 
@@ -52,6 +52,6 @@ export class MusicController implements OnInit, LogStart {
   }
 
   private failedToFindMusic(): void {
-    Log.warning(`Failed to find music for "${ZONE_INFO[this.zoneNumber]}" zone`);
+    Log.warning(`Failed to find music for "${ZONE_INFO[this.zoneIndex]}" zone`);
   }
 }

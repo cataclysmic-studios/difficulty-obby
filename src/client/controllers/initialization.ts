@@ -1,16 +1,19 @@
-import { Controller, type OnStart } from "@flamework/core";
+import { Controller, type OnInit, type OnStart } from "@flamework/core";
 
-import { Events } from "client/network";
+import { Functions } from "client/network";
 import type { CameraController } from "./camera";
 
-@Controller()
-export class InitializationController implements OnStart {
+@Controller({ loadOrder: 0 })
+export class InitializationController implements OnInit, OnStart {
   public constructor(
     private readonly camera: CameraController
   ) { }
 
+  public async onInit(): Promise<void> {
+    await Functions.data.initialize();
+  }
+
   public onStart(): void {
-    Events.data.initialize();
     this.camera.set("Default"); // set to preferred camera
   }
 }
