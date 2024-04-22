@@ -16,13 +16,13 @@ export function getDevProducts(): DevProductInfo[] {
 
 export function getPageContents<T extends defined>(pages: Pages<T>): T[] {
   const contents: T[] = [];
-  while (!pages.IsFinished) {
-    const page = pages.GetCurrentPage();
-    for (const item of page)
+  do {
+    for (const item of pages.GetCurrentPage())
       contents.push(item);
 
-    pages.AdvanceToNextPageAsync();
-  }
+    if (!pages.IsFinished)
+      pages.AdvanceToNextPageAsync();
+  } while (!pages.IsFinished)
 
   return contents;
 }
