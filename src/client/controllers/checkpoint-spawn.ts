@@ -22,7 +22,7 @@ export class CheckpointSpawnController implements OnInit, LogStart {
       if (checkpoint === undefined)
         return Log.warning(`Failed to find checkpoint ${value}`);
 
-      Character.Humanoid.RootPart.CFrame = checkpoint.CFrame;
+      Character.Humanoid.RootPart.CFrame = checkpoint.CFrame.add(new Vector3(0, 6, 0));
     });
   }
 }
