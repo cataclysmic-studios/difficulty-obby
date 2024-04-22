@@ -1,12 +1,10 @@
 import { Controller, type OnInit } from "@flamework/core";
 import { TweenInfoBuilder } from "@rbxts/builders";
-import { endsWith } from "@rbxts/string-utils";
+import { SoundService as Sound } from "@rbxts/services";
 
-import { Events } from "client/network";
 import { PlayerGui } from "shared/utility/client";
 import { Assets } from "shared/utility/instances";
 import { tween } from "shared/utility/ui";
-import { getZoneName, STAGES_PER_ZONE } from "shared/constants";
 
 import type { ZonesController } from "./zones";
 
@@ -31,6 +29,7 @@ export class NotificationController implements OnInit {
     notificationLabel.Text = message;
     notificationLabel.Parent = this.screen;
 
+    Sound.SoundEffects.Notification.Play();
     tween(notificationLabel, this.tweenInfo, {
       Position: UDim2.fromScale(0.5, 0)
     }).Completed.Once(() => task.delay(3, () => {
