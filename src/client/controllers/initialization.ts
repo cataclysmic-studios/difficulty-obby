@@ -9,8 +9,8 @@ export class InitializationController implements OnInit, OnStart {
     private readonly camera: CameraController
   ) { }
 
-  public async onInit(): Promise<void> {
-    await Functions.data.initialize();
+  public onInit(): void {
+    Functions.data.initialize();
   }
 
   public onStart(): void {

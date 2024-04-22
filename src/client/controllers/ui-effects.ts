@@ -1,9 +1,10 @@
 import { Controller, type OnInit } from "@flamework/core";
 import { TweenInfoBuilder } from "@rbxts/builders";
 
+import type { LogStart } from "shared/hooks";
+import { Events } from "client/network";
 import { PlayerGui } from "shared/utility/client";
 import { tween } from "shared/utility/ui";
-import type { LogStart } from "shared/hooks";
 
 @Controller()
 export class UIEffectsController implements OnInit, LogStart {
@@ -11,6 +12,8 @@ export class UIEffectsController implements OnInit, LogStart {
   private readonly blackFrame = new Instance("Frame", this.screen);
 
   public onInit(): void {
+    Events.uiEffects.fadeBlack.connect((timeBetween, fadeTime) => this.fadeBlack(false, timeBetween, fadeTime));
+
     this.screen.Name = "UIEffects";
     this.screen.DisplayOrder = 10;
     this.screen.ScreenInsets = Enum.ScreenInsets.DeviceSafeInsets;
@@ -21,7 +24,7 @@ export class UIEffectsController implements OnInit, LogStart {
     this.blackFrame.Transparency = 1;
   }
 
-  public async blackFade<Disable extends boolean = false>(manualDisable: Disable = <Disable>false, timeBetween = 0.5, fadeTime = 0.65): Promise<Disable extends true ? () => Tween : void> {
+  public async fadeBlack<Disable extends boolean = false>(manualDisable: Disable = <Disable>false, timeBetween = 0.5, fadeTime = 0.65): Promise<Disable extends true ? () => Tween : void> {
     type RType = Disable extends true ? () => Tween : void;
     const info = new TweenInfoBuilder()
       .SetTime(fadeTime)

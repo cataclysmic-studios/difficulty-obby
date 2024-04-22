@@ -13,6 +13,9 @@ interface ServerEvents {
 }
 
 interface ClientEvents {
+  uiEffects: {
+    fadeBlack(timeBetween?: number, fadeTime?: number): void;
+  };
   data: {
     updated(directory: string, value: unknown): void;
   };

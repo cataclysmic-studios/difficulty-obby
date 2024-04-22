@@ -1,8 +1,9 @@
 import type { OnStart } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
-import { Workspace as World } from "@rbxts/services";
+import { Players, Workspace as World } from "@rbxts/services";
 
 import type { LogStart } from "shared/hooks";
+import { Events } from "server/network";
 import { ZONE_INFO } from "shared/constants";
 import Log from "shared/logger";
 
@@ -32,9 +33,26 @@ export class ExitPortal extends BaseComponent<Attributes, PortalModel> implement
       if (zoneNumber === -1)
         return Log.warning(`Zone "${zoneName}" does not exist in World.Zones`);
 
+      const player = Players.GetPlayerFromCharacter(character);
+      const defaultWalkSpeed = humanoid.WalkSpeed;
+      const defaultJumpHeight = humanoid.JumpHeight;
+      const fadeTime = 0.5;
+
+      humanoid.WalkSpeed = 0;
+      humanoid.JumpHeight = 0;
+      if (player !== undefined) {
+        Events.uiEffects.fadeBlack(player, 0.75, fadeTime);
+        task.wait(fadeTime);
+      }
+
       const startPointNumber = zoneNumber === 0 ? 0 : (zoneNumber * 20) + 1;
       const destinationZoneSpawn = <SpawnLocation>World.StartPoints.WaitForChild(tostring(startPointNumber));
       root.CFrame = destinationZoneSpawn.CFrame.add(new Vector3(0, 6, 0));
+
+      task.delay(fadeTime, () => {
+        humanoid.WalkSpeed = defaultWalkSpeed;
+        humanoid.JumpHeight = defaultJumpHeight;
+      });
     });
   }
 }
