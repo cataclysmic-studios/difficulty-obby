@@ -7,7 +7,7 @@ import { getZoneName, STAGES_PER_ZONE } from "shared/constants";
 
 @Controller()
 export class ZonesController implements OnInit {
-  public readonly discovered = new Signal<(zoneName: string) => void>;
+  public readonly discovered = new Signal<(zoneName: string, currentStage: number) => void>;
 
   private lastZoneName?: string;
 
@@ -21,7 +21,7 @@ export class ZonesController implements OnInit {
       this.lastZoneName = zoneName;
 
       if (stage % (STAGES_PER_ZONE + 1) !== 0) return;
-      this.discovered.Fire(zoneName);
+      this.discovered.Fire(zoneName, stage);
     });
   }
 }

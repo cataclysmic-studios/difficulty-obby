@@ -10,7 +10,7 @@ import Log from "shared/logger";
 import type { ZonesController } from "./zones";
 
 @Controller()
-export class MusicController implements OnInit, OnStart, LogStart {
+export class MusicController implements OnInit, LogStart {
   private songIndex = 0;
   private zoneIndex = 0;
   private currentSong!: Sound;
@@ -21,16 +21,12 @@ export class MusicController implements OnInit, OnStart, LogStart {
   ) { }
 
   public onInit(): void {
-    let firstZoneUpdate = true
     this.zones.discovered.Connect(() => {
-      if (firstZoneUpdate) return;
-      firstZoneUpdate = false;
-      this.currentSong.Stop();
+      if (this.currentSong === undefined)
+        this.playCurrentSong();
+      else
+        this.currentSong.Stop();
     });
-  }
-
-  public onStart(): void {
-    this.playCurrentSong();
   }
 
   public async playCurrentSong(): Promise<void> {
