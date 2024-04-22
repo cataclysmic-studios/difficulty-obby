@@ -6,6 +6,7 @@ import { doubleSidedLimit } from "shared/utility/numbers";
 import { tween } from "shared/utility/ui";
 
 import type { CharacterController } from "client/controllers/character";
+import type { ProximityPromptController } from "client/controllers/proximity-prompt";
 
 const { min, deg, asin, atan2 } = math;
 
@@ -22,16 +23,23 @@ interface Attributes {
 export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart, OnTick {
   private readonly animations: Record<string, AnimationTrack> = {};
   private readonly neckBone = this.instance.RootPart.spine["spine.001"]["spine.002"]["spine.003"]["spine.005"]["spine.006"];
+  private readonly talkActionID = "Shopkeeper.Talk";
   private idleHeadOrientation!: Vector3;
 
   public constructor(
-    private readonly character: CharacterController
+    private readonly character: CharacterController,
+    private readonly proximityPrompt: ProximityPromptController
   ) { super(); }
 
   public onStart(): void {
     this.loadAnimations();
     this.playAnimation("Idle");
     this.idleHeadOrientation = this.neckBone.Orientation;
+
+    this.proximityPrompt.activated.Connect(actionID => {
+      if (actionID === undefined || actionID !== this.talkActionID) return;
+      print("talking to NPC");
+    });
   }
 
   public onTick(dt: number): void {
@@ -44,16 +52,26 @@ export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart,
     const inRadius = characterDistance <= this.attributes.NPC_CommunicationRadius;
     if (inRadius) {
       if (!this.isAnimationPlaying("FreeHead"))
-        this.playAnimation("FreeHead");
+        this.onRadiusEntered();
 
       this.facePlayer(positionDifference.Unit);
     } else
-      if (this.isAnimationPlaying("FreeHead")) {
-        this.stopAnimation("FreeHead");
-        tween(this.neckBone, new TweenInfoBuilder().SetTime(0.35), {
-          Orientation: this.idleHeadOrientation
-        });
-      }
+      if (this.isAnimationPlaying("FreeHead"))
+        this.onRadiusLeft();
+  }
+
+  private onRadiusEntered(): void {
+    this.playAnimation("FreeHead");
+    this.proximityPrompt.setAction("Talk", this.talkActionID);
+    this.proximityPrompt.toggle(true);
+  }
+
+  private onRadiusLeft(): void {
+    this.stopAnimation("FreeHead");
+    this.proximityPrompt.toggle(false);
+    tween(this.neckBone, new TweenInfoBuilder().SetTime(0.35), {
+      Orientation: this.idleHeadOrientation
+    });
   }
 
   private facePlayer(direction: Vector3) {

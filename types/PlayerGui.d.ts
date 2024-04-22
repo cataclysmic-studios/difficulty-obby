@@ -41,6 +41,9 @@ interface PlayerGui extends BasePlayerGui {
       UIPadding: UIPadding;
     };
     Main: Frame & {
+      ProximityPrompt: TextLabel & {
+        UIStroke: UIStroke;
+      };
       Buttons: Frame & {
         UIListLayout: UIListLayout;
         Shop: ImageButton & {
