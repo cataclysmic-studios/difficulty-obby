@@ -15,6 +15,25 @@ interface ReplicatedFirst extends Instance {
           UIAspectRatioConstraint: UIAspectRatioConstraint;
         };
       };
+      Purchasable: Frame & {
+        UIPadding: UIPadding;
+        UIGradient: UIGradient;
+        Title: TextLabel & {
+          UIStroke: UIStroke;
+        };
+        UICorner: UICorner;
+        UIStroke: UIStroke;
+        UIAspectRatioConstraint: UIAspectRatioConstraint;
+        Buy: TextButton & {
+          UIGradient: UIGradient;
+          UICorner: UICorner;
+          UIStroke: UIStroke;
+          Title: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          UIPadding: UIPadding;
+        };
+      };
     };
   };
 }

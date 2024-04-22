@@ -1,7 +1,10 @@
-import { Service } from "@flamework/core";
+import { Service, type OnInit } from "@flamework/core";
 import { HttpService as HTTP } from "@rbxts/services";
+import { Functions } from "server/network";
 
 import { HttpException } from "shared/exceptions";
+import type { LogStart } from "shared/hooks";
+import type { GamepassInfo } from "shared/structs/roblox-api";
 
 interface GameApiError {
   readonly code: number;
@@ -17,25 +20,17 @@ interface SuccessBody<T> {
   readonly data: readonly T[];
 }
 
-interface GamepassInfo {
-  readonly id: number;
-  readonly name: string;
-  readonly displayName: string;
-  readonly productId: number;
-  readonly price: number;
-  readonly sellerName: number;
-  readonly sellerId: number;
-  readonly isOwned: number;
-
-}
-
 function didFail(body: object): body is ErrorBody {
   return "errors" in body;
 }
 
 @Service()
-export class RobloxService {
-  private readonly gamepassesEndpoint = `http://games.roproxy.com/v1/games/${game.GameId}/game-passes?sortOrder=Asc&limit=`;
+export class RobloxService implements OnInit, LogStart {
+  private readonly gamepassesEndpoint = `https://games.roproxy.com/v1/games/${game.GameId}/game-passes?sortOrder=Asc&limit=`;
+
+  public onInit(): void {
+    Functions.roblox.getGamepasses.setCallback((_, amount) => this.getGamepasses(amount));
+  }
 
   public async getGamepasses(amount = 100): Promise<readonly GamepassInfo[]> {
     try {
@@ -47,8 +42,8 @@ export class RobloxService {
       }
 
       return (<SuccessBody<GamepassInfo>>body).data;
-    } catch (e) {
-      throw new HttpException(<string>e);
+    } catch (err) {
+      throw new HttpException(<string>err);
     }
   }
 }

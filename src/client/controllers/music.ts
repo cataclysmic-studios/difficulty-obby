@@ -1,11 +1,12 @@
 import { Controller, type OnInit } from "@flamework/core";
 import { SoundService as Sound } from "@rbxts/services";
 
+import type { LogStart } from "shared/hooks";
 import { Functions } from "client/network";
-import { ZONE_INFO } from "shared/constants";
+import { STAGES_PER_ZONE, ZONE_INFO } from "shared/constants";
 
 @Controller()
-export class MusicController implements OnInit {
+export class MusicController implements OnInit, LogStart {
   private songIndex = 0;
   private currentSong!: Sound;
   private lastZoneMusic?: Folder;
@@ -33,7 +34,7 @@ export class MusicController implements OnInit {
   }
 
   private async getZoneMusic(): Promise<Folder> {
-    const zoneNumber = <number>await Functions.data.get("stage") % 20;
+    const zoneNumber = math.floor(<number>await Functions.data.get("stage") / (STAGES_PER_ZONE + 1));
     const zoneName = ZONE_INFO[zoneNumber];
     return <Folder>Sound.Music.FindFirstChild(zoneName)!;
   }

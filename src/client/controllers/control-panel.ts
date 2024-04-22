@@ -2,17 +2,18 @@ import { Components } from "@flamework/components";
 import { Controller, type OnStart } from "@flamework/core";
 import { Context as InputContext } from "@rbxts/gamejoy";
 import { RunService as Runtime } from "@rbxts/services";
+import Object from "@rbxts/object-utils";
 import Iris from "@rbxts/iris";
 
+import type { LogStart } from "shared/hooks";
 import { Character, Player } from "shared/utility/client";
 import { DEVELOPERS } from "shared/constants";
 
 import type { CameraController } from "./camera";
 import type { Movement } from "client/components/movement";
-import Object from "@rbxts/object-utils";
 
 @Controller()
-export class ControlPanelController implements OnStart {
+export class ControlPanelController implements OnStart, LogStart {
   private readonly input = new InputContext({
     ActionGhosting: 0,
     Process: false,
