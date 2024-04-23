@@ -8,6 +8,7 @@ import { tween } from "shared/utility/ui";
 import type { StorePage } from "./ui/pages/store";
 import type { CharacterController } from "client/controllers/character";
 import type { ProximityPromptController } from "client/controllers/proximity-prompt";
+import { PlayerGui } from "shared/utility/client";
 
 const { random, min, deg, asin, atan2 } = math;
 
@@ -35,12 +36,12 @@ export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart,
     private readonly proximityPrompt: ProximityPromptController
   ) { super(); }
 
-  public onStart(): void {
+  public async onStart(): Promise<void> {
     this.loadAnimations();
     this.playAnimation("Idle");
 
     this.idleHeadOrientation = this.neckBone.Orientation;
-    this.storePage = this.components.getAllComponents<StorePage>()[0];
+    this.storePage = await this.components.waitForComponent<StorePage>(PlayerGui.WaitForChild("Main").WaitForChild("Store"));
     this.storePage.itemPurchased.Connect(() => {
       const gratitudeAnimations = <Animation[]>this.instance.Animations.Gratitude.GetChildren();
       const gratitudeAnimation = gratitudeAnimations[random(0, gratitudeAnimations.size() - 1)];

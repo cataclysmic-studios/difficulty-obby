@@ -3,12 +3,13 @@ import { TweenInfoBuilder } from "@rbxts/builders";
 import type { RawActionEntry } from "@rbxts/gamejoy";
 import Signal from "@rbxts/signal";
 
+import type { LogStart } from "shared/hooks";
 import { InputInfluenced } from "client/classes/input-influenced";
 import { PlayerGui } from "shared/utility/client";
 import { tween } from "shared/utility/ui";
 
 @Controller()
-export class ProximityPromptController extends InputInfluenced implements OnInit {
+export class ProximityPromptController extends InputInfluenced implements OnInit, LogStart {
   public readonly activated = new Signal<(actionID?: string) => void>;
 
   private readonly keybind: RawActionEntry = "E";
