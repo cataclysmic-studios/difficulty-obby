@@ -10,6 +10,7 @@ interface PortalModel extends Model {
 }
 
 interface NPCModel extends Model {
+  Head: MeshPart;
   RootPart: Part & {
     spine: Bone & {
       ["spine.001"]: Bone & {
@@ -23,6 +24,7 @@ interface NPCModel extends Model {
       };
     };
   };
+  VoiceLines: Folder;
   AnimationController: AnimationController & {
     Animator: Animator;
   };

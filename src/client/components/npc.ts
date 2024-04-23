@@ -9,7 +9,7 @@ import type { CharacterController } from "client/controllers/character";
 import type { ProximityPromptController } from "client/controllers/proximity-prompt";
 import { StorePage } from "./ui/pages/store";
 
-const { min, deg, asin, atan2 } = math;
+const { random, min, deg, asin, atan2 } = math;
 
 interface Attributes {
   NPC_CommunicationRadius: number;
@@ -23,9 +23,11 @@ interface Attributes {
 })
 export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart, OnTick {
   private readonly animations: Record<string, AnimationTrack> = {};
-  private readonly neckBone = this.instance.RootPart.spine["spine.001"]["spine.002"]["spine.003"]["spine.005"]["spine.006"];
+  private readonly root = this.instance.RootPart;
+  private readonly neckBone = this.root.spine["spine.001"]["spine.002"]["spine.003"]["spine.005"]["spine.006"];
   private readonly talkActionID = "Shopkeeper.Talk";
   private idleHeadOrientation!: Vector3;
+
 
   public constructor(
     private readonly components: Components,
@@ -45,10 +47,10 @@ export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart,
   }
 
   public onTick(dt: number): void {
-    const character = this.character.get();
-    if (character === undefined || character.Humanoid.RootPart === undefined) return;
+    const characterRoot = this.character.getRoot();
+    if (characterRoot === undefined) return;
 
-    const characterPosition = character.Humanoid.RootPart.Position.add(new Vector3(0, 3.5, 0));
+    const characterPosition = characterRoot.Position.add(new Vector3(0, 3.5, 0));
     const positionDifference = characterPosition.sub(this.neckBone.WorldPosition);
     const characterDistance = positionDifference.Magnitude;
     const inRadius = characterDistance <= this.attributes.NPC_CommunicationRadius;
@@ -66,11 +68,13 @@ export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart,
     this.playAnimation("FreeHead");
     this.proximityPrompt.setAction("Talk", this.talkActionID);
     this.proximityPrompt.toggle(true);
+    this.playVoiceLine("Greeting");
   }
 
   private onRadiusLeft(): void {
     this.stopAnimation("FreeHead");
     this.proximityPrompt.toggle(false);
+    this.playVoiceLine("Goodbye");
     tween(this.neckBone, new TweenInfoBuilder().SetTime(0.55), {
       Orientation: this.idleHeadOrientation
     });
@@ -81,6 +85,24 @@ export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart,
     const pitch = min(deg(asin(direction.Y)), 15);
     const orientation = new Vector3(pitch, yaw, 0);
     this.neckBone.Orientation = this.neckBone.Orientation.Lerp(orientation, 0.1);
+  }
+
+  private playVoiceLine(name: string): void {
+    if (this.isVoiceLinePlaying()) return;
+    const voiceLineCollection = <Sound[]>this.instance.VoiceLines.WaitForChild(name).GetChildren();
+    const voiceLine = voiceLineCollection[random(0, voiceLineCollection.size() - 1)];
+    const originalParent = voiceLine.Parent;
+    voiceLine.Parent = this.instance.Head;
+    voiceLine.Ended.Once(() => voiceLine.Parent = originalParent);
+    voiceLine.Play();
+  }
+
+  private isVoiceLinePlaying(): boolean {
+    return this.instance
+      .GetDescendants()
+      .filter((i): i is Sound => i.IsA("Sound"))
+      .map(voiceLine => voiceLine.IsPlaying)
+      .reduce((isAnyPlaying, isPlaying) => isAnyPlaying ||= isPlaying);
   }
 
   private loadAnimations(): void {
