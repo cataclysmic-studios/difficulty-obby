@@ -1,10 +1,11 @@
 import type { OnStart } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
+import { MarketplaceService as Market } from "@rbxts/services";
 import { endsWith } from "@rbxts/string-utils";
 
 import type { OnDataUpdate } from "client/hooks";
 import type { LogStart } from "shared/hooks";
-import { PlayerGui } from "shared/utility/client";
+import { Player, PlayerGui } from "shared/utility/client";
 import { CheckpointsController } from "client/controllers/checkpoints";
 
 interface StageInfoFrame extends Frame {
@@ -13,6 +14,7 @@ interface StageInfoFrame extends Frame {
   PreviousStage: TextButton;
   Next10Stages: TextButton;
   Previous10Stages: TextButton;
+  Skip: ImageButton;
 }
 
 @Component({
@@ -27,6 +29,7 @@ export class StageInfo extends BaseComponent<{}, StageInfoFrame> implements OnSt
   ) { super(); }
 
   public onStart(): void {
+    this.instance.Skip.MouseButton1Click.Connect(() => Market.PromptProductPurchase(Player, 1814214080));
     this.instance.NextStage.MouseButton1Click.Connect(() => {
       this.checkpoints.addStageOffset();
       this.onDataUpdate("stage", this.stage);
