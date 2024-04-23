@@ -5,7 +5,7 @@ export const STAGES_PER_ZONE = 20;
 export const ZONE_INFO = [ // only hard coded to keep constant index
   "Newside",
   "Whisperwood",
-  "Marshwick"
+  "Astrelyn"
 ];
 
 export function getZoneIndex(stage: number): number {
