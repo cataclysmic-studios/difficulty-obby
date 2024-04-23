@@ -95,8 +95,13 @@ export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart,
     const voiceLine = voiceLineCollection[random(0, voiceLineCollection.size() - 1)];
     const originalParent = voiceLine.Parent;
     voiceLine.Parent = this.instance.Head;
-    voiceLine.Ended.Once(() => voiceLine.Parent = originalParent);
+    voiceLine.Ended.Once(() => {
+      voiceLine.Parent = originalParent;
+      this.stopAnimation("Talking");
+    });
+
     voiceLine.Play();
+    this.playAnimation("Talking");
   }
 
   private isVoiceLinePlaying(): boolean {
@@ -113,14 +118,18 @@ export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart,
   }
 
   private playAnimation(name: string): void {
-    this.animations[name].Play();
+    this.getAnimation(name).Play();
   }
 
   private stopAnimation(name: string): void {
-    this.animations[name].Stop();
+    this.getAnimation(name).Stop();
   }
 
   private isAnimationPlaying(name: string): boolean {
-    return this.animations[name].IsPlaying;
+    return this.getAnimation(name).IsPlaying;
+  }
+
+  private getAnimation(name: string): AnimationTrack {
+    return this.animations[name];
   }
 }
