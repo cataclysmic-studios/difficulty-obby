@@ -19,7 +19,9 @@ interface ServerEvents {
 
 interface ClientEvents {
   playSoundEffect(soundName: SoundEffectName): void;
-  respawnCharacter(): void;
+  character: {
+    respawn(): void;
+  };
   uiEffects: {
     fadeBlack(timeBetween?: number, fadeTime?: number): void;
   };

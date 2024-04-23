@@ -5,6 +5,7 @@ import type { LogStart } from "shared/hooks";
 import Log from "shared/logger";
 
 import type { DatabaseService } from "./third-party/database";
+import { Events } from "server/network";
 
 type RewardHandler = (player: Player) => void;
 const enum ProductIDs {
@@ -15,7 +16,8 @@ const enum ProductIDs {
   Coins25000 = 1813571863,
   Coins250 = 1813571864,
   Coins100 = 1813571865,
-  Coins1000 = 1813571866
+  Coins1000 = 1813571866,
+  SkipStage = 1814214080
 }
 
 @Service()
@@ -28,7 +30,11 @@ export class TransactionsService implements OnInit, LogStart {
     [ProductIDs.Coins1750]: player => this.db.increment(player, "coins", 1750),
     [ProductIDs.Coins4000]: player => this.db.increment(player, "coins", 4000),
     [ProductIDs.Coins10000]: player => this.db.increment(player, "coins", 10000),
-    [ProductIDs.Coins25000]: player => this.db.increment(player, "coins", 25000)
+    [ProductIDs.Coins25000]: player => this.db.increment(player, "coins", 25000),
+    [ProductIDs.SkipStage]: player => {
+      this.db.increment(player, "stage");
+      Events.character.respawn(player);
+    }
   }
 
   public constructor(

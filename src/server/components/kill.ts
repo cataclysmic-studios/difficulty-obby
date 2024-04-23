@@ -18,7 +18,7 @@ export class KillPart extends BaseComponent<{}, BasePart> implements OnStart {
 
       const player = Players.GetPlayerFromCharacter(character);
       if (player === undefined) return;
-      Events.respawnCharacter(player);
+      Events.character.respawn(player);
     });
   }
 }

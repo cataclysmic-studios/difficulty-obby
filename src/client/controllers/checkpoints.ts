@@ -23,7 +23,7 @@ export class CheckpointsController implements OnInit, LogStart {
 
   public onInit(): void {
     let firstTime = true;
-    Events.respawnCharacter.connect(() => this.respawn());
+    Events.character.respawn.connect(() => this.respawn());
     Events.data.updated.connect((directory, value) => {
       if (!endsWith(directory, "stage")) return;
       this.stage = <number>value;
