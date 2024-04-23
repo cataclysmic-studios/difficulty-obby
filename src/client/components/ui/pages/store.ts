@@ -1,6 +1,7 @@
 import type { OnStart } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
 import { endsWith } from "@rbxts/string-utils";
+import Signal from "@rbxts/signal";
 
 import { Events, Functions } from "client/network";
 import { PlayerGui } from "shared/utility/client";
@@ -12,6 +13,8 @@ import { commaFormat } from "shared/utility/numbers";
   ancestorWhitelist: [PlayerGui]
 })
 export class StorePage extends BaseComponent<{}, PlayerGui["Main"]["Store"]> implements OnStart {
+  public readonly itemPurchased = new Signal<(purchasedItem: String) => void>;
+
   public async onStart(): Promise<void> {
     const storeItems = <Tool[]>Assets.StoreItems.GetChildren();
     for (const storeItem of storeItems)
@@ -60,6 +63,7 @@ export class StorePage extends BaseComponent<{}, PlayerGui["Main"]["Store"]> imp
       Events.data.decrement("coins", price);
       Events.data.addToArray("ownedItems", storeItem.Name);
       purchasableFrame.Buy.Title.Text = "Owned";
+      this.itemPurchased.Fire(storeItem.Name);
     });
   }
 }

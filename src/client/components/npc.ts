@@ -5,9 +5,9 @@ import { TweenInfoBuilder } from "@rbxts/builders";
 import { doubleSidedLimit } from "shared/utility/numbers";
 import { tween } from "shared/utility/ui";
 
+import type { StorePage } from "./ui/pages/store";
 import type { CharacterController } from "client/controllers/character";
 import type { ProximityPromptController } from "client/controllers/proximity-prompt";
-import { StorePage } from "./ui/pages/store";
 
 const { random, min, deg, asin, atan2 } = math;
 
@@ -27,7 +27,7 @@ export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart,
   private readonly neckBone = this.root.spine["spine.001"]["spine.002"]["spine.003"]["spine.005"]["spine.006"];
   private readonly talkActionID = "Shopkeeper.Talk";
   private idleHeadOrientation!: Vector3;
-
+  private storePage!: StorePage;
 
   public constructor(
     private readonly components: Components,
@@ -40,9 +40,11 @@ export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart,
     this.playAnimation("Idle");
 
     this.idleHeadOrientation = this.neckBone.Orientation;
+    this.storePage = this.components.getAllComponents<StorePage>()[0];
+    this.storePage.itemPurchased.Connect(() => this.playVoiceLine("Gratitude"));
     this.proximityPrompt.activated.Connect(actionID => {
       if (actionID === undefined || actionID !== this.talkActionID) return;
-      this.components.getAllComponents<StorePage>()[0].toggle(true);
+      this.storePage.toggle(true);
     });
   }
 
