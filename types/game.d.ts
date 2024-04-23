@@ -29,6 +29,7 @@ interface NPCModel extends Model {
     Animator: Animator;
   };
   Animations: Folder & {
+    Gratitude: Folder;
     Idle: Animation;
   };
 }

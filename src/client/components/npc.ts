@@ -41,7 +41,12 @@ export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart,
 
     this.idleHeadOrientation = this.neckBone.Orientation;
     this.storePage = this.components.getAllComponents<StorePage>()[0];
-    this.storePage.itemPurchased.Connect(() => this.playVoiceLine("Gratitude"));
+    this.storePage.itemPurchased.Connect(() => {
+      const gratitudeAnimations = <Animation[]>this.instance.Animations.Gratitude.GetChildren();
+      const gratitudeAnimation = gratitudeAnimations[random(0, gratitudeAnimations.size() - 1)];
+      this.playAnimation(gratitudeAnimation.Name);
+      this.playVoiceLine("Gratitude");
+    });
     this.proximityPrompt.activated.Connect(actionID => {
       if (actionID === undefined || actionID !== this.talkActionID) return;
       this.storePage.toggle(true);
@@ -113,8 +118,10 @@ export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart,
   }
 
   private loadAnimations(): void {
-    for (const animation of <Animation[]>this.instance.Animations.GetChildren())
+    for (const animation of <Animation[]>this.instance.Animations.GetDescendants()) {
+      if (!animation.IsA("Animation")) continue;
       this.animations[animation.Name] = this.instance.AnimationController.Animator.LoadAnimation(animation);
+    }
   }
 
   private playAnimation(name: string): void {
@@ -126,7 +133,7 @@ export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart,
   }
 
   private isAnimationPlaying(name: string): boolean {
-    return this.getAnimation(name).IsPlaying;
+    return this.getAnimation(name)?.IsPlaying;
   }
 
   private getAnimation(name: string): AnimationTrack {
