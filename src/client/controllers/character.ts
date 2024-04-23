@@ -1,4 +1,5 @@
 import { Controller } from "@flamework/core";
+
 import { Player } from "shared/utility/client";
 
 interface CharacterModel extends Model {

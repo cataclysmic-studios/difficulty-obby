@@ -10,6 +10,7 @@ import Log from "shared/logger";
 
 import type { CharacterController } from "./character";
 import type { NotificationController } from "./notification";
+import type { AtmosphereController } from "./atmosphere";
 
 const { clamp } = math;
 
@@ -21,7 +22,8 @@ export class CheckpointsController implements OnInit, LogStart {
 
   public constructor(
     private readonly character: CharacterController,
-    private readonly notification: NotificationController
+    private readonly notification: NotificationController,
+    private readonly atmosphere: AtmosphereController
   ) { }
 
   public onInit(): void {
@@ -43,12 +45,14 @@ export class CheckpointsController implements OnInit, LogStart {
     if (this.getStage() + offset > this.stage) return;
     this.stageOffset += offset;
     this.respawn(false);
+    this.atmosphere.update(this.getStage());
   }
 
   public subtractStageOffset(offset = 1): void {
     if (this.getStage() - offset < 0) return;
     this.stageOffset -= offset;
     this.respawn(false);
+    this.atmosphere.update(this.getStage());
   }
 
   public getStageOffset(): number {
