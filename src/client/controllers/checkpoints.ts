@@ -1,15 +1,17 @@
 import { Controller, type OnInit } from "@flamework/core";
-import { Workspace as World } from "@rbxts/services";
+import { Workspace as World, MarketplaceService as Market } from "@rbxts/services";
 import { endsWith } from "@rbxts/string-utils";
 
 import type { LogStart } from "shared/hooks";
 import { Events } from "client/network";
+import { Player } from "shared/utility/client";
 import { STAGES_PER_ZONE, ZONE_INFO } from "shared/constants";
 import Log from "shared/logger";
 
 import type { CharacterController } from "./character";
+import type { NotificationController } from "./notification";
 
-const { max, clamp } = math;
+const { clamp } = math;
 
 @Controller({ loadOrder: 0 })
 export class CheckpointsController implements OnInit, LogStart {
@@ -18,7 +20,8 @@ export class CheckpointsController implements OnInit, LogStart {
   private firstTry = true;
 
   public constructor(
-    private readonly character: CharacterController
+    private readonly character: CharacterController,
+    private readonly notification: NotificationController
   ) { }
 
   public onInit(): void {
@@ -78,6 +81,6 @@ export class CheckpointsController implements OnInit, LogStart {
   }
 
   private promptSkip(): void {
-    print("buy da skip stage product!!!!!11");
+    this.notification.send("Want to skip this stage? Click here!", () => Market.PromptProductPurchase(Player, 1814214080));
   }
 }

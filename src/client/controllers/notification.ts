@@ -7,6 +7,7 @@ import { Assets } from "shared/utility/instances";
 import { tween } from "shared/utility/ui";
 
 import type { ZonesController } from "./zones";
+import { Janitor } from "@rbxts/janitor";
 
 @Controller()
 export class NotificationController implements OnInit {
@@ -23,22 +24,26 @@ export class NotificationController implements OnInit {
     this.zones.discovered.Connect(name => this.send(`New zone discovered: ${name}`));
   }
 
-  public send(message: string): void {
-    const notificationLabel = Assets.UI.Notification.Clone();
+  public send(message: string, clickCallback?: Callback): void {
+    const janitor = new Janitor;
+    const notificationLabel = janitor.Add(Assets.UI.Notification.Clone());
     notificationLabel.Position = UDim2.fromScale(0.5, -0.075);
     notificationLabel.Text = message;
     notificationLabel.Parent = this.screen;
 
+    if (clickCallback !== undefined)
+      janitor.Add(notificationLabel.MouseButton1Click.Connect(clickCallback));
+
     Sound.SoundEffects.Notification.Play();
-    tween(notificationLabel, this.tweenInfo, {
+    janitor.Add(tween(notificationLabel, this.tweenInfo, {
       Position: UDim2.fromScale(0.5, 0)
-    }).Completed.Once(() => task.delay(3, () => {
-      tween(notificationLabel, this.tweenInfo, {
+    }).Completed.Once(() => task.delay(4, () => {
+      janitor.Add(tween(notificationLabel, this.tweenInfo, {
         TextTransparency: 1
-      });
-      tween(notificationLabel.UIStroke, this.tweenInfo, {
+      }));
+      janitor.Add(tween(notificationLabel.UIStroke, this.tweenInfo, {
         Transparency: 1
-      }).Completed.Once(() => notificationLabel.Destroy());
-    }));
+      })).Completed.Once(() => janitor.Destroy());
+    })));
   }
 }
