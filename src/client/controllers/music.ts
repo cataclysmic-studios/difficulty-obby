@@ -8,6 +8,7 @@ import { getZoneIndex, ZONE_NAMES } from "shared/constants";
 import Log from "shared/logger";
 
 import type { ZonesController } from "./zones";
+import type { CheckpointsController } from "./checkpoints";
 
 @Controller()
 export class MusicController implements OnInit, LogStart {
@@ -17,11 +18,12 @@ export class MusicController implements OnInit, LogStart {
   private lastZoneMusic?: Folder;
 
   public constructor(
-    private readonly zones: ZonesController
+    private readonly zones: ZonesController,
+    private readonly checkpoints: CheckpointsController
   ) { }
 
   public onInit(): void {
-    this.zones.discovered.Connect(() => {
+    this.zones.changed.Connect(() => {
       if (this.currentSong === undefined)
         this.playCurrentSong();
       else
@@ -66,7 +68,7 @@ export class MusicController implements OnInit, LogStart {
   }
 
   private async getZoneMusic(): Promise<Folder> {
-    const stage = <number>await Functions.data.get("stage");
+    const stage = this.checkpoints.getStage();
     this.zoneIndex = getZoneIndex(stage);
     const zoneName = ZONE_NAMES[this.zoneIndex];
     if (zoneName === undefined)
