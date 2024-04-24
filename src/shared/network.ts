@@ -20,6 +20,7 @@ interface ServerEvents {
 
 interface ClientEvents {
   playSoundEffect(soundName: SoundEffectName): void;
+  incrementStageOffset(amount?: number): void;
   character: {
     respawn(): void;
   };
