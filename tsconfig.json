@@ -27,7 +27,7 @@
 		"plugins": [
 			{
 				"transform": "rbxts-transformer-flamework",
-				"obfuscation": true
+				"obfuscation": false
 			}, {
 				"transform": "rbxts-transform-env"
 			}, {
