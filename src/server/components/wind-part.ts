@@ -1,6 +1,6 @@
 import type { OnStart, OnTick } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
-import { SoundService as Sound } from "@rbxts/services";
+import { Players, SoundService as Sound } from "@rbxts/services";
 
 import { removeDuplicates } from "shared/utility/array";
 
@@ -16,6 +16,7 @@ interface Attributes {
   }
 })
 export class WindPart extends BaseComponent<Attributes, BasePart> implements OnStart, OnTick {
+  private readonly forceName = "WindForce";
   private readonly sound = Sound.SoundEffects.Wind.Clone();
   private collider!: Part;
 
@@ -40,11 +41,39 @@ export class WindPart extends BaseComponent<Attributes, BasePart> implements OnS
 
     if (charactersTouching.size() === 0)
       this.sound.Playing = false;
+
+    task.spawn(() => {
+      const charactersNotTouching = Players.GetPlayers()
+        .mapFiltered(player => player.Character)
+        .filter(character => !charactersTouching.includes(character));
+
+      for (const character of charactersNotTouching)
+        task.spawn(() => {
+          const root = <BasePart>character.FindFirstChild("HumanoidRootPart");
+          if (root === undefined) return;
+          const mover = <Maybe<VectorForce>>root.FindFirstChild(this.forceName);
+          mover?.Destroy();
+        });
+    });
+
     for (const character of charactersTouching)
       task.spawn(() => {
-        const root = <BasePart>character.FindFirstChild("HumanoidRootPart");
-        root.AssemblyLinearVelocity = root.AssemblyLinearVelocity.add(this.collider.CFrame.LookVector.mul(this.attributes.WindPart_Speed));
         this.sound.Playing = true;
+        const root = <BasePart>character.FindFirstChild("HumanoidRootPart");
+        if (root === undefined) return;
+
+        let mover = <VectorForce>root.FindFirstChild(this.forceName);
+        const foundMover = mover !== undefined;
+        mover ??= new Instance("VectorForce");
+        if (!foundMover) {
+          mover.Name = this.forceName;
+          mover.Attachment0 = <Attachment>root.WaitForChild("RootAttachment");
+          mover.ApplyAtCenterOfMass = true;
+          mover.RelativeTo = Enum.ActuatorRelativeTo.World;
+          mover.Parent = root;
+        }
+
+        mover.Force = this.collider.CFrame.LookVector.mul(this.attributes.WindPart_Speed * 500);
       });
   }
 }
