@@ -45,14 +45,18 @@ export class CheckpointsController implements OnInit, LogStart {
     if (this.getStage() + offset > this.stage) return;
     this.stageOffset += offset;
     this.respawn(false);
+    Events.stageOffsetUpdated(this.getStage());
     this.atmosphere.update(this.getStage());
+    // TODO: update ambience sounds
   }
 
   public subtractStageOffset(offset = 1): void {
     if (this.getStage() - offset < 0) return;
     this.stageOffset -= offset;
     this.respawn(false);
+    Events.stageOffsetUpdated(this.getStage());
     this.atmosphere.update(this.getStage());
+    // TODO: update ambience sounds
   }
 
   public getStageOffset(): number {
@@ -64,10 +68,10 @@ export class CheckpointsController implements OnInit, LogStart {
   }
 
   private respawn(promptSkip = true): void {
-    const spawn = World.GetDescendants()
-      .filter((i): i is SpawnLocation => i.IsA("SpawnLocation"))
-      .find(spawn => spawn.Name === tostring(this.stage + this.stageOffset));
+    const spawns = this.getAllSpawns()
+    const spawn = spawns.find(spawn => spawn.Name === tostring(this.stage + this.stageOffset));
 
+    print(spawn, spawns)
     if (spawn === undefined)
       return Log.warning(`Failed to find spawn for stage ${this.stage}`);
 
@@ -82,6 +86,10 @@ export class CheckpointsController implements OnInit, LogStart {
       this.firstTry = false;
 
     root.CFrame = spawn.CFrame.add(new Vector3(0, 6, 0));
+  }
+
+  private getAllSpawns(): SpawnLocation[] {
+    return World.GetDescendants().filter((i): i is SpawnLocation => i.IsA("SpawnLocation"));
   }
 
   private promptSkip(): void {

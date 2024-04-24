@@ -6,6 +6,7 @@ type SoundEffectName = ExcludeKeys<Omit<SoundService["SoundEffects"], "Parent" |
 
 interface ServerEvents {
   updateBackpackItems(): void;
+  stageOffsetUpdated(stage: number): void;
   data: {
     set(directory: string, value: unknown): void;
     increment(directory: string, amount?: number): void;

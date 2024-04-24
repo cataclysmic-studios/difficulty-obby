@@ -5,6 +5,7 @@ import type { LogStart } from "shared/hooks";
 import type { OnPlayerJoin } from "server/hooks";
 
 import type { DatabaseService } from "./third-party/database";
+import { Events } from "server/network";
 
 @Service()
 export class LeaderstatsService implements OnPlayerJoin, LogStart {
@@ -27,14 +28,16 @@ export class LeaderstatsService implements OnPlayerJoin, LogStart {
     coinsStat.Value = 0;
     coinsStat.Parent = leaderstats;
 
+    Events.stageOffsetUpdated.connect((p, stage) => {
+      if (player !== p) return;
+      stageStat.Value = stage;
+    });
     this.db.updated.Connect((p, directory, value) => {
       if (player !== p) return;
       let stat: Maybe<IntValue>;
 
       if (endsWith(directory, "coins"))
         stat = coinsStat;
-      else if (endsWith(directory, "stage"))
-        stat = stageStat;
 
       if (stat === undefined) return;
       stat.Value = <number>value;
