@@ -36,7 +36,7 @@ export class FallingPart extends DestroyableComponent<Attributes, BasePart> impl
 
       const fallingPart = this.instance.Clone();
       const falling = Sound.SoundEffects.Falling.Clone();
-      falling.Parent = this.instance;
+      falling.Parent = fallingPart;
       falling.Ended.Once(() => falling?.Destroy());
       falling.Play();
 

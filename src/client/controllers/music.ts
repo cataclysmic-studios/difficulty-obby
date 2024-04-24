@@ -3,7 +3,6 @@ import { SoundService as Sound } from "@rbxts/services";
 import { Janitor } from "@rbxts/janitor";
 
 import type { LogStart } from "shared/hooks";
-import { Functions } from "client/network";
 import { getZoneIndex, ZONE_NAMES } from "shared/constants";
 import Log from "shared/logger";
 
