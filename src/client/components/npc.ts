@@ -3,12 +3,12 @@ import { Component, BaseComponent, type Components } from "@flamework/components
 import { TweenInfoBuilder } from "@rbxts/builders";
 
 import { doubleSidedLimit } from "shared/utility/numbers";
+import { PlayerGui } from "shared/utility/client";
 import { tween } from "shared/utility/ui";
 
 import type { StorePage } from "./ui/pages/store";
 import type { CharacterController } from "client/controllers/character";
 import type { ProximityPromptController } from "client/controllers/proximity-prompt";
-import { PlayerGui } from "shared/utility/client";
 
 const { random, min, deg, asin, atan2 } = math;
 

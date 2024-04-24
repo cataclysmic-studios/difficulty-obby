@@ -1,6 +1,8 @@
 interface SoundService extends Instance {
   Music: SoundGroup;
   SoundEffects: SoundGroup & {
+    AboutToFall: Sound;
+    Falling: Sound;
     GainCoins: Sound;
     StageCompleted: Sound;
     WindAmbience: Sound;
