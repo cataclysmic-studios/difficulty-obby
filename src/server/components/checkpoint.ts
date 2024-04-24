@@ -17,11 +17,16 @@ export class Checkpoint extends BaseComponent<{}, SpawnLocation> implements OnSt
 
   public onStart(): void {
     this.instance.Duration = 0;
+
+    let debounce = false;
     this.instance.Touched.Connect(async hit => {
       const character = hit.FindFirstAncestorOfClass("Model");
       const humanoid = character?.FindFirstChildOfClass("Humanoid");
       const player = Players.GetPlayerFromCharacter(character);
       if (humanoid === undefined || player === undefined) return;
+      if (debounce) return;
+      debounce = true;
+      task.delay(0.25, () => debounce = false);
 
       const checkpointStage = tonumber(this.instance.Name)!;
       const currentStage = this.leaderstats.getValue<number>("Stage");
@@ -32,11 +37,10 @@ export class Checkpoint extends BaseComponent<{}, SpawnLocation> implements OnSt
       if (currentStage >= checkpointStage || checkpointStage - 1 !== currentStage) return;
       Events.playSoundEffect(player, "StageCompleted");
 
-      if (checkpointStage > topStage) {
-        this.db.set<number>(player, "stage", checkpointStage);
-        return Events.incrementStageOffset(player);
+      if (checkpointStage > topStage && checkpointStage > currentStage) {
+        return this.db.set<number>(player, "stage", checkpointStage);
       } else if (checkpointStage > currentStage)
-        return Events.incrementStageOffset(player);
+        return Events.advanceStageOffset(player);
 
       Log.warning("you should not be seeing this");
       // const scaling = checkpointStage ** 0.25;

@@ -4,7 +4,7 @@ import { Players, Workspace as World } from "@rbxts/services";
 
 import type { LogStart } from "shared/hooks";
 import { Events } from "server/network";
-import { ZONE_INFO } from "shared/constants";
+import { ZONE_NAMES } from "shared/constants";
 import Log from "shared/logger";
 
 interface Attributes {
@@ -29,7 +29,7 @@ export class ExitPortal extends BaseComponent<Attributes, PortalModel> implement
       const root = humanoid.RootPart;
       if (root === undefined) return;
 
-      const zoneNumber = ZONE_INFO.indexOf(zoneName);
+      const zoneNumber = ZONE_NAMES.indexOf(zoneName);
       if (zoneNumber === -1)
         return Log.warning(`Zone "${zoneName}" does not exist in World.Zones`);
 

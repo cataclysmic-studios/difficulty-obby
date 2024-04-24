@@ -1,28 +1,18 @@
 import { Controller, type OnInit } from "@flamework/core";
 import { TweenInfoBuilder } from "@rbxts/builders";
 import { SoundService as Sound } from "@rbxts/services";
+import { Janitor } from "@rbxts/janitor";
 
 import { PlayerGui } from "shared/utility/client";
 import { Assets } from "shared/utility/instances";
 import { tween } from "shared/utility/ui";
 
-import type { ZonesController } from "./zones";
-import { Janitor } from "@rbxts/janitor";
-
 @Controller()
-export class NotificationController implements OnInit {
+export class NotificationController {
   private readonly screen = <ScreenGui>PlayerGui.WaitForChild("Notifications");
   private readonly tweenInfo = new TweenInfoBuilder()
     .SetTime(0.15)
     .SetEasingStyle(Enum.EasingStyle.Quad);
-
-  public constructor(
-    private readonly zones: ZonesController
-  ) { }
-
-  public onInit(): void {
-    this.zones.discovered.Connect(name => this.send(`New zone discovered: ${name}`));
-  }
 
   public send(message: string, clickCallback?: Callback): void {
     const janitor = new Janitor;

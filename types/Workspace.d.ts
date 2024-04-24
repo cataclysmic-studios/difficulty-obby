@@ -1,5 +1,5 @@
 interface Workspace extends WorldModel {
-  Zones: Folder;
-  StartPoints: Folder;
+  Zones: Model;
+  StartPoints: Model;
   ZoneHubs: Folder;
 }

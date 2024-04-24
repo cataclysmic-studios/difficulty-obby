@@ -1,5 +1,9 @@
 const { max, min, floor, random } = math;
 
+export function merge<T extends defined, U extends defined>(arrayA: T[], arrayB: U[]): (T | U)[] {
+  return flatten<T | U>([arrayA, arrayB], false);
+}
+
 export function shuffle<T>(array: T[]): T[] {
   // Fisher-Yates shuffle algorithm
   const shuffledArray = [...array];
@@ -22,15 +26,14 @@ export function removeDuplicates<T extends defined>(array: T[]): T[] {
   return result;
 }
 
-export function flatten<T extends defined>(array: (T | T[])[]): T[] {
+export function flatten<T extends defined>(array: (T | T[])[], recursive = true): T[] {
   const result: T[] = [];
   for (const value of array) {
     if (typeOf(value) === "table") {
-      const flattenedSubtable = flatten(<T[]>value);
+      const flattenedSubtable = flatten(<T[]>value, recursive ? true : false);
       for (const subValue of flattenedSubtable)
         result.push(subValue);
-    }
-    else
+    } else
       result.push(<T>value);
   }
   return result;

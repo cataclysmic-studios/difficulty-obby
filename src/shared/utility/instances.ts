@@ -27,6 +27,15 @@ export function getPageContents<T extends defined>(pages: Pages<T>): T[] {
   return contents;
 }
 
+export function waitForChildren<T extends Instance>(instance: Instance, names: string[], className?: keyof Instances): T[] {
+  const children: T[] = [];
+  for (const name of names)
+    if (className !== undefined ? instance.IsA(className) : true)
+      children.push(<T>instance.WaitForChild(name));
+
+  return children;
+}
+
 export async function getInstancePath(instance: Instance): Promise<string> {
   let path = instance.GetFullName()
     .gsub("Workspace", "World")[0]

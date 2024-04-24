@@ -1,23 +1,28 @@
-import { Controller, type OnStart } from "@flamework/core";
-import { Workspace as World, Lighting } from "@rbxts/services";
+import { Controller, type OnInit } from "@flamework/core";
+import { Lighting } from "@rbxts/services";
 
-import { Functions } from "client/network";
-import { getZoneName } from "shared/constants";
+import { getZoneModel } from "shared/constants";
+import { ZonesController } from "./zones";
 
 @Controller()
-export class AtmosphereController implements OnStart {
+export class AtmosphereController implements OnInit {
   private currentAmbience?: Sound
 
-  public async onStart(): Promise<void> {
-    this.update(<number>await Functions.data.get("stage"))
+  public constructor(
+    private readonly zone: ZonesController
+  ) { }
+
+  public onInit(): void {
+    this.zone.changed.Connect((_, stage) => this.update(stage));
   }
 
   public update(stage: number): void {
-    const currentZone = getZoneName(stage);
-    const zoneFolder = World.Zones.WaitForChild(currentZone);
-    const zoneLighting = zoneFolder.WaitForChild("Lighting");
+    const zoneModel = getZoneModel(stage);
+    const zoneLighting = zoneModel.WaitForChild("Lighting");
+    const ambience = <Sound>zoneModel.WaitForChild("Ambience");
+    if (this.currentAmbience === ambience) return;
     this.currentAmbience?.Stop();
-    this.currentAmbience = <Sound>zoneFolder.WaitForChild("Ambience");
+    this.currentAmbience = ambience;
     this.currentAmbience.Play();
 
     const oldLighting = Lighting.GetChildren().filter(i => !i.HasTag("DefaultLighting"));

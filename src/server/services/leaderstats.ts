@@ -3,9 +3,9 @@ import { endsWith } from "@rbxts/string-utils";
 
 import type { LogStart } from "shared/hooks";
 import type { OnPlayerJoin } from "server/hooks";
+import { Events } from "server/network";
 
 import type { DatabaseService } from "./third-party/database";
-import { Events } from "server/network";
 
 @Service()
 export class LeaderstatsService implements OnPlayerJoin, LogStart {
@@ -29,9 +29,12 @@ export class LeaderstatsService implements OnPlayerJoin, LogStart {
     coinsStat.Value = 0;
     coinsStat.Parent = this.leaderstats;
 
-    Events.stageOffsetUpdated.connect((p, stage) => {
+    Events.stageOffsetUpdated.connect((p, stage, advancing) => {
       if (player !== p) return;
       stageStat.Value = stage;
+
+      if (advancing) return;
+      Events.character.respawn(player, false);
     });
     this.db.updated.Connect((p, directory, value) => {
       if (player !== p) return;

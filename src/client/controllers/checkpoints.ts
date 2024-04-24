@@ -1,62 +1,80 @@
-import { Controller, type OnInit } from "@flamework/core";
+import { Controller, OnStart, type OnInit } from "@flamework/core";
 import { Workspace as World, MarketplaceService as Market } from "@rbxts/services";
 import { endsWith } from "@rbxts/string-utils";
+import Signal from "@rbxts/signal";
 
 import type { LogStart } from "shared/hooks";
 import { Events } from "client/network";
 import { Player } from "shared/utility/client";
-import { STAGES_PER_ZONE, ZONE_INFO } from "shared/constants";
+import { STAGES_PER_ZONE, ZONE_NAMES } from "shared/constants";
 import Log from "shared/logger";
 
 import type { CharacterController } from "./character";
 import type { NotificationController } from "./notification";
-import type { AtmosphereController } from "./atmosphere";
 
 const { clamp } = math;
 
 @Controller({ loadOrder: 0 })
-export class CheckpointsController implements OnInit, LogStart {
-  private stage = 0;
+export class CheckpointsController implements OnInit, OnStart, LogStart {
+  public readonly offsetUpdated = new Signal<(newStage: number) => void>;
+  public stage = 0;
+
   private stageOffset = 0;
-  private firstTry = true;
+  private offsetDebounce = false;
+  private firstStageTry = true;
 
   public constructor(
     private readonly character: CharacterController,
-    private readonly notification: NotificationController,
-    private readonly atmosphere: AtmosphereController
+    private readonly notification: NotificationController
   ) { }
 
   public onInit(): void {
-    let firstTime = true;
-    Events.character.respawn.connect(() => this.respawn());
-    Events.incrementStageOffset.connect(amount => this.addStageOffset(amount));
+    let firstStageUpdate = true;
+
+    Events.character.respawn.connect(promptSkip => this.respawn(promptSkip));
+    Events.advanceStageOffset.connect(() => this.addStageOffset(1, true));
     Events.data.updated.connect((directory, value) => {
       if (!endsWith(directory, "stage")) return;
       this.stage = <number>value;
-      this.firstTry = true;
+      this.stageOffset = 0;
+      this.firstStageTry = true;
+      this.update(true);
 
-      if (firstTime) {
+      if (firstStageUpdate) {
         this.respawn(false);
-        firstTime = false;
+        firstStageUpdate = false;
       }
     });
   }
 
-  public addStageOffset(offset = 1): void {
+  public onStart(): void {
+    this.update();
+  }
+
+  public addStageOffset(offset = 1, advancing = false): void {
+    if (this.offsetDebounce) return
+    this.offsetDebounce = true;
+    task.delay(0.35, () => this.offsetDebounce = false);
+
     if (this.getStage() + offset > this.stage) return;
     this.stageOffset += offset;
-    this.respawn(false);
-    Events.stageOffsetUpdated(this.getStage());
-    this.atmosphere.update(this.getStage());
+    this.update(advancing);
     // TODO: update ambience sounds
   }
 
+  private update(advancing = false) {
+    this.offsetUpdated.Fire(this.getStage());
+    Events.stageOffsetUpdated(this.getStage(), advancing);
+  }
+
   public subtractStageOffset(offset = 1): void {
+    if (this.offsetDebounce) return
+    this.offsetDebounce = true;
+    task.delay(0.35, () => this.offsetDebounce = false);
+
     if (this.getStage() - offset < 0) return;
     this.stageOffset -= offset;
-    this.respawn(false);
-    Events.stageOffsetUpdated(this.getStage());
-    this.atmosphere.update(this.getStage());
+    this.update();
     // TODO: update ambience sounds
   }
 
@@ -65,31 +83,46 @@ export class CheckpointsController implements OnInit, LogStart {
   }
 
   public getStage(): number {
-    return clamp(this.stage + this.stageOffset, 0, ZONE_INFO.size() * STAGES_PER_ZONE);
+    return clamp(this.stage + this.stageOffset, 0, ZONE_NAMES.size() * STAGES_PER_ZONE + 1);
   }
 
   private respawn(promptSkip = true): void {
-    const spawns = this.getAllSpawns()
+    const spawns = this.getAllSpawns();
     const spawn = spawns.find(spawn => spawn.Name === tostring(this.stage + this.stageOffset));
-
-    print(spawn, spawns)
     if (spawn === undefined)
-      return Log.warning(`Failed to find spawn for stage ${this.stage}`);
+      return Log.warning(`Failed to find spawn for stage ${this.stage + this.stageOffset}`);
 
     const root = this.character.getRoot();
     if (root === undefined) return;
-    if (promptSkip && !this.firstTry) {
-      this.firstTry = false;
+    if (promptSkip && !this.firstStageTry) {
+      this.firstStageTry = false;
       this.promptSkip();
     }
 
-    if (promptSkip && this.firstTry)
-      this.firstTry = false;
+    if (promptSkip && this.firstStageTry)
+      this.firstStageTry = false;
 
     root.CFrame = spawn.CFrame.add(new Vector3(0, 6, 0));
   }
 
   private getAllSpawns(): SpawnLocation[] {
+    // const allZoneCheckpoints: SpawnLocation[] = [];
+    // let firstZone = true;
+
+    // for (const i of $range(0, ZONE_NAMES.size() - 1)) {
+    //   const zoneCheckpointFolder = World.Zones.WaitForChild(ZONE_NAMES[i]).WaitForChild("Checkpoints");
+    //   const zoneCheckpoints = zoneCheckpointFolder.GetChildren().filter((i): i is SpawnLocation => i.IsA("SpawnLocation"));
+    //   for (const child of zoneCheckpoints)
+    //     allZoneCheckpoints.push(child);
+
+    //   firstZone = false;
+    // }
+
+    // return merge(
+    //   <SpawnLocation[]>World.WaitForChild("StartPoints").GetChildren(),
+    //   allZoneCheckpoints
+    // );
+
     return World.GetDescendants().filter((i): i is SpawnLocation => i.IsA("SpawnLocation"));
   }
 
