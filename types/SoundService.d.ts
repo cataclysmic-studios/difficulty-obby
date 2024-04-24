@@ -1,7 +1,7 @@
 interface SoundService extends Instance {
   Music: SoundGroup;
   SoundEffects: SoundGroup & {
-    PortalAmbience: Sound;
+    Portal: Sound;
     Wind: Sound;
     AboutToFall: Sound;
     Falling: Sound;

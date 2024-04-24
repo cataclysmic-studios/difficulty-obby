@@ -15,9 +15,8 @@ interface Attributes {
 export class ExitPortal extends BaseComponent<Attributes, PortalModel> implements OnStart, LogStart {
   public onStart(): void {
     const zoneName = this.attributes.ExitPortal_DestinationZone;
-    this.instance.ZoneName.GUI.Title.Text = zoneName;
-
     let db = false;
+
     this.instance.Collider.Touched.Connect(hit => {
       const character = hit.FindFirstAncestorOfClass("Model");
       const humanoid = character?.FindFirstChildOfClass("Humanoid");
