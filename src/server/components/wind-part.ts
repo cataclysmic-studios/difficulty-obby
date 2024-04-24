@@ -2,6 +2,7 @@ import type { OnStart, OnTick } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
 import { Players, SoundService as Sound } from "@rbxts/services";
 
+import { Assets } from "shared/utility/instances";
 import { removeDuplicates } from "shared/utility/array";
 
 interface Attributes {
@@ -31,6 +32,8 @@ export class WindPart extends BaseComponent<Attributes, BasePart> implements OnS
     collider.CFrame = this.instance.CFrame.add(this.instance.CFrame.LookVector.mul(this.attributes.WindPart_Distance / 2));
     collider.Parent = this.instance;
     this.collider = collider;
+
+    Assets.VFX.Wind.Clone().Parent = collider;
   }
 
   public onTick(dt: number): void {
