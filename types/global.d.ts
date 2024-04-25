@@ -60,6 +60,8 @@ type Buffer = byte[] & {
     __marker?: void;
 };
 
+type Axis = "X" | "Y" | "Z";
+
 type Maybe<T> = T | undefined;
 
 type If<Value extends boolean, TrueResult, FalseResult = null> = Value extends true

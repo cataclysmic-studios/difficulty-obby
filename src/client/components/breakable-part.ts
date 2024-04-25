@@ -6,18 +6,18 @@ import type { CharacterController } from "client/controllers/character";
 import DestroyableComponent from "shared/base-components/destroyable";
 
 interface Attributes {
-  FallingPart_StableLength: number;
-  FallingPart_ResetTime: number;
+  BreakablePart_StableLength: number;
+  BreakablePart_ResetTime: number;
 }
 
 @Component({
-  tag: "FallingPart",
+  tag: "BreakablePart",
   defaults: {
-    FallingPart_StableLength: 0.75,
-    FallingPart_ResetTime: 5
+    BreakablePart_StableLength: 0.75,
+    BreakablePart_ResetTime: 5
   }
 })
-export class FallingPart extends DestroyableComponent<Attributes, BasePart> implements OnStart {
+export class BreakablePart extends DestroyableComponent<Attributes, BasePart> implements OnStart {
   public constructor(
     private readonly character: CharacterController
   ) { super(); }
@@ -32,10 +32,10 @@ export class FallingPart extends DestroyableComponent<Attributes, BasePart> impl
       if (hit.FindFirstAncestorOfClass("Model") !== character) return;
       if (debounce) return;
       debounce = true;
-      task.delay(this.attributes.FallingPart_StableLength + this.attributes.FallingPart_ResetTime, () => debounce = false);
+      task.delay(this.attributes.BreakablePart_StableLength + this.attributes.BreakablePart_ResetTime, () => debounce = false);
 
       aboutToFall.Play();
-      task.wait(this.attributes.FallingPart_StableLength);
+      task.wait(this.attributes.BreakablePart_StableLength);
       aboutToFall.Stop();
 
       const fallingPart = this.instance.Clone();
@@ -51,7 +51,7 @@ export class FallingPart extends DestroyableComponent<Attributes, BasePart> impl
       this.instance.CanCollide = false;
       this.instance.Transparency = 1;
       task.delay(1.5, () => fallingPart.Destroy());
-      task.delay(this.attributes.FallingPart_ResetTime, () => {
+      task.delay(this.attributes.BreakablePart_ResetTime, () => {
         this.instance.CanCollide = true;
         this.instance.Transparency = 0;
       });

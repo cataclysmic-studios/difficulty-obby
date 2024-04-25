@@ -3,7 +3,7 @@ import { Component, BaseComponent } from "@flamework/components";
 
 interface Attributes {
   SpinningPart_Speed: number,
-  SpinningPart_Axis: "X" | "Y" | "Z";
+  SpinningPart_Axis: Axis;
 }
 
 @Component({
