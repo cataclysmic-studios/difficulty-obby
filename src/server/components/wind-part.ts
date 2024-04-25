@@ -13,7 +13,7 @@ interface Attributes {
 @Component({
   tag: "WindPart",
   defaults: {
-    WindPart_Speed: 10
+    WindPart_Speed: 5
   }
 })
 export class WindPart extends BaseComponent<Attributes, BasePart> implements OnStart, OnTick {
@@ -40,43 +40,36 @@ export class WindPart extends BaseComponent<Attributes, BasePart> implements OnS
     if (this.collider === undefined) return;
     const charactersTouching = removeDuplicates(this.collider.GetTouchingParts()
       .mapFiltered(part => part.FindFirstAncestorOfClass("Model"))
-      .filter(model => model.FindFirstChildOfClass("Humanoid") !== undefined));
+      .filter(model => Players.GetPlayers().mapFiltered(player => player.Character).includes(model)));
 
-    if (charactersTouching.size() === 0)
-      this.sound.Playing = false;
+    this.sound.Playing = charactersTouching.size() !== 0;
+    for (const character of Players.GetPlayers().mapFiltered(player => player.Character)) {
+      const root = <BasePart>character.FindFirstChild("HumanoidRootPart");
+      if (root === undefined) return;
 
-    task.spawn(() => {
-      const charactersNotTouching = Players.GetPlayers()
-        .mapFiltered(player => player.Character)
-        .filter(character => !charactersTouching.includes(character));
-
-      for (const character of charactersNotTouching)
+      if (charactersTouching.includes(character))
         task.spawn(() => {
-          const root = <BasePart>character.FindFirstChild("HumanoidRootPart");
-          if (root === undefined) return;
+          let mover = <VectorForce>root.FindFirstChild(this.forceName);
+          const foundMover = mover !== undefined;
+          mover ??= new Instance("VectorForce");
+          if (!foundMover) {
+            mover.Name = this.forceName;
+            mover.Attachment0 = <Attachment>root.WaitForChild("RootAttachment");
+            mover.ApplyAtCenterOfMass = true;
+            mover.RelativeTo = Enum.ActuatorRelativeTo.World;
+            mover.Parent = root;
+          }
+
+          mover.Force = this.collider.CFrame.LookVector
+            .mul(this.attributes.WindPart_Speed * 500)
+            .add(new Vector3(0, 100, 0));
+        });
+      else
+        task.spawn(() => {
+          if (character.GetDescendants().filter((i): i is BasePart => i.IsA("BasePart")).some(part => part.GetTouchingParts().includes(this.collider))) return;
           const mover = <Maybe<VectorForce>>root.FindFirstChild(this.forceName);
           mover?.Destroy();
         });
-    });
-
-    for (const character of charactersTouching)
-      task.spawn(() => {
-        this.sound.Playing = true;
-        const root = <BasePart>character.FindFirstChild("HumanoidRootPart");
-        if (root === undefined) return;
-
-        let mover = <VectorForce>root.FindFirstChild(this.forceName);
-        const foundMover = mover !== undefined;
-        mover ??= new Instance("VectorForce");
-        if (!foundMover) {
-          mover.Name = this.forceName;
-          mover.Attachment0 = <Attachment>root.WaitForChild("RootAttachment");
-          mover.ApplyAtCenterOfMass = true;
-          mover.RelativeTo = Enum.ActuatorRelativeTo.World;
-          mover.Parent = root;
-        }
-
-        mover.Force = this.collider.CFrame.LookVector.mul(this.attributes.WindPart_Speed * 500);
-      });
+    }
   }
 }
