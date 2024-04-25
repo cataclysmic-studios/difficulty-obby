@@ -33,6 +33,36 @@ export class WindPart extends BaseComponent<Attributes, BasePart> implements OnS
     collider.Parent = this.instance;
     this.collider = collider;
 
+    collider.Touched.Connect(hit => {
+      const character = hit.FindFirstAncestorOfClass("Model");
+      const humanoid = character?.FindFirstChildOfClass("Humanoid");
+      const root = humanoid?.RootPart;
+      print(root, humanoid, character)
+      if (humanoid === undefined || root === undefined) return;
+      if (root.GetAttribute("HasForce")) return;
+      root.SetAttribute("HasForce", true);
+
+      const force = new Instance("VectorForce");
+      force.Name = this.forceName;
+      force.Attachment0 = <Attachment>root.WaitForChild("RootAttachment");
+      force.ApplyAtCenterOfMass = true;
+      force.RelativeTo = Enum.ActuatorRelativeTo.World;
+      force.Parent = root;
+      force.Force = this.collider.CFrame.LookVector
+        .mul(this.attributes.WindPart_Speed * 500)
+        .add(new Vector3(0, 100, 0));
+    });
+    collider.TouchEnded.Connect(hit => {
+      const character = hit.FindFirstAncestorOfClass("Model");
+      const humanoid = character?.FindFirstChildOfClass("Humanoid");
+      const root = humanoid?.RootPart;
+      if (humanoid === undefined || root === undefined) return;
+
+      root.SetAttribute("HasForce", false);
+      const force = <Maybe<VectorForce>>root.FindFirstChild(this.forceName);
+      force?.Destroy();
+    });
+
     Assets.VFX.Wind.Clone().Parent = collider;
   }
 
@@ -43,33 +73,5 @@ export class WindPart extends BaseComponent<Attributes, BasePart> implements OnS
       .filter(model => Players.GetPlayers().mapFiltered(player => player.Character).includes(model)));
 
     this.sound.Playing = charactersTouching.size() !== 0;
-    for (const character of Players.GetPlayers().mapFiltered(player => player.Character)) {
-      const root = <BasePart>character.FindFirstChild("HumanoidRootPart");
-      if (root === undefined) return;
-
-      if (charactersTouching.includes(character))
-        task.spawn(() => {
-          let mover = <VectorForce>root.FindFirstChild(this.forceName);
-          const foundMover = mover !== undefined;
-          mover ??= new Instance("VectorForce");
-          if (!foundMover) {
-            mover.Name = this.forceName;
-            mover.Attachment0 = <Attachment>root.WaitForChild("RootAttachment");
-            mover.ApplyAtCenterOfMass = true;
-            mover.RelativeTo = Enum.ActuatorRelativeTo.World;
-            mover.Parent = root;
-          }
-
-          mover.Force = this.collider.CFrame.LookVector
-            .mul(this.attributes.WindPart_Speed * 500)
-            .add(new Vector3(0, 100, 0));
-        });
-      else
-        task.spawn(() => {
-          if (character.GetDescendants().filter((i): i is BasePart => i.IsA("BasePart")).some(part => part.GetTouchingParts().includes(this.collider))) return;
-          const mover = <Maybe<VectorForce>>root.FindFirstChild(this.forceName);
-          mover?.Destroy();
-        });
-    }
   }
 }

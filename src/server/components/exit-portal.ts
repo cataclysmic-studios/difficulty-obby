@@ -15,15 +15,15 @@ interface Attributes {
 export class ExitPortal extends BaseComponent<Attributes, PortalModel> implements OnStart, LogStart {
   public onStart(): void {
     const zoneName = this.attributes.ExitPortal_DestinationZone;
-    let db = false;
+    let debounce = false;
 
     this.instance.Collider.Touched.Connect(hit => {
       const character = hit.FindFirstAncestorOfClass("Model");
       const humanoid = character?.FindFirstChildOfClass("Humanoid");
       if (humanoid === undefined) return;
-      if (db) return;
-      db = true;
-      task.delay(1, () => db = false);
+      if (debounce) return;
+      debounce = true;
+      task.delay(1, () => debounce = false);
 
       const root = humanoid.RootPart;
       if (root === undefined) return;
