@@ -1,10 +1,11 @@
 import { Controller, type OnInit } from "@flamework/core";
+import { SoundService as Sound } from "@rbxts/services";
 import Signal from "@rbxts/signal";
 
 import { getZoneName, STAGES_PER_ZONE } from "shared/constants";
 
 import type { CheckpointsController } from "./checkpoints";
-import { NotificationController } from "./notification";
+import type { NotificationController } from "./notification";
 
 @Controller()
 export class ZonesController implements OnInit {
@@ -31,7 +32,8 @@ export class ZonesController implements OnInit {
   }
 
   private discover(name: string, stage: number): void {
-    if (this.checkpoints.stage >= stage) return;
+    if (this.checkpoints.stage > stage) return;
+    Sound.SoundEffects.ZoneDiscovered.Play();
     this.notification.send(`New zone discovered: ${name}`);
     this.discovered.Fire(name, stage);
   }
