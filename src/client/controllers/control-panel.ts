@@ -8,6 +8,7 @@ import type { LogStart } from "shared/hooks";
 import { Player } from "shared/utility/client";
 import { DEVELOPERS } from "shared/constants";
 
+import type { IrisController } from "./iris";
 import type { CameraController } from "./camera";
 
 @Controller()
@@ -19,6 +20,7 @@ export class ControlPanelController implements OnStart, LogStart {
   });
 
   public constructor(
+    private readonly iris: IrisController,
     private readonly camera: CameraController
   ) { }
 
@@ -31,17 +33,15 @@ export class ControlPanelController implements OnStart, LogStart {
       open = !open;
     });
 
-    Iris.Init();
-    Iris.UpdateGlobalConfig(Iris.TemplateConfig.colorDark);
-    Iris.UpdateGlobalConfig(Iris.TemplateConfig.sizeClear);
+    this.iris.initialized.Once(() => {
+      Iris.Connect(() => {
+        if (!open) return;
+        Iris.Window(["Control Panel"], { size: Iris.State(windowSize) });
 
-    Iris.Connect(() => {
-      if (!open) return;
-      Iris.Window(["Control Panel"], { size: Iris.State(windowSize) });
+        this.renderCameraTab();
 
-      this.renderCameraTab();
-
-      Iris.End();
+        Iris.End();
+      });
     });
   }
 
