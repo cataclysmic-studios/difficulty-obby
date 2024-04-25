@@ -2,6 +2,7 @@ import type { OnStart } from "@flamework/core";
 import { Component } from "@flamework/components";
 import { SoundService as Sound } from "@rbxts/services";
 
+import type { CharacterController } from "client/controllers/character";
 import DestroyableComponent from "shared/base-components/destroyable";
 
 interface Attributes {
@@ -17,15 +18,18 @@ interface Attributes {
   }
 })
 export class FallingPart extends DestroyableComponent<Attributes, BasePart> implements OnStart {
+  public constructor(
+    private readonly character: CharacterController
+  ) { super(); }
+
   public onStart(): void {
     const aboutToFall = Sound.SoundEffects.AboutToFall.Clone();
     aboutToFall.Parent = this.instance;
 
     let debounce = false;
     this.janitor.Add(this.instance.Touched.Connect(hit => {
-      const character = hit.FindFirstAncestorOfClass("Model");
-      const humanoid = character?.FindFirstChildOfClass("Humanoid");
-      if (humanoid === undefined) return;
+      const character = this.character.get();
+      if (hit.FindFirstAncestorOfClass("Model") !== character) return;
       if (debounce) return;
       debounce = true;
       task.delay(this.attributes.FallingPart_StableLength + this.attributes.FallingPart_ResetTime, () => debounce = false);

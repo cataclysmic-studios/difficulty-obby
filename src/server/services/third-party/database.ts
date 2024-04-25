@@ -70,6 +70,7 @@ export class DatabaseService implements OnInit, LogStart {
 		this.initialize(player, "stage", 0);
 		this.initialize(player, "coins", 0);
 		this.initialize(player, "ownedItems", []);
+		this.initialize(player, "lastCoinRefresh", 0);
 		this.initializeSettings(player);
 
 		this.loaded.Fire(player);
