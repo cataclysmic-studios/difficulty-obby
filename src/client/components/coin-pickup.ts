@@ -1,12 +1,13 @@
 import type { OnStart } from "@flamework/core";
 import { Component } from "@flamework/components";
+import { TweenInfoBuilder } from "@rbxts/builders";
+import { endsWith } from "@rbxts/string-utils";
+
+import { Events } from "client/network";
+import { tween } from "shared/utility/ui";
 
 import type { CharacterController } from "client/controllers/character";
 import DestroyableComponent from "shared/base-components/destroyable";
-import { Events } from "client/network";
-import { endsWith } from "@rbxts/string-utils";
-import { tween } from "shared/utility/ui";
-import { TweenInfoBuilder } from "@rbxts/builders";
 
 interface Attributes {
   readonly CoinPickup_Worth: number;
@@ -26,7 +27,7 @@ export class CoinPickup extends DestroyableComponent<Attributes, BasePart> imple
     let destroyed = false;
     let loaded = false;
     let debounce = false;
-    this.janitor.Add(this.instance);
+    this.janitor.LinkToInstance(this.instance, true);
     this.janitor.Add(() => destroyed = true);
     this.janitor.Add(this.instance.Touched.Once(hit => {
       const character = this.character.get();
@@ -35,15 +36,17 @@ export class CoinPickup extends DestroyableComponent<Attributes, BasePart> imple
       if (debounce) return;
       debounce = true;
 
+      this.instance.Destroy();
       Events.data.set("lastCoinRefresh", os.time());
       Events.data.increment("coins", this.attributes.CoinPickup_Worth);
     }));
 
-    this.janitor.Add(Events.data.updated.connect((directory, value) => {
+    const conn = Events.data.updated.connect((directory, value) => {
       if (!endsWith(directory, "lastCoinRefresh")) return;
       if (os.time() - <number>value >= 24 * 60 * 60) return; // if it's been 24 or more hours then keep the coin
-      this.destroy();
-    }));
+      conn.Disconnect();
+      this.instance.Destroy();
+    });
 
     const defaultOrientation = this.instance.Orientation;
     const defaultPosition = this.instance.Position;
