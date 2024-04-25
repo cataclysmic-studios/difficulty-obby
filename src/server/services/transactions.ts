@@ -8,7 +8,7 @@ import type { DatabaseService } from "./third-party/database";
 import { Events } from "server/network";
 
 type RewardHandler = (player: Player) => void;
-const enum ProductIDs {
+export const enum ProductIDs {
   Coins10000 = 1813571859,
   Coins1750 = 1813571860,
   Coins4000 = 1813571861,
@@ -18,6 +18,10 @@ const enum ProductIDs {
   Coins100 = 1813571865,
   Coins1000 = 1813571866,
   SkipStage = 1814214080
+}
+
+export const enum PassIDs {
+  InfiniteCoins = 793370149
 }
 
 @Service()
@@ -34,7 +38,9 @@ export class TransactionsService implements OnInit, LogStart {
     [ProductIDs.SkipStage]: player => {
       this.db.increment(player, "stage");
       Events.character.respawn(player);
-    }
+    },
+
+    [PassIDs.InfiniteCoins]: player => this.db.set(player, "coins", math.huge)
   }
 
   public constructor(

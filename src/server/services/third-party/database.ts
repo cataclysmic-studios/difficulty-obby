@@ -1,11 +1,13 @@
 import { type OnInit, Service } from "@flamework/core";
 import { endsWith, startsWith } from "@rbxts/string-utils";
+import { MarketplaceService as Market } from "@rbxts/services";
 import Signal from "@rbxts/signal";
 
 import type { LogStart } from "shared/hooks";
 import { Events, Functions } from "server/network";
 import Firebase from "server/firebase";
 import Log from "shared/logger";
+import { PassIDs } from "../transactions";
 
 const db = new Firebase;
 
@@ -72,6 +74,9 @@ export class DatabaseService implements OnInit, LogStart {
 		this.initialize(player, "ownedItems", []);
 		this.initialize(player, "lastCoinRefresh", 0);
 		this.initializeSettings(player);
+
+		if (Market.UserOwnsGamePassAsync(player.UserId, PassIDs.InfiniteCoins))
+			this.set(player, "coins", 999_999_999);
 
 		this.loaded.Fire(player);
 		Log.info("Initialized data");
