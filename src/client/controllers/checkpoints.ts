@@ -78,15 +78,7 @@ export class CheckpointsController implements OnInit, OnStart, LogStart {
     // TODO: update ambience sounds
   }
 
-  public getStageOffset(): number {
-    return this.stageOffset;
-  }
-
-  public getStage(): number {
-    return clamp(this.stage + this.stageOffset, 0, ZONE_NAMES.size() * STAGES_PER_ZONE + 1);
-  }
-
-  private respawn(promptSkip = true): void {
+  public respawn(promptSkip = true): void {
     const spawns = this.getAllSpawns();
     const spawn = spawns.find(spawn => spawn.Name === tostring(this.stage + this.stageOffset));
     if (spawn === undefined)
@@ -105,24 +97,15 @@ export class CheckpointsController implements OnInit, OnStart, LogStart {
     root.CFrame = spawn.CFrame.add(new Vector3(0, 6, 0));
   }
 
+  public getStageOffset(): number {
+    return this.stageOffset;
+  }
+
+  public getStage(): number {
+    return clamp(this.stage + this.stageOffset, 0, ZONE_NAMES.size() * STAGES_PER_ZONE + 1);
+  }
+
   private getAllSpawns(): SpawnLocation[] {
-    // const allZoneCheckpoints: SpawnLocation[] = [];
-    // let firstZone = true;
-
-    // for (const i of $range(0, ZONE_NAMES.size() - 1)) {
-    //   const zoneCheckpointFolder = World.Zones.WaitForChild(ZONE_NAMES[i]).WaitForChild("Checkpoints");
-    //   const zoneCheckpoints = zoneCheckpointFolder.GetChildren().filter((i): i is SpawnLocation => i.IsA("SpawnLocation"));
-    //   for (const child of zoneCheckpoints)
-    //     allZoneCheckpoints.push(child);
-
-    //   firstZone = false;
-    // }
-
-    // return merge(
-    //   <SpawnLocation[]>World.WaitForChild("StartPoints").GetChildren(),
-    //   allZoneCheckpoints
-    // );
-
     return World.GetDescendants().filter((i): i is SpawnLocation => i.IsA("SpawnLocation"));
   }
 

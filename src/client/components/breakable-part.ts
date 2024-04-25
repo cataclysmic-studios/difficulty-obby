@@ -45,6 +45,7 @@ export class BreakablePart extends DestroyableComponent<Attributes, BasePart> im
       if (hit.FindFirstAncestorOfClass("Model") !== character) return;
       if (debounce) return;
       debounce = true;
+
       task.delay(this.attributes.BreakablePart_StableLength + this.attributes.BreakablePart_ResetTime, () => debounce = false);
       this.break();
     }));
@@ -63,7 +64,7 @@ export class BreakablePart extends DestroyableComponent<Attributes, BasePart> im
     falling.Ended.Once(() => falling?.Destroy());
     falling.Play();
 
-    fallingPart.RemoveTag("FallingPart");
+    fallingPart.RemoveTag("BreakablePart");
     fallingPart.Parent = this.instance.Parent;
     fallingPart.CanCollide = false;
     fallingPart.Anchored = false;
