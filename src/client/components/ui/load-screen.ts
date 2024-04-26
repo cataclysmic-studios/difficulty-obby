@@ -12,8 +12,8 @@ import type { UIEffectsController } from "client/controllers/ui-effects";
 import DestroyableComponent from "shared/base-components/destroyable";
 
 interface Attributes {
-  Delay: number;
-  Lifetime: number;
+  readonly LoadScreen_Delay: number;
+  readonly LoadScreen_Lifetime: number;
 }
 
 @Component({
@@ -31,9 +31,9 @@ export class LoadScreen extends DestroyableComponent<Attributes, PlayerGui["Load
     this.janitor.LinkToInstance(this.instance, true);
 
     const logoSize = <UDim2>this.background.Logo.GetAttribute("DefaultSize");
-    task.delay(this.attributes.Delay, () => {
+    task.delay(this.attributes.LoadScreen_Delay, () => {
       this.startLogoAnimation(logoSize);
-      task.delay(this.attributes.Lifetime, async () => {
+      task.delay(this.attributes.LoadScreen_Lifetime, async () => {
         await this.uiEffects.fadeBlack();
         StarterGui.SetCoreGuiEnabled("All", true);
         this.instance.Destroy();
