@@ -42,8 +42,8 @@ export class CoinPickup extends DestroyableComponent<Attributes, BasePart> imple
       conn.Disconnect();
 
       const dailyCoinsClaimed = <Record<string, number[]>>value;
-      const zoneCoinsClaimed = dailyCoinsClaimed[this.getZoneName()];
-      if (zoneCoinsClaimed.includes(tonumber(this.instance.Name)!))
+      const zoneCoinsClaimed = dailyCoinsClaimed?.[this.getZoneName()];
+      if (zoneCoinsClaimed?.includes(tonumber(this.instance.Name)!))
         this.instance.Destroy();
       else
         this.listenForTouch(() => loaded);
@@ -75,14 +75,14 @@ export class CoinPickup extends DestroyableComponent<Attributes, BasePart> imple
       if (this.touchDebounce) return;
       this.touchDebounce = true;
 
-      this.instance.Destroy();
       const zoneName = this.getZoneName();
+      this.instance.Destroy();
       Events.data.increment("coins", this.attributes.CoinPickup_Worth);
       Events.data.addToArray(`dailyCoinsClaimed/${zoneName}`, tonumber(this.instance.Name)!);
     }));
   }
 
   private getZoneName(): string {
-    return getZoneName(this.checkpoints.getStage());
+    return this.instance.Parent!.Parent!.Name;
   }
 }
