@@ -6,6 +6,7 @@ export const ZONE_NAMES = [
   "Whisperwood",
   "Astrelyn",
   "Cascadia",
+  "Mirkholm",
   "The Sanguine Sea"
 ];
 
