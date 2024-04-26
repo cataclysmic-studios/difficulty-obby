@@ -1,7 +1,7 @@
 import { Controller, Modding, type OnInit } from "@flamework/core";
 
 import type { OnDataUpdate } from "client/hooks";
-import { Events, Functions } from "client/network";
+import { Events } from "client/network";
 
 @Controller({ loadOrder: 1 })
 export class DataUpdateController implements OnInit {
@@ -14,7 +14,5 @@ export class DataUpdateController implements OnInit {
       for (const listener of dataUpdateListeners)
         listener.onDataUpdate(directory, value);
     });
-
-    task.delay(1.5, () => Functions.data.initialize());
   }
 }
