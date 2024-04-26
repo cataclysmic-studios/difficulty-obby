@@ -4,7 +4,7 @@ import { Players, Workspace as World } from "@rbxts/services";
 
 import type { LogStart } from "shared/hooks";
 import { Events } from "server/network";
-import { ZONE_NAMES } from "shared/constants";
+import { ZONE_NAMES } from "shared/zones";
 import Log from "shared/logger";
 
 interface Attributes {

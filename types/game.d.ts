@@ -8,6 +8,13 @@ interface PortalModel extends Model {
   };
 }
 
+interface ZoneModel extends Model {
+  Coins: Folder;
+  Checkpoints: Folder;
+  Stages: Folder;
+  ExitPortal: PortalModel;
+}
+
 interface NPCModel extends Model {
   Head: MeshPart;
   RootPart: Part & {

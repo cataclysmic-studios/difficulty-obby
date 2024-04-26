@@ -6,7 +6,7 @@ import Signal from "@rbxts/signal";
 import type { LogStart } from "shared/hooks";
 import { Events } from "client/network";
 import { Player } from "shared/utility/client";
-import { STAGES_PER_ZONE, ZONE_NAMES } from "shared/constants";
+import { STAGES_PER_ZONE, ZONE_NAMES } from "shared/zones";
 import Log from "shared/logger";
 
 import type { CharacterController } from "./character";

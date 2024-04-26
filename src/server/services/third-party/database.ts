@@ -5,10 +5,11 @@ import Signal from "@rbxts/signal";
 
 import type { LogStart } from "shared/hooks";
 import { Events, Functions } from "server/network";
+import { PassIDs } from "../transactions";
 import Firebase from "server/firebase";
 import Log from "shared/logger";
-import { PassIDs } from "../transactions";
 
+const INF_COINS = 999_999_999;
 const db = new Firebase;
 
 @Service({ loadOrder: 0 })
@@ -72,11 +73,15 @@ export class DatabaseService implements OnInit, LogStart {
 		this.initialize(player, "stage", 0);
 		this.initialize(player, "coins", 0);
 		this.initialize(player, "ownedItems", []);
-		this.initialize(player, "lastCoinRefresh", 0);
+		this.initialize(player, "lastCoinRefresh", os.time());
+		this.initialize(player, "dailyCoinsClaimed", {});
 		this.initializeSettings(player);
 
-		if (Market.UserOwnsGamePassAsync(player.UserId, PassIDs.InfiniteCoins))
-			this.set(player, "coins", 999_999_999);
+		if (os.time() - this.get<number>(player, "lastCoinRefresh") >= 24 * 60 * 60)
+			this.delete(player, "dailyCoinsClaimed");
+
+		if (Market.UserOwnsGamePassAsync(player.UserId, PassIDs.InfiniteCoins) && this.get<number>(player, "coins") < INF_COINS)
+			this.set(player, "coins", INF_COINS);
 
 		this.loaded.Fire(player);
 		Log.info("Initialized data");

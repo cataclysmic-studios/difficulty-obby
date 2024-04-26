@@ -1,7 +1,7 @@
 import { Controller, type OnInit } from "@flamework/core";
 import { Lighting } from "@rbxts/services";
 
-import { getZoneModel } from "shared/constants";
+import { getZoneModel } from "shared/zones";
 import { ZonesController } from "./zones";
 
 @Controller()

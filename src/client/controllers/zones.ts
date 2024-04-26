@@ -2,7 +2,7 @@ import { Controller, type OnInit } from "@flamework/core";
 import { SoundService as Sound } from "@rbxts/services";
 import Signal from "@rbxts/signal";
 
-import { getZoneName, STAGES_PER_ZONE } from "shared/constants";
+import { getZoneName, STAGES_PER_ZONE } from "shared/zones";
 
 import type { CheckpointsController } from "./checkpoints";
 import type { NotificationController } from "./notification";
