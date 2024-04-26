@@ -29,7 +29,8 @@ export class CoinPickup extends DestroyableComponent<Attributes, BasePart> imple
   public onStart(): void {
     const tweenInfo = new TweenInfoBuilder()
       .SetTime(1)
-      .SetEasingStyle(Enum.EasingStyle.Linear);
+      .SetEasingStyle(Enum.EasingStyle.Linear)
+      .SetEasingDirection(Enum.EasingDirection.InOut);
 
     let destroyed = false;
     let loaded = false;
@@ -57,7 +58,7 @@ export class CoinPickup extends DestroyableComponent<Attributes, BasePart> imple
           Position: defaultPosition.add(new Vector3(0, 1, 0))
         }).Completed.Wait();
         tween(this.instance, tweenInfo, {
-          Orientation: defaultOrientation.add(new Vector3(0, 360, 0)),
+          Orientation: defaultOrientation.add(new Vector3(0, 0, 0)),
           Position: defaultPosition
         }).Completed.Wait();
       }
