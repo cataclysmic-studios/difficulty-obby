@@ -37,7 +37,6 @@ export class WindPart extends BaseComponent<Attributes, BasePart> implements OnS
       const character = hit.FindFirstAncestorOfClass("Model");
       const humanoid = character?.FindFirstChildOfClass("Humanoid");
       const root = humanoid?.RootPart;
-      print(root, humanoid, character)
       if (humanoid === undefined || root === undefined) return;
       if (root.GetAttribute("HasForce")) return;
       root.SetAttribute("HasForce", true);

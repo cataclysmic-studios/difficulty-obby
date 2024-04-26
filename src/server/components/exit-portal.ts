@@ -2,7 +2,6 @@ import type { OnStart } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
 import { Players, Workspace as World } from "@rbxts/services";
 
-import type { LogStart } from "shared/hooks";
 import { Events } from "server/network";
 import { ZONE_NAMES } from "shared/zones";
 import Log from "shared/logger";
@@ -12,7 +11,7 @@ interface Attributes {
 }
 
 @Component({ tag: "ExitPortal" })
-export class ExitPortal extends BaseComponent<Attributes, PortalModel> implements OnStart, LogStart {
+export class ExitPortal extends BaseComponent<Attributes, PortalModel> implements OnStart {
   public onStart(): void {
     const zoneName = this.attributes.ExitPortal_DestinationZone;
     let debounce = false;
