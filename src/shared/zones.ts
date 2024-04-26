@@ -5,7 +5,8 @@ export const ZONE_NAMES = [
   "Newside",
   "Whisperwood",
   "Astrelyn",
-  "Cascadia"
+  "Cascadia",
+  "The Sanguine Sea"
 ];
 
 export function getZoneIndex(stage: number): number {
