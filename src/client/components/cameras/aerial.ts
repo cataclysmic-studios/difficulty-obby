@@ -33,7 +33,7 @@ export class AerialCamera extends CameraControllerComponent<Attributes> implemen
   ) { super(); }
 
   public onRender(dt: number): void {
-    const root = this.character.get()?.Humanoid?.RootPart;
+    const root = this.character.getRoot();
     if (root === undefined) return;
 
     const position = root.Position.add(new Vector3(0, this.getHeight(), 0));

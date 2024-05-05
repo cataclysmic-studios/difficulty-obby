@@ -1,6 +1,6 @@
 import { Networking } from "@flamework/networking";
 import type { GitHubInfo } from "./structs/github";
-import type { GamepassInfo } from "shared/structs/roblox-api";
+import type { GamepassInfo } from "./structs/roblox-api";
 
 type SoundEffectName = ExcludeKeys<Omit<SoundService["SoundEffects"], "Parent" | "Changed">, SoundGroup | boolean | string | number | Callback | symbol | RBXScriptSignal>;
 
@@ -23,9 +23,10 @@ interface ClientEvents {
   advanceStageOffset(): void;
   character: {
     respawn(promptSkip?: boolean): void;
+    toggleCustomMovement(on: boolean): void;
   };
   uiEffects: {
-    fadeBlack(timeBetween?: number, fadeTime?: number): void;
+    blackFade(timeBetween?: number, fadeTime?: number): void;
   };
   data: {
     updated(directory: string, value: unknown): void;

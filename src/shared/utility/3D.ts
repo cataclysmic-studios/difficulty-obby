@@ -1,5 +1,7 @@
-import type { StorableVector3 } from "shared/data-models/common";
+import { Workspace as World } from "@rbxts/services";
+
 import { doubleSidedLimit } from "./numbers";
+import type { StorableVector3 } from "shared/data-models/common";
 
 const { abs } = math;
 
@@ -24,7 +26,23 @@ export function uniformlyLimitVector(vector: Vector3, limit: number, excludeY = 
     doubleSidedLimit(X, coordLimit),
     excludeY ? Y : doubleSidedLimit(Y, coordLimit),
     doubleSidedLimit(Z, coordLimit)
-  )
+  );
+}
+
+export function createRayVisualizer(position: Vector3, direction: Vector3, decayTime = 3, transparency = 0.7, color = new Color3(1, 0, 0)): void {
+  const raySize = direction.Magnitude;
+  const visual = new Instance("Part", World);
+  visual.Color = color;
+  visual.Transparency = transparency;
+  visual.Anchored = true;
+  visual.CanCollide = false;
+  visual.Size = new Vector3(0.5, 0.5, raySize);
+  visual.CFrame = CFrame.lookAlong(position.add(direction.mul(raySize / 2)), direction);
+  task.delay(decayTime, () => visual.Destroy());
+}
+
+export function combineCFrames(cframes: CFrame[]): CFrame {
+  return cframes.reduce((sum, cf) => sum.mul(cf), new CFrame);
 }
 
 export const STUDS_TO_METERS_CONSTANT = 3.571;

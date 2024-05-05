@@ -6,6 +6,6 @@ export interface OnPlayerJoin {
   onPlayerJoin(player: Player): void;
 }
 
-export interface OnDataUpdate {
-  onDataUpdate(player: Player, directory: string, value: unknown): void;
+export interface OnDataUpdate<T = unknown> {
+  onDataUpdate(player: Player, directory: string, value: T): void;
 }

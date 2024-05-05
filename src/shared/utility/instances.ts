@@ -36,6 +36,10 @@ export function waitForChildren<T extends Instance>(instance: Instance, names: s
   return children;
 }
 
+export function getCharacterParts(character: Model): BasePart[] {
+  return character.GetDescendants().filter((i): i is BasePart => i.IsA("BasePart"));
+}
+
 export async function getInstancePath(instance: Instance): Promise<string> {
   let path = instance.GetFullName()
     .gsub("Workspace", "World")[0]

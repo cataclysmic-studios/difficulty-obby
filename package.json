@@ -8,6 +8,10 @@
     "watch": "rbxtsc -w"
   },
   "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cataclysmic-studios/difficulty-obby.git"
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {

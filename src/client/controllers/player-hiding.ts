@@ -1,6 +1,8 @@
 import { Controller, type OnInit } from "@flamework/core";
 import { Players } from "@rbxts/services";
 
+import { getCharacterParts } from "shared/utility/instances";
+
 import type { CharacterController } from "./character";
 
 @Controller()
@@ -12,7 +14,7 @@ export class PlayerHidingController implements OnInit {
   public onInit(): void {
     for (const character of this.getAllCharacters())
       task.spawn(() => {
-        const parts = this.getCharacterParts(character);
+        const parts = getCharacterParts(character);
         for (const part of parts)
           part.SetAttribute("DefaultTransparency", part.Transparency);
       });
@@ -22,20 +24,16 @@ export class PlayerHidingController implements OnInit {
     task.spawn(() => {
       for (const character of this.getAllCharacters())
         task.spawn(() => {
-          const parts = this.getCharacterParts(character);
+          const parts = getCharacterParts(character);
           for (const part of parts)
             part.Transparency = on ? 1 : (<number>part.GetAttribute("DefaultTransparency") ?? 0);
         });
     });
   }
 
-  private getCharacterParts(character: Model): BasePart[] {
-    return character.GetDescendants().filter((i): i is BasePart => i.IsA("BasePart"));
-  }
-
-  private getAllCharacters() {
+  private getAllCharacters(): CharacterModel[] {
     return Players.GetPlayers()
       .map(player => player.Character!)
-      .filter(character => character !== this.character.get());
+      .filter((character): character is CharacterModel => character !== this.character.get());
   }
 }

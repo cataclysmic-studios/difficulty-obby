@@ -1,7 +1,8 @@
 import { Service, Modding, type OnStart } from "@flamework/core";
-import { DatabaseService } from "server/services/third-party/database";
 
 import type { OnDataUpdate } from "server/hooks";
+
+import type { DatabaseService } from "server/services/third-party/database";
 
 @Service()
 export class DataUpdateService implements OnStart {

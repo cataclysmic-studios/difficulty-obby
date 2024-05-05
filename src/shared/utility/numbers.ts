@@ -1,8 +1,29 @@
 import Log from "shared/logger";
 
-const { floor, log, abs, clamp } = math;
+const { floor, ceil, log, abs, clamp } = math;
 
 export const isNaN = (n: number) => n !== n;
+
+export namespace Size {
+  export const byte = 8;
+  export const short = 16;
+  export const int = 32;
+  export const long = 64;
+  export const bigint = 128;
+
+  export function inBytes(n: number): byte {
+    const positiveNum = abs(n);
+    let temp = positiveNum;
+    let bits = 0;
+
+    while (temp !== 0 && bits < 128) {
+      temp >>= 1; // Right shift by 1 bit
+      bits++;
+    }
+
+    return ceil(bits / 8);
+  }
+}
 
 export function isUnsigned(n: number): boolean {
   return n >= 0;
@@ -32,9 +53,15 @@ export function isUInt(n: number): n is uint {
   return isUnsigned(n) && n <= 0xFFFFFFFF;
 }
 
+export function lerp(a: number, b: number, t: number): number {
+  return a + (b - a) * t;
+}
+
 export function doubleSidedLimit(n: number, limit: number) {
   return clamp(n, -limit, limit);
 }
+
+export const isEven = (n: number) => n % 2 === 0;
 
 /**
  * Returns 0 if the number is close enough to 0 by `epsilon`

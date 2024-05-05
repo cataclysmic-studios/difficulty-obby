@@ -1,3 +1,3 @@
-export interface OnDataUpdate {
-  onDataUpdate(directory: string, value: unknown): void;
+export interface OnDataUpdate<T = unknown> {
+  onDataUpdate(directory: string, value: T): void;
 }

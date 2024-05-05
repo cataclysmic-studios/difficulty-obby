@@ -1,19 +1,22 @@
-import { Size } from "shared/utility/number-size";
+import { Size } from "shared/utility/numbers";
 import { slice } from "shared/utility/array";
 import Log from "shared/logger";
 
 class MissingByteException extends Log.Exception {
   public constructor() {
-    super("BinaryReader.MissingByte", "Attempted to read byte that did not exist. This is caused by reading past the buffers extents.");
+    super("BinaryReader.MissingByte", "Attempted to read byte that did not exist. This is usually caused by reading past the buffers extents");
   }
 }
 
+/**
+ * Reads binary data from a buffer
+ */
 export class BinaryReader {
   private offset = 0;
   private bitOffset = 0;
 
   public constructor(
-    private readonly buffer: Buffer = []
+    public readonly buffer: Buffer = []
   ) { }
 
   public readInt(): int {
@@ -93,15 +96,15 @@ export class BinaryReader {
     let remainingBits = amount;
 
     while (remainingBits > 0) {
-      const bitsToRead = math.min(Size.byte() - this.bitOffset, remainingBits);
+      const bitsToRead = math.min(Size.byte - this.bitOffset, remainingBits);
       const mask = (1 << bitsToRead) - 1;
-      const bits = (this.peekByte() >> (Size.byte() - this.bitOffset - bitsToRead)) & mask;
+      const bits = (this.peekByte() >> (Size.byte - this.bitOffset - bitsToRead)) & mask;
       currentByte = (currentByte << bitsToRead) | bits;
 
       remainingBits -= bitsToRead;
       this.bitOffset += bitsToRead;
 
-      if (this.bitOffset === Size.byte()) {
+      if (this.bitOffset === Size.byte) {
         result.push(currentByte);
         currentByte = 0;
         this.offset++;
@@ -111,12 +114,12 @@ export class BinaryReader {
 
     // If there are remaining bits, add the partially assembled byte to the result
     if (remainingBits > 0)
-      result.push(currentByte << (Size.byte() - this.bitOffset - remainingBits));
+      result.push(currentByte << (Size.byte - this.bitOffset - remainingBits));
 
     return result;
   }
 
-  private peekByte(extraOffset = 0): byte {
+  public peekByte(extraOffset = 0): byte {
     const byte: Maybe<byte> = this.buffer[this.offset + extraOffset];
     if (byte === undefined)
       throw new MissingByteException;
@@ -124,10 +127,15 @@ export class BinaryReader {
     return byte;
   }
 
+  public peekBytes(amount: number, extraOffset = 0): Buffer {
+    const bytes: Buffer = [];
+
+    return bytes;
+  }
+
   public seek(offset: number): void {
     this.offset = offset;
   }
-
   public getPosition(): number {
     return this.offset;
   }

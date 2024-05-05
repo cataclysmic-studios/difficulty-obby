@@ -12,7 +12,7 @@ export class UIEffectsController implements OnInit, LogStart {
   private readonly blackFrame = new Instance("Frame", this.screen);
 
   public onInit(): void {
-    Events.uiEffects.fadeBlack.connect((timeBetween, fadeTime) => this.fadeBlack(false, timeBetween, fadeTime));
+    Events.uiEffects.blackFade.connect((timeBetween, fadeTime) => this.blackFade(false, timeBetween, fadeTime));
 
     this.screen.Name = "UIEffects";
     this.screen.DisplayOrder = 10;
@@ -24,7 +24,7 @@ export class UIEffectsController implements OnInit, LogStart {
     this.blackFrame.Transparency = 1;
   }
 
-  public async fadeBlack<Disable extends boolean = false>(manualDisable: Disable = <Disable>false, timeBetween = 0.5, fadeTime = 0.65): Promise<Disable extends true ? () => Tween : void> {
+  public async blackFade<Disable extends boolean = false>(manualDisable: Disable = <Disable>false, timeBetween = 0.5, fadeTime = 0.65): Promise<Disable extends true ? () => Tween : void> {
     type RType = Disable extends true ? () => Tween : void;
     const info = new TweenInfoBuilder()
       .SetTime(fadeTime)

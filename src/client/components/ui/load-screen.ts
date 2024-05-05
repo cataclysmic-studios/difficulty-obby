@@ -34,7 +34,7 @@ export class LoadScreen extends DestroyableComponent<Attributes, PlayerGui["Load
     task.delay(this.attributes.LoadScreen_Delay, () => {
       this.startLogoAnimation(logoSize);
       task.delay(this.attributes.LoadScreen_Lifetime, async () => {
-        await this.uiEffects.fadeBlack();
+        await this.uiEffects.blackFade();
         StarterGui.SetCoreGuiEnabled("All", true);
         this.instance.Destroy();
       });

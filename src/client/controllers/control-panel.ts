@@ -4,15 +4,14 @@ import { RunService as Runtime } from "@rbxts/services";
 import Object from "@rbxts/object-utils";
 import Iris from "@rbxts/iris";
 
-import type { LogStart } from "shared/hooks";
 import { Player } from "shared/utility/client";
 import { DEVELOPERS } from "shared/constants";
 
-import type { IrisController } from "./iris";
 import type { CameraController } from "./camera";
+import type { MouseController } from "./mouse";
 
 @Controller()
-export class ControlPanelController implements OnStart, LogStart {
+export class ControlPanelController implements OnStart {
   private readonly input = new InputContext({
     ActionGhosting: 0,
     Process: false,
@@ -20,28 +19,36 @@ export class ControlPanelController implements OnStart, LogStart {
   });
 
   public constructor(
-    private readonly iris: IrisController,
-    private readonly camera: CameraController
+    private readonly camera: CameraController,
+    private readonly mouse: MouseController
   ) { }
 
   public async onStart(): Promise<void> {
     const windowSize = new Vector2(300, 400);
     let open = false;
 
-    this.input.Bind("RightShift", () => {
-      if (!Runtime.IsStudio() && !DEVELOPERS.includes(Player.UserId)) return;
-      open = !open;
-    });
-
-    this.iris.initialized.Once(() => {
-      Iris.Connect(() => {
-        if (!open) return;
-        Iris.Window(["Control Panel"], { size: Iris.State(windowSize) });
-
-        this.renderCameraTab();
-
-        Iris.End();
+    this.input
+      .Bind("RightShift", () => {
+        if (!Runtime.IsStudio() && !DEVELOPERS.includes(Player.UserId)) return;
+        open = !open;
+      })
+      .Bind("P", () => {
+        if (!Runtime.IsStudio() && !DEVELOPERS.includes(Player.UserId)) return;
+        this.mouse.behavior = this.mouse.behavior === Enum.MouseBehavior.Default ? Enum.MouseBehavior.LockCenter : Enum.MouseBehavior.Default;
+        Player.CameraMode = Player.CameraMode === Enum.CameraMode.LockFirstPerson ? Enum.CameraMode.Classic : Enum.CameraMode.LockFirstPerson;
       });
+
+    Iris.Init();
+    Iris.UpdateGlobalConfig(Iris.TemplateConfig.colorDark);
+    Iris.UpdateGlobalConfig(Iris.TemplateConfig.sizeClear);
+
+    Iris.Connect(() => {
+      if (!open) return;
+      Iris.Window(["Control Panel"], { size: Iris.State(windowSize) });
+
+      this.renderCameraTab();
+
+      Iris.End();
     });
   }
 

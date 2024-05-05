@@ -24,7 +24,7 @@ export class FlyOnTheWallCamera extends CameraControllerComponent implements OnR
   ) { super(); }
 
   public onRender(dt: number): void {
-    const root = this.character.get()?.Humanoid?.RootPart;
+    const root = this.character.getRoot();
     if (root === undefined) return;
 
     this.lookAt(root.Position);

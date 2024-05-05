@@ -39,7 +39,7 @@ export class ExitPortal extends BaseComponent<Attributes, PortalModel> implement
       humanoid.WalkSpeed = 0;
       humanoid.JumpHeight = 0;
       if (player !== undefined) {
-        Events.uiEffects.fadeBlack(player, 0.75, fadeTime);
+        Events.uiEffects.blackFade(player, 0.75, fadeTime);
         task.wait(fadeTime);
       }
 
