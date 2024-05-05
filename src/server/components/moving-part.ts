@@ -8,6 +8,7 @@ interface Attributes {
   MovingPart_Distance: number;
   MovingPart_Delay: number;
   MovingPart_Time: number;
+  MovingPart_Direction: "Forward" | "Backward" | "Right" | "Left" | "Up" | "Down";
 }
 
 @Component({
@@ -27,12 +28,16 @@ export class MovingPart extends BaseComponent<Attributes, BasePart> implements O
 
         tweenInfo.SetDelayTime(this.attributes.MovingPart_Delay);
         tween(this.instance, tweenInfo, {
-          Position: originalPosition.add(this.instance.CFrame.LookVector.mul(this.attributes.MovingPart_Distance))
+          Position: originalPosition.add(this.getDirection().mul(this.attributes.MovingPart_Distance))
         }).Completed.Wait();
         tween(this.instance, tweenInfo, {
           Position: originalPosition
         }).Completed.Wait();
       }
     });
+  }
+
+  private getDirection(): Vector3 {
+    return this.instance.CFrame.LookVector;
   }
 }

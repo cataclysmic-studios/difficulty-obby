@@ -1,41 +1,41 @@
 interface PortalModel extends Model {
-  VFX: Folder;
-  Collider: Part;
-  ZoneName: Part & {
-    GUI: BillboardGui & {
-      Title: TextLabel;
+  readonly VFX: Folder;
+  readonly Collider: Part;
+  readonly ZoneName: Part & {
+    readonly GUI: BillboardGui & {
+      readonly Title: TextLabel;
     };
   };
 }
 
 interface ZoneModel extends Model {
-  Coins: Folder;
-  Checkpoints: Folder;
-  Stages: Folder;
-  ExitPortal: PortalModel;
+  readonly Coins: Folder;
+  readonly Checkpoints: Folder;
+  readonly Stages: Folder;
+  readonly ExitPortal: PortalModel;
 }
 
 interface NPCModel extends Model {
-  Head: MeshPart;
-  RootPart: Part & {
-    spine: Bone & {
-      ["spine.001"]: Bone & {
-        ["spine.002"]: Bone & {
-          ["spine.003"]: Bone & {
-            ["spine.005"]: Bone & {
-              ["spine.006"]: Bone; // neck bone
+  readonly Head: MeshPart;
+  readonly RootPart: Part & {
+    readonly spine: Bone & {
+      readonly ["spine.001"]: Bone & {
+        readonly ["spine.002"]: Bone & {
+          readonly ["spine.003"]: Bone & {
+            readonly ["spine.005"]: Bone & {
+              readonly ["spine.006"]: Bone; // neck bone
             };
           };
         };
       };
     };
   };
-  VoiceLines: Folder;
-  AnimationController: AnimationController & {
-    Animator: Animator;
+  readonly VoiceLines: Folder;
+  readonly AnimationController: AnimationController & {
+    readonly Animator: Animator;
   };
-  Animations: Folder & {
-    Gratitude: Folder;
-    Idle: Animation;
+  readonly Animations: Folder & {
+    readonly Gratitude: Folder;
+    readonly Idle: Animation;
   };
 }
