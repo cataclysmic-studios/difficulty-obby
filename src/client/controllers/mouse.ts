@@ -74,6 +74,7 @@ export class MouseController implements OnInit, OnRender {
   }
 
   public onRender(dt: number): void {
+    if (this.behavior === Enum.MouseBehavior.Default && UIS.MouseBehavior === Enum.MouseBehavior.LockCurrentPosition) return; // preserve default camera movement
     UIS.MouseBehavior = this.behavior;
   }
 

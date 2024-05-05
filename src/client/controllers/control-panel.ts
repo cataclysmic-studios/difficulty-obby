@@ -7,6 +7,7 @@ import Iris from "@rbxts/iris";
 import { Player } from "shared/utility/client";
 import { DEVELOPERS } from "shared/constants";
 
+import type { IrisController } from "./iris";
 import type { CameraController } from "./camera";
 import type { MouseController } from "./mouse";
 
@@ -19,6 +20,7 @@ export class ControlPanelController implements OnStart {
   });
 
   public constructor(
+    private readonly iris: IrisController,
     private readonly camera: CameraController,
     private readonly mouse: MouseController
   ) { }
@@ -38,18 +40,14 @@ export class ControlPanelController implements OnStart {
         Player.CameraMode = Player.CameraMode === Enum.CameraMode.LockFirstPerson ? Enum.CameraMode.Classic : Enum.CameraMode.LockFirstPerson;
       });
 
-    Iris.Init();
-    Iris.UpdateGlobalConfig(Iris.TemplateConfig.colorDark);
-    Iris.UpdateGlobalConfig(Iris.TemplateConfig.sizeClear);
-
-    Iris.Connect(() => {
+    this.iris.initialized.Connect(() => Iris.Connect(() => {
       if (!open) return;
       Iris.Window(["Control Panel"], { size: Iris.State(windowSize) });
 
       this.renderCameraTab();
 
       Iris.End();
-    });
+    }));
   }
 
   private renderCameraTab(): void {
