@@ -60,6 +60,7 @@ export class DatabaseService implements OnInit, LogStart {
 
 	public delete(player: Player, directory: string): void {
 		const fullDirectory = this.getDirectoryForPlayer(player, directory);
+		print("deleted", fullDirectory)
 		db.delete(fullDirectory);
 		this.update(player, fullDirectory, undefined);
 	}
@@ -77,8 +78,10 @@ export class DatabaseService implements OnInit, LogStart {
 		this.initialize(player, "dailyCoinsClaimed", {});
 		this.initializeSettings(player);
 
-		if (os.time() - this.get<number>(player, "lastCoinRefresh") >= 24 * 60 * 60)
+		if (os.time() - this.get<number>(player, "lastCoinRefresh") >= 24 * 60 * 60) {
 			this.delete(player, "dailyCoinsClaimed");
+			this.set<number>(player, "lastCoinRefresh", os.time());
+		}
 
 		if (Market.UserOwnsGamePassAsync(player.UserId, PassIDs.InfiniteCoins) && this.get<number>(player, "coins") < INF_COINS)
 			this.set(player, "coins", INF_COINS);
