@@ -2,7 +2,7 @@ import type { OnTick } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
 
 interface Attributes {
-  SpinningPart_Speed: number,
+  SpinningPart_Speed: number;
   SpinningPart_Axis: Axis;
 }
 

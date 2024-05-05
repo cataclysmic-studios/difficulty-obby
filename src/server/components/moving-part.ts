@@ -1,4 +1,4 @@
-import type { OnStart } from "@flamework/core";
+import type { OnStart, OnTick } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
 
 import { tween } from "shared/utility/ui";
@@ -17,7 +17,9 @@ interface Attributes {
     MovingPart_Delay: 0
   }
 })
-export class MovingPart extends BaseComponent<Attributes, BasePart> implements OnStart {
+export class MovingPart extends BaseComponent<Attributes, BasePart> implements OnStart, OnTick {
+  private lastPosition = this.instance.Position;
+
   public onStart(): void {
     const originalPosition = this.instance.Position;
     task.spawn(() => {
@@ -35,6 +37,14 @@ export class MovingPart extends BaseComponent<Attributes, BasePart> implements O
         }).Completed.Wait();
       }
     });
+  }
+
+  public onTick(dt: number): void {
+    const currentPosition = this.instance.Position;
+    const deltaPosition = currentPosition.sub(this.lastPosition);
+    const velocity = deltaPosition.div(dt);
+    this.instance.AssemblyLinearVelocity = velocity;
+    this.lastPosition = currentPosition;
   }
 
   private getDirection(): Vector3 {
