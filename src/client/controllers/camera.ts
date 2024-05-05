@@ -2,12 +2,13 @@ import { Controller, OnRender, type OnInit } from "@flamework/core";
 import { Workspace as World } from "@rbxts/services";
 
 import type { LogStart } from "shared/hooks";
+import { InputInfluenced } from "client/classes/input-influenced";
+
 import { DefaultCamera } from "client/components/cameras/default";
 import { FirstPersonCamera } from "client/components/cameras/first-person";
 import { AerialCamera } from "client/components/cameras/aerial";
 import { FixedCamera } from "client/components/cameras/fixed";
 import { FlyOnTheWallCamera } from "client/components/cameras/fly-on-the-wall";
-
 import type { CameraControllerComponent } from "client/base-components/camera-controller-component";
 
 // add new camera components here
@@ -20,10 +21,12 @@ interface Cameras {
 }
 
 @Controller()
-export class CameraController implements OnInit, OnRender, LogStart {
+export class CameraController extends InputInfluenced implements OnInit, OnRender, LogStart {
   public readonly cameraStorage = new Instance("Actor", World);
   public cameras!: Cameras;
   public currentName!: keyof typeof this.cameras;
+
+  private firstPerson = false;
 
   public onInit(): void {
     this.cameraStorage.Name = "Cameras";
