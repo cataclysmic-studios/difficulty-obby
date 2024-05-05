@@ -1,4 +1,4 @@
-import type { OnTick } from "@flamework/core";
+import type { OnPhysics } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
 
 interface Attributes {
@@ -13,8 +13,10 @@ interface Attributes {
     SpinningPart_Axis: "Y"
   }
 })
-export class SpinningPart extends BaseComponent<Attributes, BasePart> implements OnTick {
-  public onTick(dt: number): void {
+export class SpinningPart extends BaseComponent<Attributes, BasePart> implements OnPhysics {
+  private lastOrientation = this.instance.Orientation;
+
+  public onPhysics(dt: number): void {
     const speed = this.attributes.SpinningPart_Speed * dt * 60;
     let x = 0;
     let y = 0;
@@ -34,6 +36,12 @@ export class SpinningPart extends BaseComponent<Attributes, BasePart> implements
       }
     }
 
-    this.instance.Orientation = this.instance.Orientation.add(new Vector3(x, y, z));
+    const spin = new Vector3(x, y, z);
+    const currentOrientation = this.instance.Orientation;
+    const deltaOrientation = currentOrientation.sub(this.lastOrientation);
+    const angularVelocity = deltaOrientation;
+    this.instance.AssemblyAngularVelocity = angularVelocity;
+    this.lastOrientation = currentOrientation;
+    this.instance.Orientation = this.instance.Orientation.add(spin);
   }
 }
