@@ -10,6 +10,8 @@ import { AerialCamera } from "client/components/cameras/aerial";
 import { FixedCamera } from "client/components/cameras/fixed";
 import { FlyOnTheWallCamera } from "client/components/cameras/fly-on-the-wall";
 import type { CameraControllerComponent } from "client/base-components/camera-controller-component";
+import { Events } from "client/network";
+import CameraShaker from "@rbxts/camera-shaker";
 
 // add new camera components here
 interface Cameras {
@@ -37,6 +39,15 @@ export class CameraController extends InputInfluenced implements OnInit, OnRende
       Fixed: FixedCamera.create(this),
       FlyOnTheWall: FlyOnTheWallCamera.create(this)
     };
+
+    const shaker = new CameraShaker(Enum.RenderPriority.Camera.Value, shake => {
+      const camera = this.getCurrent();
+      if (camera === undefined) return;
+      camera.setCFrame(camera.instance.CFrame.mul(shake));
+    });
+
+    shaker.Start();
+    Events.nukeShake.connect(() => shaker.ShakeOnce(5.5, 7, 0, 8));
   }
 
   public onRender(dt: number): void {
@@ -45,6 +56,10 @@ export class CameraController extends InputInfluenced implements OnInit, OnRende
       const update = <(camera: CameraControllerComponent, dt: number) => void>camera.onRender;
       update(camera, dt);
     }
+  }
+
+  public getCurrent<T extends CameraControllerComponent>(): T {
+    return <T>this.cameras[this.currentName];
   }
 
   public set(cameraName: keyof typeof this.cameras): void {

@@ -14,9 +14,11 @@ import type { GamepassInfo } from "shared/structs/roblox-api";
 export class ShopPage extends BaseComponent<{}, PlayerGui["Main"]["Shop"]> implements OnStart {
   public async onStart(): Promise<void> {
     const devProducts = getDevProducts().sort((productA, productB) => this.sortPurchasables(productA.Name, productB.Name));
-    const gamepasses = (await Functions.roblox.getGamepasses()).sort((passA, passB) => this.sortPurchasables(passA.name, passB.name));
-    for (const gamepass of gamepasses)
+    const gamepasses = (<GamepassInfo[]>await Functions.roblox.getGamepasses()).sort((passA, passB) => this.sortPurchasables(passA.name, passB.name));
+    for (const gamepass of gamepasses) {
+      if (gamepass.sellerId === undefined) continue;
       this.createGamepassFrame(gamepass);
+    }
     for (const product of devProducts)
       this.createDevProductFrame(product);
   }

@@ -1,6 +1,10 @@
 interface SoundService extends Instance {
   Music: SoundGroup;
+  Boombox: SoundGroup;
   SoundEffects: SoundGroup & {
+    NukeAlarm: Sound;
+    NukeFall: Sound;
+    NukeExplode: Sound;
     Boing: Sound;
     Portal: Sound;
     Wind: Sound;

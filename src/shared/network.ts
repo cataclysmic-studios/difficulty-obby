@@ -21,6 +21,8 @@ interface ServerEvents {
 interface ClientEvents {
   playSoundEffect(soundName: SoundEffectName): void;
   advanceStageOffset(): void;
+  sendNotification(message: string): void;
+  nukeShake(): void;
   character: {
     respawn(promptSkip?: boolean): void;
     toggleCustomMovement(on: boolean): void;
@@ -31,18 +33,22 @@ interface ClientEvents {
   data: {
     updated(directory: string, value: unknown): void;
   };
+  transactions: {
+    processed(productType: "GamePass" | "DevProduct", id: number): void;
+  };
 }
 
 interface ServerFunctions {
   data: {
     initialize(): void;
     get(directory: string, defaultValue?: unknown): unknown;
+    ownsInvincibility(): boolean;
   };
   github: {
     getInfo(): GitHubInfo;
   };
   roblox: {
-    getGamepasses(amount?: number): GamepassInfo[];
+    getGamepasses(amount?: number): unknown[];
   };
 }
 

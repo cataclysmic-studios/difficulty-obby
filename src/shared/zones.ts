@@ -24,5 +24,5 @@ export function getZoneName(stage: number): string {
 }
 
 export function getZoneModel(stage: number): ZoneModel {
-  return <ZoneModel>World.Zones.WaitForChild(getZoneName(stage));
+  return <ZoneModel>World.WaitForChild("Zones").WaitForChild(getZoneName(stage));
 }

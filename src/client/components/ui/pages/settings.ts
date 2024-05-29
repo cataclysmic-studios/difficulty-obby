@@ -1,11 +1,12 @@
 import type { OnStart } from "@flamework/core";
 import { Component, BaseComponent, type Components } from "@flamework/components";
-import { UserInputService } from "@rbxts/services";
+import { MarketplaceService as Market, UserInputService } from "@rbxts/services";
 import { Janitor } from "@rbxts/janitor";
 
 import { Events, Functions } from "client/network";
-import { PlayerGui } from "shared/utility/client";
+import { Player, PlayerGui } from "shared/utility/client";
 import { Assets } from "shared/utility/instances";
+import { PassIDs } from "shared/structs/product-ids";
 import { camelCaseToSpaced } from "shared/utility/strings";
 
 import type { ToggleSwitch } from "../widgets/toggle-switch";
@@ -45,7 +46,7 @@ export class SettingsPage extends BaseComponent<{}, PlayerGui["Main"]["Settings"
     }
   }
 
-  private createSetting(settingFrame: Frame & { Title: TextLabel; }, [settingName, settingValue]: [string, DatabaseValue], dataPath: string): void {
+  private async createSetting(settingFrame: Frame & { Title: TextLabel; }, [settingName, settingValue]: [string, DatabaseValue], dataPath: string): Promise<void> {
     settingFrame.Title.Text = camelCaseToSpaced(settingName).upper();
     switch (type(settingValue)) {
       case "boolean": {
@@ -56,6 +57,15 @@ export class SettingsPage extends BaseComponent<{}, PlayerGui["Main"]["Settings"
         toggleSwitchFrame.SetAttribute("ToggleSwitch_InitialState", <boolean>settingValue);
 
         const toggleSwitch = this.components.addComponent<ToggleSwitch>(toggleSwitchFrame);
+        if (settingName === "invincibility") {
+          toggleSwitch.canToggle = await Functions.data.ownsInvincibility();
+          toggleSwitch.toggleFailed.Connect(() => Market.PromptGamePassPurchase(Player, PassIDs.Invincibility));
+          Events.transactions.processed.connect((productType, id) => {
+            if (productType !== "GamePass" || id !== PassIDs.Invincibility) return;
+            toggleSwitch.canToggle = true;
+          });
+        }
+
         toggleSwitch.toggled.Connect(on => Events.data.set(dataPath, on));
         break;
       }

@@ -26,6 +26,9 @@ interface Attributes {
 })
 export class ToggleSwitch extends DestroyableComponent<Attributes, ReplicatedFirst["Assets"]["UI"]["ToggleSwitch"]> implements OnStart {
   public readonly toggled = new Signal<(on: boolean) => void>;
+  public readonly toggleFailed = new Signal;
+  public canToggle = true;
+
   private firstToggle = true;
 
   private readonly tweenInfo = new TweenInfoBuilder()
@@ -41,6 +44,9 @@ export class ToggleSwitch extends DestroyableComponent<Attributes, ReplicatedFir
   }
 
   public toggle(on: boolean): void {
+    if (!this.canToggle)
+      return this.toggleFailed.Fire();
+
     this.on = on;
     this.toggled.Fire(this.on);
     if (!this.firstToggle)

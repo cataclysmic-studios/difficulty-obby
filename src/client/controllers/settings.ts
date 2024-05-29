@@ -13,6 +13,7 @@ type SettingValue = boolean;
 export class SettingsController implements OnInit, LogStart {
   private readonly originalMusicVolume = Sound.Music.Volume;
   private readonly originalFXVolume = Sound.SoundEffects.Volume;
+  private readonly originalBoomboxVolume = Sound.Boombox.Volume;
 
   public constructor(
     private readonly playerHiding: PlayerHidingController
@@ -34,6 +35,10 @@ export class SettingsController implements OnInit, LogStart {
       }
       case "soundEffects": {
         Sound.SoundEffects.Volume = value ? this.originalFXVolume : 0;
+        break;
+      }
+      case "boomboxes": {
+        Sound.Boombox.Volume = value ? this.originalBoomboxVolume : 0;
         break;
       }
       case "hidePlayers": {

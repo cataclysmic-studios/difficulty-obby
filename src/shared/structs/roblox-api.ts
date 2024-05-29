@@ -1,10 +1,10 @@
 export interface GamepassInfo {
-  readonly id: number;
-  readonly name: string;
   readonly displayName: string;
-  readonly productId: number;
-  readonly price: number;
-  readonly sellerName: string;
-  readonly sellerId: number;
+  readonly id: number;
   readonly isOwned: boolean;
+  readonly name: string;
+  readonly price: number;
+  readonly productId: number;
+  readonly sellerId?: number;
+  readonly sellerName: string;
 }

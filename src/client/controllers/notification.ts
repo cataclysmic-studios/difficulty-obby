@@ -4,15 +4,20 @@ import { SoundService as Sound } from "@rbxts/services";
 import { Janitor } from "@rbxts/janitor";
 
 import { PlayerGui } from "shared/utility/client";
+import { Events } from "client/network";
 import { Assets } from "shared/utility/instances";
 import { tween } from "shared/utility/ui";
 
 @Controller()
-export class NotificationController {
+export class NotificationController implements OnInit {
   private readonly screen = <ScreenGui>PlayerGui.WaitForChild("Notifications");
   private readonly tweenInfo = new TweenInfoBuilder()
     .SetTime(0.15)
     .SetEasingStyle(Enum.EasingStyle.Quad);
+
+  public onInit(): void {
+    Events.sendNotification.connect(message => this.send(message));
+  }
 
   public send(message: string, clickCallback?: Callback): void {
     const janitor = new Janitor;

@@ -1,32 +1,16 @@
 import { OnInit, Service } from "@flamework/core";
-import { MarketplaceService as Market, Players } from "@rbxts/services";
+import { MarketplaceService as Market, Players, Lighting } from "@rbxts/services";
 
 import type { LogStart } from "shared/hooks";
 import { Events } from "server/network";
+import { ProductIDs, PassIDs } from "../../shared/structs/product-ids";
 import Log from "shared/logger";
 
 import type { DatabaseService } from "./third-party/database";
+import type { CharacterService } from "./character";
+import { tween } from "shared/utility/ui";
 
 type RewardHandler = (player: Player) => void;
-export const enum ProductIDs {
-  Coins10000 = 1813571859,
-  Coins1750 = 1813571860,
-  Coins4000 = 1813571861,
-  Coins500 = 1813571862,
-  Coins25000 = 1813571863,
-  Coins250 = 1813571864,
-  Coins100 = 1813571865,
-  Coins1000 = 1813571866,
-  SkipStage = 1814214080,
-  Nuke = 1837958289
-}
-
-export const enum PassIDs {
-  Boombox = 823037548,
-  DoubleCoins = 823062462,
-  InfiniteCoins = 793370149,
-  Invincibility = 822986586
-}
 
 @Service()
 export class TransactionsService implements OnInit, LogStart {
@@ -43,15 +27,39 @@ export class TransactionsService implements OnInit, LogStart {
       this.db.increment(player, "stage");
       Events.character.respawn(player);
     },
+    [ProductIDs.Nuke]: player => {
+      Events.playSoundEffect.broadcast("NukeAlarm");
+      Events.sendNotification.broadcast(`${player.Name} has sent a nuke!!!`);
+      task.delay(5, () => {
+        Events.playSoundEffect.broadcast("NukeFall");
+        task.delay(4.5, () => {
+          Events.nukeShake.broadcast();
+          Events.playSoundEffect.broadcast("NukeExplode");
+          Lighting.ExposureCompensation = 4;
+          tween(Lighting, new TweenInfo(10), { ExposureCompensation: 0 });
+          Events.character.respawn.except(player, false);
+        });
+      });
+    },
 
     [PassIDs.InfiniteCoins]: player => this.db.set(player, "coins", math.huge),
+    [PassIDs.Invincibility]: player => {
+      player.SetAttribute("OwnsInvincibility", true);
+      this.character.updateInvincibility(player, true);
+    }
   }
 
   public constructor(
-    private readonly db: DatabaseService
+    private readonly db: DatabaseService,
+    private readonly character: CharacterService
   ) { }
 
   public onInit(): void {
+    Market.PromptGamePassPurchaseFinished.Connect((player, passID, wasPurchased) => {
+      if (!wasPurchased) return;
+      this.rewardHandlers[passID]?.(player);
+      Events.transactions.processed(player, "GamePass", passID);
+    });
     Market.ProcessReceipt = ({ PlayerId, ProductId, PurchaseId }) => {
       const productKey = `${PlayerId}_${PurchaseId}`;
       const player = Players.GetPlayerByUserId(PlayerId);
@@ -68,8 +76,10 @@ export class TransactionsService implements OnInit, LogStart {
       let success = true;
       try {
         const grantReward = this.rewardHandlers[ProductId];
-        if (playerExists && grantReward !== undefined)
-          grantReward(player);
+        if (playerExists) {
+          grantReward?.(player);
+          Events.transactions.processed(player, "DevProduct", ProductId);
+        }
       } catch (err) {
         success = false;
         purchaseRecorded = undefined;
