@@ -46,6 +46,7 @@ export class StorePage extends BaseComponent<{}, PlayerGui["Main"]["Store"]> imp
     const price = <number>storeItem.GetAttribute("Price");
     const priceLabel = Assets.UI.Price.Clone();
     priceLabel.Text = `${commaFormat(price)} Coins`;
+    priceLabel.Parent = purchasableFrame;
 
     const ownedItems = <string[]>await Functions.data.get("ownedItems", []);
     purchasableFrame.Buy.Title.Text = ownedItems.includes(storeItem.Name) ? "Owned" : "Buy";
