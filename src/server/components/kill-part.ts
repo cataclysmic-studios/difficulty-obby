@@ -17,6 +17,7 @@ export class KillPart extends BaseComponent<{}, BasePart> implements OnStart {
       const character = hit.FindFirstAncestorOfClass("Model");
       const humanoid = character?.FindFirstChildOfClass("Humanoid");
       if (character === undefined || humanoid === undefined) return;
+      if (hit.FindFirstAncestorOfClass("Accessory") !== undefined) return;
       if (character.GetAttribute("KillPartDebounce") === true) return;
 
       const player = Players.GetPlayerFromCharacter(character);
