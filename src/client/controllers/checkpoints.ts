@@ -11,6 +11,7 @@ import Log from "shared/logger";
 
 import type { CharacterController } from "./character";
 import type { NotificationController } from "./notification";
+import type { UIEffectsController } from "./ui-effects";
 
 const { clamp } = math;
 
@@ -25,7 +26,8 @@ export class CheckpointsController implements OnInit, OnStart, LogStart {
 
   public constructor(
     private readonly character: CharacterController,
-    private readonly notification: NotificationController
+    private readonly notification: NotificationController,
+    private readonly uiEffects: UIEffectsController
   ) { }
 
   public onInit(): void {
@@ -86,6 +88,8 @@ export class CheckpointsController implements OnInit, OnStart, LogStart {
 
     const root = this.character.getRoot();
     if (root === undefined) return;
+
+    this.uiEffects.flash();
     if (promptSkip && !this.firstStageTry) {
       this.firstStageTry = false;
       this.promptSkip();

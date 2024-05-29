@@ -1,14 +1,9 @@
 import { Controller } from "@flamework/core";
-import type { Components } from "@flamework/components";
 
 import { Player } from "shared/utility/client";
 
 @Controller()
 export class CharacterController {
-  public constructor(
-    private readonly components: Components
-  ) { }
-
   public get(): Maybe<CharacterModel> {
     return <Maybe<CharacterModel>>Player.Character;
   }
