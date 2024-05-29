@@ -12,6 +12,10 @@ import Log from "shared/logger";
 const INF_COINS = 999_999_999;
 const db = new Firebase;
 
+export const enum MultiplierType {
+  Coins
+}
+
 @Service({ loadOrder: 0 })
 export class DatabaseService implements OnInit, LogStart {
 	public readonly loaded = new Signal<(player: Player) => void>;
@@ -31,17 +35,24 @@ export class DatabaseService implements OnInit, LogStart {
 		return db.get(fullDirectory) ?? <T>defaultValue;
 	}
 
-	public set<T>(player: Player, directory: string, value: T, noRequest = false): void {
+	public set<T>(player: Player, directory: string, value: T, onlyUpdate = false): void {
 		const fullDirectory = this.getDirectoryForPlayer(player, directory);
-		db.set(fullDirectory, value);
+		if (!onlyUpdate)
+			db.set(fullDirectory, value);
+
 		this.update(player, fullDirectory, value);
 	}
 
 	public increment(player: Player, directory: string, amount = 1): number {
 		const fullDirectory = this.getDirectoryForPlayer(player, directory);
-		const value = db.increment(fullDirectory, amount);
+		const incrementingCoins = endsWith(directory, "coins");
+		if (incrementingCoins) {
+			const coinMultiplier = this.getMultiplier(player, MultiplierType.Coins);
+			amount *= coinMultiplier;
+		}
 
-		if (endsWith(directory, "coins"))
+		const value = db.increment(fullDirectory, amount);
+		if (incrementingCoins)
 			Events.playSoundEffect(player, "GainCoins");
 
 		this.update(player, fullDirectory, value);
@@ -60,10 +71,18 @@ export class DatabaseService implements OnInit, LogStart {
 
 	public delete(player: Player, directory: string): void {
 		const fullDirectory = this.getDirectoryForPlayer(player, directory);
-		print("deleted", fullDirectory)
 		db.delete(fullDirectory);
 		this.update(player, fullDirectory, undefined);
 	}
+
+	public getMultiplier(player: Player, multiplierType: MultiplierType): number {
+    switch (multiplierType) {
+      case MultiplierType.Coins: {
+        const doubleCoins = Market.UserOwnsGamePassAsync(player.UserId, PassIDs.DoubleCoins);
+        return doubleCoins ? 2 : 1;
+      }
+    }
+  }
 
 	private update(player: Player, fullDirectory: string, value: unknown): void {
 		this.updated.Fire(player, fullDirectory, value);

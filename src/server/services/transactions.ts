@@ -2,10 +2,10 @@ import { OnInit, Service } from "@flamework/core";
 import { MarketplaceService as Market, Players } from "@rbxts/services";
 
 import type { LogStart } from "shared/hooks";
+import { Events } from "server/network";
 import Log from "shared/logger";
 
 import type { DatabaseService } from "./third-party/database";
-import { Events } from "server/network";
 
 type RewardHandler = (player: Player) => void;
 export const enum ProductIDs {
@@ -17,11 +17,15 @@ export const enum ProductIDs {
   Coins250 = 1813571864,
   Coins100 = 1813571865,
   Coins1000 = 1813571866,
-  SkipStage = 1814214080
+  SkipStage = 1814214080,
+  Nuke = 1837958289
 }
 
 export const enum PassIDs {
-  InfiniteCoins = 793370149
+  Boombox = 823037548,
+  DoubleCoins = 823062462,
+  InfiniteCoins = 793370149,
+  Invincibility = 822986586
 }
 
 @Service()
@@ -40,7 +44,7 @@ export class TransactionsService implements OnInit, LogStart {
       Events.character.respawn(player);
     },
 
-    [PassIDs.InfiniteCoins]: player => this.db.set(player, "coins", math.huge)
+    [PassIDs.InfiniteCoins]: player => this.db.set(player, "coins", math.huge),
   }
 
   public constructor(
