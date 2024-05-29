@@ -8,6 +8,10 @@ export const ZONE_NAMES = [
   "Cascadia",
   "Mirkholm",
   "Shadowvale",
+  "Solastir",
+  "Artaeum",
+  "Apocrypha",
+  "Deadlands",
   "The Sanguine Sea"
 ];
 
