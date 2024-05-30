@@ -61,12 +61,6 @@ export class CheckpointsController implements OnInit, OnStart, LogStart {
     if (this.getStage() + offset > this.stage) return;
     this.stageOffset += offset;
     this.update(advancing);
-    // TODO: update ambience sounds
-  }
-
-  private update(advancing = false) {
-    this.offsetUpdated.Fire(this.getStage());
-    Events.stageOffsetUpdated(this.getStage(), advancing);
   }
 
   public subtractStageOffset(offset = 1): void {
@@ -77,7 +71,6 @@ export class CheckpointsController implements OnInit, OnStart, LogStart {
     if (this.getStage() - offset < 0) return;
     this.stageOffset -= offset;
     this.update();
-    // TODO: update ambience sounds
   }
 
   public respawn(promptSkip = true): void {
@@ -107,6 +100,11 @@ export class CheckpointsController implements OnInit, OnStart, LogStart {
 
   public getStage(): number {
     return clamp(this.stage + this.stageOffset, 0, ZONE_NAMES.size() * STAGES_PER_ZONE + 1);
+  }
+
+  private update(advancing = false): void {
+    this.offsetUpdated.Fire(this.getStage());
+    Events.stageOffsetUpdated(this.getStage(), advancing);
   }
 
   private getAllSpawns(): SpawnLocation[] {

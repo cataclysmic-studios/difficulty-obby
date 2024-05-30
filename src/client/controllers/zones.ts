@@ -23,8 +23,8 @@ export class ZonesController implements OnInit {
     this.checkpoints.offsetUpdated.Connect(stage => {
       const zoneName = getZoneName(stage);
       if (zoneName === this.lastZoneName) return;
-      this.lastZoneName = zoneName;
 
+      this.lastZoneName = zoneName;
       this.changed.Fire(zoneName, stage);
       if (math.max(stage - 1, 0) % STAGES_PER_ZONE !== 0) return;
       this.discover(zoneName, stage);

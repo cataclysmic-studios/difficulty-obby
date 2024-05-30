@@ -27,7 +27,7 @@ export class ExitPortal extends BaseComponent<Attributes, PortalModel> implement
       const root = humanoid.RootPart;
       if (root === undefined) return;
 
-      const zoneNumber = ZONE_NAMES.indexOf(zoneName);
+      const zoneNumber = (<readonly string[]>ZONE_NAMES).indexOf(zoneName);
       if (zoneNumber === -1)
         return Log.warning(`Zone "${zoneName}" does not exist in World.Zones`);
 

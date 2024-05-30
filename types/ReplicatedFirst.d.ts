@@ -1,6 +1,28 @@
 interface ReplicatedFirst extends Instance {
   Assets: Folder & {
     UI: Folder & {
+      LeaderboardUI: SurfaceGui & {
+        Line: Frame;
+        Key: Frame & {
+          UIPadding: UIPadding;
+        };
+        List: ScrollingFrame & {
+          UIPadding: UIPadding;
+        };
+      };
+      LeaderboardEntry: Frame & {
+        Username: TextLabel & {
+          UIStroke: UIStroke;
+        };
+        UIListLayout: UIListLayout;
+        Stage: TextLabel & {
+          UIStroke: UIStroke;
+        };
+        UIAspectRatioConstraint: UIAspectRatioConstraint;
+        Coins: TextLabel & {
+          UIStroke: UIStroke;
+        };
+      };
       Notification: TextButton & {
         UIStroke: UIStroke;
       };
