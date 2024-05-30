@@ -94,7 +94,7 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 	}
 
 	public addToArray<T extends defined = defined>(player: Player, directory: string, value: T): void {
-		const array = this.get<T[]>(player, directory);
+		const array = this.get<T[]>(player, directory, []);
 		array.push(value);
 		this.set(player, directory, array);
 	}
