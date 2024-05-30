@@ -47,11 +47,13 @@ export class MusicController implements OnInit, LogStart {
 
     janitor.Add(this.currentSong.Ended.Once(() => {
       Log.info(`Ended song "${this.currentSong!.Name}"`);
+      janitor.Cleanup();
       this.nextSong();
     }));
     janitor.Add(this.currentSong.Stopped.Once(() => {
       Log.info(`Stopped song "${this.currentSong!.Name}"`);
-      this.nextSong()
+      janitor.Cleanup();
+      this.nextSong();
     }));
     this.currentSong.Play();
     Log.info(`Played song "${this.currentSong.Name}"`);
