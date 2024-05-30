@@ -99,12 +99,20 @@ export class DatabaseService implements OnInit, LogStart {
 	}
 
 	private setup(player: Player): void {
-		this.initialize(player, "stage", 0);
-		this.initialize(player, "coins", 0);
-		this.initialize(player, "ownedItems", []);
-		this.initialize(player, "lastCoinRefresh", os.time());
-		this.initialize(player, "dailyCoinsClaimed", {});
-		this.initializeSettings(player);
+		this.initialize(player, "", {
+			stage: 0,
+			coins: 0,
+			ownedItems: [],
+			lastCoinRefresh: os.time(),
+			dailyCoinsClaimed: {},
+			settings: {
+				soundEffects: true,
+				music: true,
+				boomboxes: true,
+				hidePlayers: false,
+				invincibility: false
+			}
+		});
 
 		if (os.time() - this.get<number>(player, "lastCoinRefresh") >= 24 * 60 * 60) {
 			this.delete(player, "dailyCoinsClaimed");
@@ -116,14 +124,6 @@ export class DatabaseService implements OnInit, LogStart {
 
 		this.loaded.Fire(player);
 		Log.info("Initialized data");
-	}
-
-	private initializeSettings(player: Player) {
-		this.initialize(player, "settings/soundEffects", true);
-		this.initialize(player, "settings/music", true);
-		this.initialize(player, "settings/boomboxes", true);
-		this.initialize(player, "settings/hidePlayers", false);
-		this.initialize(player, "settings/invincibility", false);
 	}
 
 	private initialize<T>(player: Player, directory: string, initialValue: T): void {

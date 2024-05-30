@@ -6,12 +6,8 @@ import { endsWith } from "@rbxts/string-utils";
 import { Events } from "client/network";
 import { tween } from "shared/utility/ui";
 
-import type { CharacterController } from "client/controllers/character";
-import type { CheckpointsController } from "client/controllers/checkpoints";
 import DestroyableComponent from "shared/base-components/destroyable";
-import { getZoneModel, getZoneName } from "shared/zones";
-import Object from "@rbxts/object-utils";
-import { flatten } from "shared/utility/array";
+import type { CharacterController } from "client/controllers/character";
 
 interface Attributes {
   readonly CoinPickup_Worth: number;
@@ -22,8 +18,7 @@ export class CoinPickup extends DestroyableComponent<Attributes, BasePart> imple
   private touchDebounce = false;
 
   public constructor(
-    private readonly character: CharacterController,
-    private readonly checkpoints: CheckpointsController
+    private readonly character: CharacterController
   ) { super(); }
 
   public onStart(): void {
