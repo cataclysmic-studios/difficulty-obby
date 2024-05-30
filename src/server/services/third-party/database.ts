@@ -50,11 +50,11 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 	}
 
 	public onPlayerLeave(player: Player): void {
-		db.set(`playerData/${player.UserId}`, this.playerData[tostring(player.UserId)]);
+		db.set(`playerData/${player.UserId}`, this.getCached(player));
 	}
 
 	public get<T>(player: Player, directory: string, defaultValue?: T): T {
-		let data = this.playerData[tostring(player.UserId)];
+		let data = this.getCached(player);
 		const pieces = directory.split("/");
 		for (const piece of pieces)
 			data = <Record<string, unknown>>data[piece];
@@ -63,7 +63,7 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 	}
 
 	public set<T>(player: Player, directory: string, value: T): void {
-		let data = this.playerData[tostring(player.UserId)]
+		let data = this.getCached(player);
 		const pieces = directory.split("/");
 		const lastPiece = pieces[pieces.size() - 1];
 		for (const piece of pieces) {
@@ -118,6 +118,10 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 				return doubleCoins ? 2 : 1;
 			}
 		}
+	}
+
+	private getCached(player: Player) {
+		return this.playerData[tostring(player.UserId)] ?? {};
 	}
 
 	private update(player: Player, fullDirectory: string, value: unknown): void {
