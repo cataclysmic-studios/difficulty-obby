@@ -23,7 +23,7 @@ export class KillPart extends BaseComponent<{}, BasePart> implements OnStart {
       const player = Players.GetPlayerFromCharacter(character);
       if (player !== undefined && this.db.isInvincible(player) && this.instance.Name !== "Void") return;
       character.SetAttribute("KillPartDebounce", true);
-      task.delay(0.3, () => character?.SetAttribute("KillPartDebounce", false));
+      task.delay(0.5, () => character?.SetAttribute("KillPartDebounce", false));
 
       if (player === undefined) return;
       Events.character.respawn(player);

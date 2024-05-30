@@ -4,11 +4,11 @@ import { MarketplaceService as Market } from "@rbxts/services";
 import Signal from "@rbxts/signal";
 
 import type { LogStart } from "shared/hooks";
+import type { OnPlayerLeave } from "server/hooks";
 import { Events, Functions } from "server/network";
 import { PassIDs } from "../../../shared/structs/product-ids";
 import Firebase from "server/firebase";
 import Log from "shared/logger";
-import Object from "@rbxts/object-utils";
 
 const INF_COINS = 999_999_999;
 const db = new Firebase;
@@ -31,12 +31,15 @@ const INITIAL_DATA = {
 		invincibility: false
 	}
 };
+
 @Service({ loadOrder: 0 })
-export class DatabaseService implements OnInit, LogStart {
+export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 	public readonly loaded = new Signal<(player: Player) => void>;
 	public readonly updated = new Signal<(player: Player, directory: string, value: unknown) => void>;
+	public playerData: Record<string, Record<string, unknown>> = {};
 
 	public onInit(): void {
+		this.playerData = db.get("playerData");
 		Events.data.set.connect((player, directory, value) => this.set(player, directory, value));
 		Events.data.increment.connect((player, directory, amount) => this.increment(player, directory, amount))
 		Events.data.decrement.connect((player, directory, amount) => this.decrement(player, directory, amount))
@@ -46,32 +49,43 @@ export class DatabaseService implements OnInit, LogStart {
 		Functions.data.ownsInvincibility.setCallback(player => this.ownsInvincibilityPass(player));
 	}
 
-	public get<T>(player: Player, directory: string, defaultValue?: T): T {
-		const fullDirectory = this.getDirectoryForPlayer(player, directory);
-		return db.get(fullDirectory) ?? <T>defaultValue;
+	public onPlayerLeave(player: Player): void {
+		db.set(`playerData/${player.UserId}`, this.playerData[tostring(player.UserId)]);
 	}
 
-	public set<T>(player: Player, directory: string, value: T, onlyUpdate = false): void {
-		const fullDirectory = this.getDirectoryForPlayer(player, directory);
-		if (!onlyUpdate)
-			db.set(fullDirectory, value);
+	public get<T>(player: Player, directory: string, defaultValue?: T): T {
+		let data = this.playerData[tostring(player.UserId)];
+		const pieces = directory.split("/");
+		for (const piece of pieces)
+			data = <Record<string, unknown>>data[piece];
 
-		this.update(player, fullDirectory, value);
+		return <T>(data ?? defaultValue);
+	}
+
+	public set<T>(player: Player, directory: string, value: T): void {
+		let data = this.playerData[tostring(player.UserId)]
+		const pieces = directory.split("/");
+		const lastPiece = pieces[pieces.size() - 1];
+		for (const piece of pieces) {
+			if (piece === lastPiece) continue;
+			data = <Record<string, unknown>>data[piece];
+		}
+
+		data[lastPiece] = value;
+		this.update(player, this.getDirectoryForPlayer(player, directory), value);
 	}
 
 	public increment(player: Player, directory: string, amount = 1): number {
-		const fullDirectory = this.getDirectoryForPlayer(player, directory);
 		const incrementingCoins = endsWith(directory, "coins");
 		if (incrementingCoins) {
+			Events.playSoundEffect(player, "GainCoins");
 			const coinMultiplier = this.getMultiplier(player, MultiplierType.Coins);
 			amount *= coinMultiplier;
 		}
 
-		const value = db.increment(fullDirectory, amount);
-		if (incrementingCoins)
-			Events.playSoundEffect(player, "GainCoins");
-
-		this.update(player, fullDirectory, value);
+		const oldValue = this.get<number>(player, directory);
+		const value = oldValue + amount;
+		this.set(player, directory, value);
 		return value;
 	}
 
@@ -80,15 +94,13 @@ export class DatabaseService implements OnInit, LogStart {
 	}
 
 	public addToArray<T extends defined = defined>(player: Player, directory: string, value: T): void {
-		const fullDirectory = this.getDirectoryForPlayer(player, directory);
-		db.addToArray(fullDirectory, value);
-		this.update(player, fullDirectory, value);
+		const array = this.get<T[]>(player, directory);
+		array.push(value);
+		this.set(player, directory, array);
 	}
 
 	public delete(player: Player, directory: string): void {
-		const fullDirectory = this.getDirectoryForPlayer(player, directory);
-		db.delete(fullDirectory);
-		this.update(player, fullDirectory, undefined);
+		this.set(player, directory, undefined);
 	}
 
 	public isInvincible(player: Player): boolean {
@@ -114,30 +126,33 @@ export class DatabaseService implements OnInit, LogStart {
 	}
 
 	private setup(player: Player): void {
-		this.initialize(player);
+		this.playerData[tostring(player.UserId)] = db.get<Record<string, unknown>>(`playerData/${player.UserId}`) ?? INITIAL_DATA;
+		this.initialize(player, "stage", 0);
+		this.initialize(player, "coins", 0);
+		this.initialize(player, "ownedItems", []);
+		this.initialize(player, "lastCoinRefresh", os.time());
+		this.initialize(player, "dailyCoinsClaimed", {});
+		this.initializeSettings(player);
 
 		if (os.time() - this.get<number>(player, "lastCoinRefresh") >= 24 * 60 * 60) {
 			this.delete(player, "dailyCoinsClaimed");
 			this.set<number>(player, "lastCoinRefresh", os.time());
 		}
 
-		if (Market.UserOwnsGamePassAsync(player.UserId, PassIDs.InfiniteCoins) && this.get<number>(player, "coins") < INF_COINS)
-			this.set(player, "coins", INF_COINS);
-
 		this.loaded.Fire(player);
 		Log.info("Initialized data");
 	}
 
-	private initialize<T>(player: Player): void {
-		const fullDirectory = this.getDirectoryForPlayer(player, "");
-		const object = db.get<Record<string, unknown>>(fullDirectory) ?? INITIAL_DATA;
-		for (const [key, value] of Object.entries(object)) {
-			if (key === "settings")
-				for (const [name, setting] of Object.entries(value))
-					this.set(player, `settings/${name}`, setting, value !== INITIAL_DATA.settings[<keyof typeof INITIAL_DATA.settings>name]);
-			else
-				this.set(player, key, value, value !== value !== INITIAL_DATA[<keyof typeof INITIAL_DATA>key]);
-		}
+	private initialize<T>(player: Player, directory: string, initialValue: T): void {
+		this.set(player, directory, this.get(player, directory, initialValue));
+	}
+
+	private initializeSettings(player: Player) {
+		this.initialize(player, "settings/soundEffects", true);
+		this.initialize(player, "settings/music", true);
+		this.initialize(player, "settings/boomboxes", true);
+		this.initialize(player, "settings/hidePlayers", false);
+		this.initialize(player, "settings/invincibility", false);
 	}
 
 	private getDirectoryForPlayer(player: Player, directory: string): string {
