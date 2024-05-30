@@ -40,7 +40,7 @@ export class SpinningPart extends BaseComponent<Attributes, BasePart> implements
     const currentOrientation = this.instance.Orientation;
     const deltaOrientation = currentOrientation.sub(this.lastOrientation);
     const angularVelocity = deltaOrientation;
-    this.instance.AssemblyAngularVelocity = angularVelocity;
+    this.instance.AssemblyAngularVelocity = angularVelocity.div(this.instance.Size);
     this.lastOrientation = currentOrientation;
     this.instance.Orientation = this.instance.Orientation.add(spin);
   }

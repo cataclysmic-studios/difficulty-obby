@@ -10,7 +10,7 @@ import type { StorePage } from "./ui/pages/store";
 import type { CharacterController } from "client/controllers/character";
 import type { ProximityPromptController } from "client/controllers/proximity-prompt";
 
-const { random, min, deg, asin, atan2 } = math;
+const { random, clamp, deg, asin, atan2 } = math;
 
 interface Attributes {
   NPC_CommunicationRadius: number;
@@ -66,7 +66,7 @@ export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart,
       if (!this.isAnimationPlaying("FreeHead"))
         this.onRadiusEntered();
 
-      this.facePlayer(positionDifference.Unit);
+      this.facePlayer(CFrame.lookAt(this.neckBone.WorldPosition, characterPosition).LookVector);
     } else
       if (this.isAnimationPlaying("FreeHead"))
         this.onRadiusLeft();
@@ -74,23 +74,23 @@ export class NPC extends BaseComponent<Attributes, NPCModel> implements OnStart,
 
   private onRadiusEntered(): void {
     this.playAnimation("FreeHead");
+    this.playVoiceLine("Greeting");
     this.proximityPrompt.setAction("Talk", this.talkActionID);
     this.proximityPrompt.toggle(true);
-    this.playVoiceLine("Greeting");
   }
 
   private onRadiusLeft(): void {
     this.stopAnimation("FreeHead");
-    this.proximityPrompt.toggle(false);
     this.playVoiceLine("Goodbye");
+    this.proximityPrompt.toggle(false);
     tween(this.neckBone, new TweenInfoBuilder().SetTime(0.55), {
       Orientation: this.idleHeadOrientation
     });
   }
 
-  private facePlayer(direction: Vector3) {
-    const yaw = doubleSidedLimit(deg(atan2(direction.X, direction.Z)), 60);
-    const pitch = min(deg(asin(direction.Y)), 15);
+  private facePlayer(direction: Vector3): void {
+    const pitch = clamp(deg(asin(direction.Y)), -20, 15);
+    const yaw = -doubleSidedLimit(deg(atan2(direction.Z, direction.X)), 60);
     const orientation = new Vector3(pitch, yaw, 0);
     this.neckBone.Orientation = this.neckBone.Orientation.Lerp(orientation, 0.1);
   }
