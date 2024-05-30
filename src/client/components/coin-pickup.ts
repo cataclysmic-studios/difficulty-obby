@@ -69,6 +69,7 @@ export class CoinPickup extends DestroyableComponent<Attributes, BasePart> imple
       if (!isLoaded()) return;
       if (this.touchDebounce) return;
       this.touchDebounce = true;
+      task.delay(5, () => this.touchDebounce = false);
 
       const zoneName = this.getZoneName();
       this.instance.Destroy();
