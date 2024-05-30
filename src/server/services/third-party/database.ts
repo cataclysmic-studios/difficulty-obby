@@ -8,6 +8,7 @@ import { Events, Functions } from "server/network";
 import { PassIDs } from "../../../shared/structs/product-ids";
 import Firebase from "server/firebase";
 import Log from "shared/logger";
+import Object from "@rbxts/object-utils";
 
 const INF_COINS = 999_999_999;
 const db = new Firebase;
@@ -16,6 +17,20 @@ export const enum MultiplierType {
 	Coins
 }
 
+const INITIAL_DATA = {
+	stage: 0,
+	coins: 0,
+	ownedItems: [],
+	lastCoinRefresh: os.time(),
+	dailyCoinsClaimed: {},
+	settings: {
+		soundEffects: true,
+		music: true,
+		boomboxes: true,
+		hidePlayers: false,
+		invincibility: false
+	}
+};
 @Service({ loadOrder: 0 })
 export class DatabaseService implements OnInit, LogStart {
 	public readonly loaded = new Signal<(player: Player) => void>;
@@ -99,20 +114,7 @@ export class DatabaseService implements OnInit, LogStart {
 	}
 
 	private setup(player: Player): void {
-		this.initialize(player, "", {
-			stage: 0,
-			coins: 0,
-			ownedItems: [],
-			lastCoinRefresh: os.time(),
-			dailyCoinsClaimed: {},
-			settings: {
-				soundEffects: true,
-				music: true,
-				boomboxes: true,
-				hidePlayers: false,
-				invincibility: false
-			}
-		});
+		this.initialize(player);
 
 		if (os.time() - this.get<number>(player, "lastCoinRefresh") >= 24 * 60 * 60) {
 			this.delete(player, "dailyCoinsClaimed");
@@ -126,10 +128,16 @@ export class DatabaseService implements OnInit, LogStart {
 		Log.info("Initialized data");
 	}
 
-	private initialize<T>(player: Player, directory: string, initialValue: T): void {
-		const fullDirectory = this.getDirectoryForPlayer(player, directory);
-		const value = db.get<Maybe<T>>(fullDirectory) ?? initialValue;
-		this.set(player, directory, value, value !== initialValue);
+	private initialize<T>(player: Player): void {
+		const fullDirectory = this.getDirectoryForPlayer(player, "");
+		const object = db.get<Record<string, unknown>>(fullDirectory) ?? INITIAL_DATA;
+		for (const [key, value] of Object.entries(object)) {
+			if (key === "settings")
+				for (const [name, setting] of Object.entries(value))
+					this.set(player, `settings/${name}`, setting, value !== INITIAL_DATA.settings[<keyof typeof INITIAL_DATA.settings>name]);
+			else
+				this.set(player, key, value, value !== value !== INITIAL_DATA[<keyof typeof INITIAL_DATA>key]);
+		}
 	}
 
 	private getDirectoryForPlayer(player: Player, directory: string): string {
