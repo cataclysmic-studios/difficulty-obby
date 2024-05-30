@@ -9,25 +9,24 @@ import type { DatabaseService } from "./third-party/database";
 
 @Service()
 export class LeaderstatsService implements OnPlayerJoin, LogStart {
-  private readonly leaderstats = new Instance("Folder");
-
   public constructor(
     private readonly db: DatabaseService
   ) { }
 
   public onPlayerJoin(player: Player): void {
-    this.leaderstats.Name = "leaderstats";
-    this.leaderstats.Parent = player;
+    const leaderstats = new Instance("Folder");
+    leaderstats.Name = "leaderstats";
+    leaderstats.Parent = player;
 
     const stageStat = new Instance("IntValue");
     stageStat.Name = "Stage";
     stageStat.Value = 0;
-    stageStat.Parent = this.leaderstats;
+    stageStat.Parent = leaderstats;
 
     const coinsStat = new Instance("IntValue");
     coinsStat.Name = "Coins";
     coinsStat.Value = 0;
-    coinsStat.Parent = this.leaderstats;
+    coinsStat.Parent = leaderstats;
 
     Events.stageOffsetUpdated.connect((p, stage, advancing) => {
       if (player !== p) return;
@@ -48,7 +47,8 @@ export class LeaderstatsService implements OnPlayerJoin, LogStart {
     });
   }
 
-  public getValue<T>(statName: string): T {
-    return <T>(<ValueBase>this.leaderstats.WaitForChild(statName)).Value;
+  public getValue<T>(player: Player, statName: string): T {
+    const leaderstats = player.WaitForChild("leaderstats");
+    return <T>(<ValueBase>leaderstats.WaitForChild(statName)).Value;
   }
 }

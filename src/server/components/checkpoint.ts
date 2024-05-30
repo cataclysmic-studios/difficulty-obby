@@ -29,7 +29,7 @@ export class Checkpoint extends BaseComponent<{}, SpawnLocation> implements OnSt
       task.delay(0.25, () => debounce = false);
 
       const checkpointStage = tonumber(this.instance.Name)!;
-      const currentStage = this.leaderstats.getValue<number>("Stage");
+      const currentStage = this.leaderstats.getValue<number>(player, "Stage");
       const topStage = this.db.get<number>(player, "stage");
       if (currentStage > topStage)
         player.Kick("take a look at yourself, hacking on a roblox obby");
