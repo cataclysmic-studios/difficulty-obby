@@ -65,7 +65,6 @@ export class MusicController implements OnInit, LogStart {
     if (zoneMusic !== this.lastZoneMusic)
       this.songIndex = 0;
 
-
     this.songIndex += 1
     this.songIndex %= zoneMusic.GetChildren().size();
     this.playCurrentSong();

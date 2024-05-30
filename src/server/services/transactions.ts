@@ -35,9 +35,9 @@ export class TransactionsService implements OnInit, LogStart {
         task.delay(4.5, () => {
           Events.nukeShake.broadcast();
           Events.playSoundEffect.broadcast("NukeExplode");
+          Events.character.respawn.except(player, false);
           Lighting.ExposureCompensation = 4;
           tween(Lighting, new TweenInfo(10), { ExposureCompensation: 0 });
-          Events.character.respawn.broadcast(false);
         });
       });
     },
