@@ -120,7 +120,7 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 		}
 	}
 
-	private getCached(player: Player) {
+	private getCached(player: Player): Record<string, unknown> {
 		return this.playerData[tostring(player.UserId)] ?? {};
 	}
 
@@ -142,6 +142,9 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 			this.delete(player, "dailyCoinsClaimed");
 			this.set<number>(player, "lastCoinRefresh", os.time());
 		}
+
+		if (Market.UserOwnsGamePassAsync(player.UserId, PassIDs.InfiniteCoins) && this.get<number>(player, "coins") < INF_COINS)
+			this.set(player, "coins", INF_COINS);
 
 		this.loaded.Fire(player);
 		Log.info("Initialized data");
