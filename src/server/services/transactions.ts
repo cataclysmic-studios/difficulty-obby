@@ -37,7 +37,7 @@ export class TransactionsService implements OnInit, LogStart {
           Events.playSoundEffect.broadcast("NukeExplode");
           Lighting.ExposureCompensation = 4;
           tween(Lighting, new TweenInfo(10), { ExposureCompensation: 0 });
-          Events.character.respawn.except(player, false);
+          Events.character.respawn.broadcast(false);
         });
       });
     },
