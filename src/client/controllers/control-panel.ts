@@ -28,7 +28,7 @@ export class ControlPanelController implements OnStart {
   ) { }
 
   public async onStart(): Promise<void> {
-    const windowSize = new Vector2(300, 400);
+    const windowSize = new Vector2(500, 400);
     let open = false;
 
     this.input
