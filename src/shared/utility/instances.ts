@@ -20,6 +20,7 @@ export function getPageContents<T extends defined>(pages: Pages<T>): T[] {
     for (const item of pages.GetCurrentPage())
       contents.push(item);
 
+    task.wait(0.1);
     if (!pages.IsFinished)
       pages.AdvanceToNextPageAsync();
   } while (!pages.IsFinished)

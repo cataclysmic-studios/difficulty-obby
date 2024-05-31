@@ -51,6 +51,7 @@ export class CheckpointsController implements OnInit, OnStart, LogStart {
 
   public onStart(): void {
     this.update();
+    task.delay(3, () => this.update());
   }
 
   public addStageOffset(offset = 1, advancing = false): void {
