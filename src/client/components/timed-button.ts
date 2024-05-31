@@ -60,7 +60,7 @@ export class TimedButton extends BaseComponent<Attributes, BasePart> implements 
 
     const conn = Runtime.Heartbeat.Connect(dt => {
       if (ticking === undefined) return;
-      if (timePosition >= time)
+      if (timePosition >= time - 0.01)
         return ticking.Stop();
 
       const speed = (timePosition / time) * MAX_TICK_SPEED;

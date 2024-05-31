@@ -41,9 +41,6 @@ interface ServerFunctions {
     get(directory: string, defaultValue?: unknown): unknown;
     ownsInvincibility(): boolean;
   };
-  github: {
-    getInfo(): GitHubInfo;
-  };
   roblox: {
     getGamepasses(amount?: number): unknown[];
   };
