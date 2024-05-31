@@ -3,6 +3,9 @@ import { Component } from "@flamework/components";
 
 import Spring from "shared/classes/spring";
 import BaseButtonAnimation from "client/base-components/base-button-animation";
+import { flattenNumber } from "shared/utility/numbers";
+
+const { max } = math;
 
 interface Attributes {
   readonly SpringScaleAnimation_ScaleIncrement: number;
@@ -15,7 +18,7 @@ interface Attributes {
 @Component({
   tag: "SpringScaleAnimation",
   defaults: {
-    SpringScaleAnimation_ScaleIncrement: 0.2,
+    SpringScaleAnimation_ScaleIncrement: 0.15,
     SpringScaleAnimation_Mass: 5,
     SpringScaleAnimation_Force: 100,
     SpringScaleAnimation_Damping: 3,
@@ -45,6 +48,6 @@ export class SpringScaleAnimation extends BaseButtonAnimation<Attributes> implem
       this.spring.shove(new Vector3(this.scaleIncrement, 0, 0));
 
     const movement = this.spring.update(dt);
-    this.scale.Scale = this.defaultScale + movement.X;
+    this.scale.Scale = this.defaultScale + max(flattenNumber(movement.X), 0);
   }
 }
