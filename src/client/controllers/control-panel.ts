@@ -65,9 +65,12 @@ export class ControlPanelController implements OnStart {
     }
 
     Iris.Separator();
+    const coinsRecipient = Iris.InputText(["", "Recipient of coins (empty for self)"]);
     const addCoins = Iris.Button(["Add 1,000 Coins"]);
-    if (addCoins.clicked())
-      Events.data.increment("coins", 1000);
+    if (addCoins.clicked()) {
+      const recipientName = coinsRecipient.state.text.get();
+      Events.data.giveCoins(removeWhitespace(recipientName) === "" ? Player.Name : recipientName);
+    }
 
     Iris.End();
   }

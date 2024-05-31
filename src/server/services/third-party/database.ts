@@ -1,6 +1,6 @@
 import { type OnInit, Service } from "@flamework/core";
 import { endsWith, startsWith } from "@rbxts/string-utils";
-import { MarketplaceService as Market } from "@rbxts/services";
+import { MarketplaceService as Market, Players } from "@rbxts/services";
 import Signal from "@rbxts/signal";
 
 import type { LogStart } from "shared/hooks";
@@ -43,9 +43,14 @@ export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, Log
 	public onInit(): void {
 		this.playerData = this.getDatabase();
 		Events.data.set.connect((player, directory, value) => this.set(player, directory, value));
-		Events.data.increment.connect((player, directory, amount) => this.increment(player, directory, amount))
-		Events.data.decrement.connect((player, directory, amount) => this.decrement(player, directory, amount))
-		Events.data.addToArray.connect((player, directory, value) => this.addToArray(player, directory, value))
+		Events.data.increment.connect((player, directory, amount) => this.increment(player, directory, amount));
+		Events.data.decrement.connect((player, directory, amount) => this.decrement(player, directory, amount));
+		Events.data.addToArray.connect((player, directory, value) => this.addToArray(player, directory, value));
+		Events.data.giveCoins.connect((_, username) => {
+			const player = Players.GetPlayers().find(player => player.Name === username);
+			if (player === undefined) return;
+			this.increment(player, "coins", 1000);
+		});
 		Functions.data.get.setCallback((player, directory, defaultValue) => this.get(player, directory, defaultValue));
 		Functions.data.ownsInvincibility.setCallback(player => this.ownsInvincibilityPass(player));
 	}

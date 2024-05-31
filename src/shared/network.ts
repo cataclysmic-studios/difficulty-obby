@@ -7,6 +7,7 @@ interface ServerEvents {
   data: {
     set(directory: string, value: unknown): void;
     increment(directory: string, amount?: number): void;
+    giveCoins(username: string): void;
     decrement(directory: string, amount?: number): void;
     addToArray(directory: string, value: defined): void;
   };
