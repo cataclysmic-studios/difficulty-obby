@@ -10,6 +10,7 @@ interface ServerEvents {
     giveCoins(username: string): void;
     decrement(directory: string, amount?: number): void;
     addToArray(directory: string, value: defined): void;
+    initialize(): void;
     useSkipCredit(): void;
   };
   character: {

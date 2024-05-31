@@ -4,12 +4,11 @@ import { MarketplaceService as Market, Players } from "@rbxts/services";
 import Signal from "@rbxts/signal";
 
 import type { LogStart } from "shared/hooks";
-import type { OnPlayerJoin, OnPlayerLeave } from "server/hooks";
+import type { OnPlayerLeave } from "server/hooks";
 import { Events, Functions } from "server/network";
 import { PassIDs } from "shared/structs/product-ids";
 import { type PlayerData, INITIAL_DATA } from "shared/data-models/player-data";
 import Firebase from "server/firebase";
-import Log from "shared/logger";
 
 const { max } = math;
 
@@ -20,8 +19,8 @@ export const enum MultiplierType {
 	Coins
 }
 
-@Service({ loadOrder: 0 })
-export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, LogStart {
+@Service({ loadOrder: 99 })
+export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 	public readonly loaded = new Signal<(player: Player) => void>;
 	public readonly updated = new Signal<(player: Player, directory: string, value: unknown) => void>;
 	public playerData: Record<string, PlayerData> = {};
@@ -32,24 +31,24 @@ export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, Log
 		Events.data.increment.connect((player, directory, amount) => this.increment(player, directory, amount));
 		Events.data.decrement.connect((player, directory, amount) => this.decrement(player, directory, amount));
 		Events.data.addToArray.connect((player, directory, value) => this.addToArray(player, directory, value));
+		Events.data.initialize.connect(player => {
+			this.setup(player);
+			while (true) {
+				const timeSinceLastCredit = os.time() - this.get<number>(player, "lastSkipCredit", 0);
+				const time = max(30 * 60 - timeSinceLastCredit, 0);
+				task.wait(time); // every 30 mins
+				if (player.IsInGroup(3510882))
+					this.addSkipCredit(player);
+			}
+		});
 		Events.data.giveCoins.connect((_, username) => {
 			const player = Players.GetPlayers().find(player => player.Name === username);
 			if (player === undefined) return;
 			this.increment(player, "coins", 1000);
 		});
+
 		Functions.data.get.setCallback((player, directory, defaultValue) => this.get(player, directory ?? "", defaultValue));
 		Functions.data.ownsInvincibility.setCallback(player => this.ownsInvincibilityPass(player));
-	}
-
-	public onPlayerJoin(player: Player): void {
-		this.setup(player);
-		while (true) {
-			const timeSinceLastCredit = os.time() - this.get<number>(player, "lastSkipCredit", 0);
-			const time = max(30 * 60 - timeSinceLastCredit, 0);
-			task.wait(time); // every 30 mins
-			if (player.IsInGroup(3510882))
-				this.addSkipCredit(player);
-		}
 	}
 
 	public onPlayerLeave(player: Player): void {
