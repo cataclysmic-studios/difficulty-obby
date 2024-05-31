@@ -1,7 +1,6 @@
 import { Networking } from "@flamework/networking";
 
 interface ServerEvents {
-  updateBackpackItems(): void;
   stageOffsetUpdated(stage: number, advancing?: boolean): void;
   sendGlobalNotification(message: string): void;
   nuke(): void;

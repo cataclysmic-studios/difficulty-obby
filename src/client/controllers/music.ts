@@ -9,7 +9,7 @@ import Log from "shared/logger";
 import type { ZonesController } from "./zones";
 import type { CheckpointsController } from "./checkpoints";
 
-@Controller()
+@Controller({ loadOrder: 0 })
 export class MusicController implements OnInit, LogStart {
   public currentSong?: Sound;
 

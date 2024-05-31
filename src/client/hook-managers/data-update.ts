@@ -3,7 +3,7 @@ import { Controller, Modding, type OnInit } from "@flamework/core";
 import type { OnDataUpdate } from "client/hooks";
 import { Events } from "client/network";
 
-@Controller({ loadOrder: 1 })
+@Controller({ loadOrder: 99 })
 export class DataUpdateController implements OnInit {
   public onInit(): void {
     const dataUpdateListeners = new Set<OnDataUpdate>;

@@ -8,7 +8,7 @@ import { getZoneName, STAGES_PER_ZONE } from "shared/zones";
 import type { CheckpointsController } from "./checkpoints";
 import type { NotificationController } from "./notification";
 
-@Controller()
+@Controller({ loadOrder: 1 })
 export class ZonesController implements OnInit, LogStart {
   public readonly discovered = new Signal<(zoneName: string, currentStage: number) => void>;
   public readonly changed = new Signal<(zoneName: string, currentStage: number) => void>;

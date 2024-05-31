@@ -4,6 +4,7 @@ import { endsWith } from "@rbxts/string-utils";
 import Signal from "@rbxts/signal";
 
 import type { LogStart } from "shared/hooks";
+import type { OnDataUpdate } from "client/hooks";
 import { Events } from "client/network";
 import { Player } from "shared/utility/client";
 import { STAGES_PER_ZONE, ZONE_NAMES } from "shared/zones";
@@ -15,14 +16,15 @@ import type { UIEffectsController } from "./ui-effects";
 
 const { clamp } = math;
 
-@Controller({ loadOrder: 1 })
-export class CheckpointsController implements OnInit, LogStart {
+@Controller({ loadOrder: 2 })
+export class CheckpointsController implements OnInit, OnDataUpdate, LogStart {
   public readonly offsetUpdated = new Signal<(newStage: number) => void>;
   public stage = 0;
 
   private stageOffset = 0;
   private offsetDebounce = false;
   private firstStageTry = true;
+  private firstStageUpdate = true;
 
   public constructor(
     private readonly character: CharacterController,
@@ -31,22 +33,21 @@ export class CheckpointsController implements OnInit, LogStart {
   ) { }
 
   public onInit(): void {
-    let firstStageUpdate = true;
-
     Events.character.respawn.connect(promptSkip => this.respawn(promptSkip));
     Events.advanceStageOffset.connect(() => this.addStageOffset(1, true));
-    Events.data.updated.connect((directory, value) => {
-      if (!endsWith(directory, "stage")) return;
-      this.stage = <number>value;
-      this.stageOffset = 0;
-      this.firstStageTry = true;
-      this.update(true);
+  }
 
-      if (firstStageUpdate) {
-        this.respawn(false);
-        firstStageUpdate = false;
-      }
-    });
+  public onDataUpdate(directory: string, stage: number): void {
+    if (!endsWith(directory, "stage")) return;
+    this.stage = stage;
+    this.stageOffset = 0;
+    this.firstStageTry = true;
+    this.update(true);
+
+    if (this.firstStageUpdate) {
+      this.respawn(false);
+      this.firstStageUpdate = false;
+    }
   }
 
   public addStageOffset(offset = 1, advancing = false): void {

@@ -7,14 +7,15 @@ import type { OnDataUpdate } from "client/hooks";
 import type { LogStart } from "shared/hooks";
 import { Events, Functions } from "client/network";
 import { Player, PlayerGui } from "shared/utility/client";
-import { STAGES_PER_ZONE, ZONE_NAMES } from "shared/zones";
+import { getZoneName, STAGES_PER_ZONE, ZONE_NAMES } from "shared/zones";
+import { ProductIDs } from "shared/structs/product-ids";
 import type { PlayerData } from "shared/data-models/player-data";
 
 import type { CheckpointsController } from "client/controllers/checkpoints";
-import { ProductIDs } from "shared/structs/product-ids";
 
 interface StageInfoFrame extends Frame {
   StageNumber: TextLabel;
+  ZoneName: TextLabel;
   NextStage: TextButton;
   PreviousStage: TextButton;
   Next10Stages: TextButton;
@@ -51,6 +52,7 @@ export class StageInfo extends BaseComponent<{}, StageInfoFrame> implements OnSt
   public onDataUpdate(directory: string, stage: number): void {
     if (!endsWith(directory, "stage")) return;
     this.instance.StageNumber.Text = tostring(math.max(stage + this.checkpoints.getStageOffset(), 0));
+    this.instance.ZoneName.Text = getZoneName(stage);
     this.instance.Visible = true;
   }
 }
