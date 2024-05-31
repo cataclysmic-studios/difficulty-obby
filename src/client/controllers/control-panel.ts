@@ -31,28 +31,26 @@ export class ControlPanelController implements OnStart {
     const windowSize = new Vector2(300, 400);
     let open = false;
 
-    this.iris.initialized.Connect(() => {
-      this.input
-        .Bind("Comma", () => {
-          if (!Runtime.IsStudio() && !DEVELOPERS.includes(Player.UserId)) return;
-          Iris.Connect(() => {
-            if (!open) return;
-            const window = Iris.Window(["Control Panel"], { size: Iris.State(windowSize) });
-            if (window.closed())
-              open = false;
+    this.input
+      .Bind("Comma", () => {
+        if (!Runtime.IsStudio() && !DEVELOPERS.includes(Player.UserId)) return;
+        open = !open
+      })
+      .Bind("P", () => {
+        if (!Runtime.IsStudio() && !DEVELOPERS.includes(Player.UserId)) return;
+        this.mouse.behavior = this.mouse.behavior === Enum.MouseBehavior.Default ? Enum.MouseBehavior.LockCenter : Enum.MouseBehavior.Default;
+        Player.CameraMode = Player.CameraMode === Enum.CameraMode.LockFirstPerson ? Enum.CameraMode.Classic : Enum.CameraMode.LockFirstPerson;
+      });
 
-            this.renderCameraTab();
-            this.renderAdminTab();
+    this.iris.initialized.Connect(() => Iris.Connect(() => {
+      if (!open) return;
+      Iris.Window(["Control Panel", false, false, false, true], { size: Iris.State(windowSize) });
 
-            Iris.End();
-          });
-        })
-        .Bind("P", () => {
-          if (!Runtime.IsStudio() && !DEVELOPERS.includes(Player.UserId)) return;
-          this.mouse.behavior = this.mouse.behavior === Enum.MouseBehavior.Default ? Enum.MouseBehavior.LockCenter : Enum.MouseBehavior.Default;
-          Player.CameraMode = Player.CameraMode === Enum.CameraMode.LockFirstPerson ? Enum.CameraMode.Classic : Enum.CameraMode.LockFirstPerson;
-        });
-    });
+      this.renderCameraTab();
+      this.renderAdminTab();
+
+      Iris.End();
+    }));
   }
 
   private renderAdminTab(): void {

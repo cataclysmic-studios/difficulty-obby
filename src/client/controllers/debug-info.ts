@@ -42,18 +42,14 @@ export class DebugInfoController implements OnInit, LogStart {
     let zoneName = "...";
     this.zone.changed.Connect(newName => zoneName = newName);
 
-    this.iris.initialized.Once(() => {
-      Iris.Connect(() => {
-        if (!open) return;
-        const window = Iris.Window(["Debug Info"], { size: Iris.State(windowSize) });
-        if (window.closed())
-          open = false;
+    this.iris.initialized.Once(() => Iris.Connect(() => {
+      if (!open) return;
+      Iris.Window(["Debug Info", false, false, false, true], { size: Iris.State(windowSize) });
 
-        Iris.Text([`<b>Current Zone:</b> ${zoneName}`, true, undefined, true]);
-        Iris.Text([`<b>Current Song:</b> ${this.music.currentSong?.Name ?? "None"}`, true, undefined, true]);
+      Iris.Text([`<b>Current Zone:</b> ${zoneName}`, true, undefined, true]);
+      Iris.Text([`<b>Current Song:</b> ${this.music.currentSong?.Name ?? "None"}`, true, undefined, true]);
 
-        Iris.End();
-      });
-    });
+      Iris.End();
+    }));
   }
 }
