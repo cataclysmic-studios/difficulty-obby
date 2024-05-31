@@ -11,6 +11,7 @@ import type { IrisController } from "./iris";
 import type { CameraController } from "./camera";
 import type { MouseController } from "./mouse";
 import { Events } from "client/network";
+import { removeWhitespace } from "shared/utility/strings";
 
 @Controller()
 export class ControlPanelController implements OnStart {
@@ -30,26 +31,28 @@ export class ControlPanelController implements OnStart {
     const windowSize = new Vector2(300, 400);
     let open = false;
 
-    this.input
-      .Bind("Comma", () => {
-        if (!Runtime.IsStudio() && !DEVELOPERS.includes(Player.UserId)) return;
-        open = !open;
-      })
-      .Bind("P", () => {
-        if (!Runtime.IsStudio() && !DEVELOPERS.includes(Player.UserId)) return;
-        this.mouse.behavior = this.mouse.behavior === Enum.MouseBehavior.Default ? Enum.MouseBehavior.LockCenter : Enum.MouseBehavior.Default;
-        Player.CameraMode = Player.CameraMode === Enum.CameraMode.LockFirstPerson ? Enum.CameraMode.Classic : Enum.CameraMode.LockFirstPerson;
-      });
+    this.iris.initialized.Connect(() => {
+      this.input
+        .Bind("Comma", () => {
+          if (!Runtime.IsStudio() && !DEVELOPERS.includes(Player.UserId)) return;
+          Iris.Connect(() => {
+            if (!open) return;
+            const window = Iris.Window(["Control Panel"], { size: Iris.State(windowSize) });
+            if (window.closed())
+              open = false;
 
-    this.iris.initialized.Connect(() => Iris.Connect(() => {
-      if (!open) return;
-      Iris.Window(["Control Panel"], { size: Iris.State(windowSize) });
+            this.renderCameraTab();
+            this.renderAdminTab();
 
-      this.renderCameraTab();
-      this.renderAdminTab();
-
-      Iris.End();
-    }));
+            Iris.End();
+          });
+        })
+        .Bind("P", () => {
+          if (!Runtime.IsStudio() && !DEVELOPERS.includes(Player.UserId)) return;
+          this.mouse.behavior = this.mouse.behavior === Enum.MouseBehavior.Default ? Enum.MouseBehavior.LockCenter : Enum.MouseBehavior.Default;
+          Player.CameraMode = Player.CameraMode === Enum.CameraMode.LockFirstPerson ? Enum.CameraMode.Classic : Enum.CameraMode.LockFirstPerson;
+        });
+    });
   }
 
   private renderAdminTab(): void {
@@ -57,8 +60,15 @@ export class ControlPanelController implements OnStart {
 
     const notifText = Iris.InputText(["", "Notification message"]);
     const notifButton = Iris.Button(["Send Global Notification"]);
-    if (notifButton.clicked())
-      Events.sendGlobalNotification(notifText.state.text.get());
+    if (notifButton.clicked()) {
+      const text = notifText.state.text.get();
+      if (removeWhitespace(text) === "") return;
+      Events.sendGlobalNotification(text);
+    }
+
+    const addCoins = Iris.Button(["Add 1,000 Coins"]);
+    if (addCoins.clicked())
+      Events.data.increment("coins", 1000);
 
     Iris.End();
   }

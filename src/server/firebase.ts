@@ -41,10 +41,7 @@ export default class Firebase {
 
   public get<T>(path?: string, defaultValue?: T): T {
     try {
-      Log.info("Getting from Firebase path:", repr(path));
       const data = <T>HTTP.JSONDecode(HTTP.GetAsync(this.getEndpoint(path), true));
-      Log.info("Firebase got value:", repr(data));
-      Log.info("Default value:", repr(defaultValue));
       return data ?? defaultValue!;
     } catch (error) {
       throw Log.fatal(`[Firebase]: ${error}`);

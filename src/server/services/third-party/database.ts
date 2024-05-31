@@ -9,8 +9,6 @@ import { Events, Functions } from "server/network";
 import { PassIDs } from "shared/structs/product-ids";
 import type { ZoneName } from "shared/zones";
 import Firebase from "server/firebase";
-import Log from "shared/logger";
-import repr from "shared/utility/repr";
 
 const INF_COINS = 999_999_999;
 const db = new Firebase;
@@ -141,8 +139,6 @@ export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, Log
 	}
 
 	private setup(player: Player): void {
-		Log.info(`Initializing ${player}'s data`);
-		Log.info("Directory:", `playerData/${player.UserId}`)
 		const data = db.get<PlayerData>(`playerData/${player.UserId}`, table.clone(INITIAL_DATA));
 		this.playerData[tostring(player.UserId)] = data;
 		this.initialize(player, "stage", 0);

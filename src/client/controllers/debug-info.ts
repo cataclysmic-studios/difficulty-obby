@@ -45,7 +45,9 @@ export class DebugInfoController implements OnInit, LogStart {
     this.iris.initialized.Once(() => {
       Iris.Connect(() => {
         if (!open) return;
-        Iris.Window(["Debug Info"], { size: Iris.State(windowSize) });
+        const window = Iris.Window(["Debug Info"], { size: Iris.State(windowSize) });
+        if (window.closed())
+          open = false;
 
         Iris.Text([`<b>Current Zone:</b> ${zoneName}`, true, undefined, true]);
         Iris.Text([`<b>Current Song:</b> ${this.music.currentSong?.Name ?? "None"}`, true, undefined, true]);
