@@ -33,7 +33,7 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 		Events.data.addToArray.connect((player, directory, value) => this.addToArray(player, directory, value));
 		Events.data.initialize.connect(player => {
 			this.setup(player);
-			while (true) {
+			while (Players.GetPlayers().map(p => p.Name).includes(player.Name)) {
 				const timeSinceLastCredit = os.time() - this.get<number>(player, "lastSkipCredit", 0);
 				const time = max(30 * 60 - timeSinceLastCredit, 0);
 				task.wait(time); // every 30 mins
