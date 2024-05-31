@@ -31,10 +31,7 @@ function nuke(player: Player): void {
 export class TransactionsService implements OnInit, LogStart {
   private readonly rewardHandlers: Record<number, RewardHandler> = {
     [ProductIDs.Nuke]: nuke,
-    [ProductIDs.SkipStage]: player => {
-      this.db.increment(player, "stage");
-      Events.character.respawn(player);
-    },
+    [ProductIDs.SkipStage]: player => this.skipStage(player),
     [ProductIDs.Coins100]: player => this.db.increment(player, "coins", 100),
     [ProductIDs.Coins250]: player => this.db.increment(player, "coins", 250),
     [ProductIDs.Coins500]: player => this.db.increment(player, "coins", 500),
@@ -63,6 +60,13 @@ export class TransactionsService implements OnInit, LogStart {
       nukeDebounce = true;
       task.delay(1, () => nukeDebounce = false);
       nuke(player);
+    });
+
+    Events.data.useSkipCredit.connect(player => {
+      const skipCredits = this.db.get<number>(player, "skipCredits", 0);
+      if (skipCredits <= 0) return;
+      this.skipStage(player);
+      this.db.decrement(player, "skipCredits");
     });
 
     Market.PromptGamePassPurchaseFinished.Connect((player, passID, wasPurchased) => {
@@ -98,5 +102,10 @@ export class TransactionsService implements OnInit, LogStart {
 
       return Enum.ProductPurchaseDecision[(!success || purchaseRecorded === undefined) ? "NotProcessedYet" : "PurchaseGranted"];
     }
+  }
+
+  private skipStage(player: Player) {
+    this.db.increment(player, "stage");
+    Events.character.respawn(player);
   }
 }

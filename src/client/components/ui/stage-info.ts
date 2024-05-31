@@ -7,6 +7,7 @@ import type { OnDataUpdate } from "client/hooks";
 import type { LogStart } from "shared/hooks";
 import { Player, PlayerGui } from "shared/utility/client";
 import { CheckpointsController } from "client/controllers/checkpoints";
+import { Events, Functions } from "client/network";
 
 interface StageInfoFrame extends Frame {
   StageNumber: TextLabel;
@@ -29,7 +30,13 @@ export class StageInfo extends BaseComponent<{}, StageInfoFrame> implements OnSt
   public onStart(): void {
     this.checkpoints.offsetUpdated.Connect(stage => this.onDataUpdate("stage", stage - this.checkpoints.getStageOffset()));
 
-    this.instance.Skip.MouseButton1Click.Connect(() => Market.PromptProductPurchase(Player, 1814214080));
+    this.instance.Skip.MouseButton1Click.Connect(async () => {
+      const skipCredits = <number>await Functions.data.get("skipCredits", 0);
+      if (skipCredits > 0)
+        Events.data.useSkipCredit();
+      else
+        Market.PromptProductPurchase(Player, 1814214080);
+    });
     this.instance.NextStage.MouseButton1Click.Connect(() => this.checkpoints.addStageOffset());
     this.instance.PreviousStage.MouseButton1Click.Connect(() => this.checkpoints.subtractStageOffset())
     this.instance.Next10Stages.MouseButton1Click.Connect(() => this.checkpoints.addStageOffset(10));

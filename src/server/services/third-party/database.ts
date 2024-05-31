@@ -23,6 +23,7 @@ const INITIAL_DATA = {
 	ownedItems: <string[]>[],
 	lastCoinRefresh: os.time(),
 	dailyCoinsClaimed: <Record<ZoneName, number[]>>{},
+	skipCredits: 0,
 	settings: {
 		soundEffects: true,
 		music: true,
@@ -57,6 +58,11 @@ export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, Log
 
 	public onPlayerJoin(player: Player): void {
 		this.setup(player);
+		while (true) {
+			if (player.IsInGroup(3510882))
+				this.addSkipCredit(player);
+			task.wait(30 * 60); // every 30 mins
+		}
 	}
 
 	public onPlayerLeave(player: Player): void {
@@ -93,7 +99,7 @@ export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, Log
 			amount *= coinMultiplier;
 		}
 
-		const oldValue = this.get<number>(player, directory);
+		const oldValue = this.get<number>(player, directory, 0);
 		const value = oldValue + amount;
 		this.set(player, directory, value);
 		return value;
@@ -115,6 +121,10 @@ export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, Log
 
 	public getDatabase(): Record<string, PlayerData> {
 		return db.get("playerData", {});
+	}
+
+	public addSkipCredit(player: Player): void {
+		this.increment(player, "skipCredits");
 	}
 
 	public isInvincible(player: Player): boolean {
@@ -151,6 +161,7 @@ export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, Log
 		this.initialize(player, "ownedItems", []);
 		this.initialize(player, "lastCoinRefresh", os.time());
 		this.initialize(player, "dailyCoinsClaimed", {});
+		this.initialize(player, "skipCredits", 0);
 		this.initializeSettings(player);
 
 		if (os.time() - this.get<number>(player, "lastCoinRefresh") >= 24 * 60 * 60) {
