@@ -113,7 +113,7 @@ export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, Log
 	}
 
 	public addSkipCredit(player: Player): void {
-		Log.info(player, "gained a skip credit!");
+		Events.sendNotification(player, "You earned a skip credit!");
 		this.increment(player, "skipCredits");
 		this.set(player, "lastSkipCredit", os.time());
 	}
