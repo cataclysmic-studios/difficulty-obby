@@ -25,7 +25,7 @@ export class CharacterController {
   }
 
   public getHumanoid(): Maybe<Humanoid> {
-    return this.get()?.Humanoid;
+    return <Maybe<Humanoid>>this.get()?.FindFirstChild("Humanoid");
   }
 
   public mustGetHumanoid(): Humanoid {
