@@ -11,7 +11,7 @@ export const ZONE_NAMES = <const>[
   "Solastir",
   "Artaeum",
   "Apocrypha",
-  // "Deadlands",
+  "Deadlands",
   // "The Sanguine Sea"
 ];
 

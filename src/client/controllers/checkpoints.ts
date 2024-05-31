@@ -1,4 +1,4 @@
-import { Controller, OnStart, type OnInit } from "@flamework/core";
+import { Controller, type OnInit } from "@flamework/core";
 import { Workspace as World, MarketplaceService as Market } from "@rbxts/services";
 import { endsWith } from "@rbxts/string-utils";
 import Signal from "@rbxts/signal";
@@ -15,8 +15,8 @@ import type { UIEffectsController } from "./ui-effects";
 
 const { clamp } = math;
 
-@Controller({ loadOrder: 0 })
-export class CheckpointsController implements OnInit, OnStart, LogStart {
+@Controller({ loadOrder: 1 })
+export class CheckpointsController implements OnInit, LogStart {
   public readonly offsetUpdated = new Signal<(newStage: number) => void>;
   public stage = 0;
 
@@ -47,11 +47,6 @@ export class CheckpointsController implements OnInit, OnStart, LogStart {
         firstStageUpdate = false;
       }
     });
-  }
-
-  public onStart(): void {
-    this.update();
-    task.delay(3, () => this.update());
   }
 
   public addStageOffset(offset = 1, advancing = false): void {

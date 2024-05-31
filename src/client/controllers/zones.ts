@@ -2,13 +2,14 @@ import { Controller, type OnInit } from "@flamework/core";
 import { SoundService as Sound } from "@rbxts/services";
 import Signal from "@rbxts/signal";
 
+import type { LogStart } from "shared/hooks";
 import { getZoneName, STAGES_PER_ZONE } from "shared/zones";
 
 import type { CheckpointsController } from "./checkpoints";
 import type { NotificationController } from "./notification";
 
 @Controller()
-export class ZonesController implements OnInit {
+export class ZonesController implements OnInit, LogStart {
   public readonly discovered = new Signal<(zoneName: string, currentStage: number) => void>;
   public readonly changed = new Signal<(zoneName: string, currentStage: number) => void>;
 

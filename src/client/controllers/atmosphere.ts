@@ -1,11 +1,13 @@
 import { Controller, type OnInit } from "@flamework/core";
 import { Lighting } from "@rbxts/services";
 
+import { LogStart } from "shared/hooks";
 import { getZoneModel } from "shared/zones";
-import { ZonesController } from "./zones";
 
-@Controller()
-export class AtmosphereController implements OnInit {
+import type { ZonesController } from "./zones";
+
+@Controller({ loadOrder: 0 })
+export class AtmosphereController implements OnInit, LogStart {
   private currentAmbience?: Sound
 
   public constructor(
