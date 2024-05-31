@@ -33,6 +33,9 @@ export class Leaderboard extends BaseComponent<Attributes, BasePart> implements 
     ui.Adornee = this.instance;
     ui.Parent = this.instance;
 
+    for (const frame of ui.List.GetChildren().filter(i => i.IsA("Frame")))
+      frame.Destroy();
+
     for (const player of database) {
       const [idString, data] = player;
       const index = database.indexOf(player);

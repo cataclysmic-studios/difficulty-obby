@@ -4,7 +4,7 @@ import { MarketplaceService as Market } from "@rbxts/services";
 import Signal from "@rbxts/signal";
 
 import type { LogStart } from "shared/hooks";
-import type { OnPlayerLeave } from "server/hooks";
+import type { OnPlayerJoin, OnPlayerLeave } from "server/hooks";
 import { Events, Functions } from "server/network";
 import { PassIDs } from "shared/structs/product-ids";
 import type { ZoneName } from "shared/zones";
@@ -36,7 +36,7 @@ const INITIAL_DATA = {
 type PlayerData = typeof INITIAL_DATA;
 
 @Service({ loadOrder: 0 })
-export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
+export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, LogStart {
 	public readonly loaded = new Signal<(player: Player) => void>;
 	public readonly updated = new Signal<(player: Player, directory: string, value: unknown) => void>;
 	public playerData: Record<string, PlayerData> = {};
@@ -47,9 +47,12 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 		Events.data.increment.connect((player, directory, amount) => this.increment(player, directory, amount))
 		Events.data.decrement.connect((player, directory, amount) => this.decrement(player, directory, amount))
 		Events.data.addToArray.connect((player, directory, value) => this.addToArray(player, directory, value))
-		Functions.data.initialize.setCallback((player) => this.setup(player));
 		Functions.data.get.setCallback((player, directory, defaultValue) => this.get(player, directory, defaultValue));
 		Functions.data.ownsInvincibility.setCallback(player => this.ownsInvincibilityPass(player));
+	}
+
+	public onPlayerJoin(player: Player): void {
+		this.setup(player);
 	}
 
 	public onPlayerLeave(player: Player): void {
@@ -60,7 +63,7 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 		let data: Record<string, unknown> = this.getCached(player);
 		const pieces = directory.split("/");
 		for (const piece of pieces)
-			data = <Record<string, unknown>>data[piece];
+			data = <Record<string, unknown>>(data ?? {})[piece];
 
 		return <T>(data ?? defaultValue);
 	}
@@ -71,7 +74,7 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 		const lastPiece = pieces[pieces.size() - 1];
 		for (const piece of pieces) {
 			if (piece === lastPiece) continue;
-			data = <Record<string, unknown>>data[piece];
+			data = <Record<string, unknown>>(data ?? {})[piece];
 		}
 
 		data[lastPiece] = value;
@@ -138,6 +141,7 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 
 	private setup(player: Player): void {
 		try {
+			Log.info(`Intializing ${player}'s data`)
 			this.playerData[tostring(player.UserId)] = db.get<PlayerData>(`playerData/${player.UserId}`) ?? INITIAL_DATA;
 			this.initialize(player, "stage", 0);
 			this.initialize(player, "coins", 0);

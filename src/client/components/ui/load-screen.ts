@@ -8,8 +8,8 @@ import { Functions } from "client/network";
 import { PlayerGui } from "shared/utility/client";
 import { tween } from "shared/utility/ui";
 
-import type { UIEffectsController } from "client/controllers/ui-effects";
 import DestroyableComponent from "shared/base-components/destroyable";
+import type { UIEffectsController } from "client/controllers/ui-effects";
 
 interface Attributes {
   readonly LoadScreen_Delay: number;
@@ -39,8 +39,6 @@ export class LoadScreen extends DestroyableComponent<Attributes, PlayerGui["Load
         this.instance.Destroy();
       });
     });
-
-    Functions.data.initialize();
   }
 
   private startLogoAnimation(size: UDim2): void {

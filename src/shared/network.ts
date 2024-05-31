@@ -1,5 +1,4 @@
 import { Networking } from "@flamework/networking";
-import type { GitHubInfo } from "./structs/github";
 
 interface ServerEvents {
   updateBackpackItems(): void;
@@ -40,9 +39,6 @@ interface ServerFunctions {
     initialize(): void;
     get(directory: string, defaultValue?: unknown): unknown;
     ownsInvincibility(): boolean;
-  };
-  roblox: {
-    getGamepasses(amount?: number): unknown[];
   };
 }
 
