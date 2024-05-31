@@ -15,15 +15,10 @@ import { commaFormat } from "shared/utility/numbers";
 export class StorePage extends BaseComponent<{}, PlayerGui["Main"]["Store"]> implements OnStart {
   public readonly itemPurchased = new Signal<(purchasedItem: String) => void>;
 
-  public async onStart(): Promise<void> {
+  public onStart(): void {
     const storeItems = <Tool[]>Assets.StoreItems.GetChildren();
     for (const storeItem of storeItems)
       this.createShopItemFrame(storeItem);
-
-    Events.data.updated.connect(async directory => {
-      if (!endsWith(directory, "ownedItems")) return;
-      Events.updateBackpackItems();
-    });
   }
 
   public toggle(on: boolean): void {

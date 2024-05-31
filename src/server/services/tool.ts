@@ -1,7 +1,7 @@
 import { Service, type OnInit } from "@flamework/core";
-import { Events } from "server/network";
 
 import { Assets } from "shared/utility/instances";
+import { endsWith } from "@rbxts/string-utils";
 
 import type { DatabaseService } from "./third-party/database";
 
@@ -12,7 +12,8 @@ export class ToolService implements OnInit {
   ) { }
 
   public onInit(): void {
-    Events.updateBackpackItems.connect(player => {
+    this.db.updated.Connect((player, directory) => {
+      if (!endsWith(directory, "ownedItems")) return;
       const items = this.db.get(player, "ownedItems", []);
       player.WaitForChild("Backpack").ClearAllChildren();
       player.WaitForChild("StarterGear").ClearAllChildren();
