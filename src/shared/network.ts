@@ -41,7 +41,7 @@ interface ClientEvents {
 interface ServerFunctions {
   data: {
     initialize(): void;
-    get(directory: string, defaultValue?: unknown): unknown;
+    get(directory?: string, defaultValue?: unknown): unknown;
     ownsInvincibility(): boolean;
   };
 }

@@ -6,7 +6,8 @@ import Object from "@rbxts/object-utils";
 import { Assets } from "shared/utility/instances";
 import { commaFormat, toSuffixedNumber } from "shared/utility/numbers";
 
-import type { DatabaseService, PlayerData } from "server/services/third-party/database";
+import type { DatabaseService } from "server/services/third-party/database";
+import type { PlayerData } from "shared/data-models/player-data";
 import { slice } from "shared/utility/array";
 import Log from "shared/logger";
 

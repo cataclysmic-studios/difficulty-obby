@@ -7,8 +7,11 @@ import type { LogStart } from "shared/hooks";
 import type { OnPlayerJoin, OnPlayerLeave } from "server/hooks";
 import { Events, Functions } from "server/network";
 import { PassIDs } from "shared/structs/product-ids";
-import type { ZoneName } from "shared/zones";
+import { type PlayerData, INITIAL_DATA } from "shared/data-models/player-data";
 import Firebase from "server/firebase";
+import Log from "shared/logger";
+
+const { max } = math;
 
 const INF_COINS = 999_999_999;
 const db = new Firebase;
@@ -16,24 +19,6 @@ const db = new Firebase;
 export const enum MultiplierType {
 	Coins
 }
-
-const INITIAL_DATA = {
-	stage: 0,
-	coins: 0,
-	ownedItems: <string[]>[],
-	lastCoinRefresh: os.time(),
-	dailyCoinsClaimed: <Record<ZoneName, number[]>>{},
-	skipCredits: 0,
-	settings: {
-		soundEffects: true,
-		music: true,
-		boomboxes: true,
-		hidePlayers: false,
-		invincibility: false
-	}
-};
-
-export type PlayerData = typeof INITIAL_DATA;
 
 @Service({ loadOrder: 0 })
 export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, LogStart {
@@ -52,16 +37,18 @@ export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, Log
 			if (player === undefined) return;
 			this.increment(player, "coins", 1000);
 		});
-		Functions.data.get.setCallback((player, directory, defaultValue) => this.get(player, directory, defaultValue));
+		Functions.data.get.setCallback((player, directory, defaultValue) => this.get(player, directory ?? "", defaultValue));
 		Functions.data.ownsInvincibility.setCallback(player => this.ownsInvincibilityPass(player));
 	}
 
 	public onPlayerJoin(player: Player): void {
 		this.setup(player);
 		while (true) {
+			const timeSinceLastCredit = os.time() - this.get<number>(player, "lastSkipCredit", 0);
+			const time = max(30 * 60 - timeSinceLastCredit, 0);
+			task.wait(time); // every 30 mins
 			if (player.IsInGroup(3510882))
 				this.addSkipCredit(player);
-			task.wait(30 * 60); // every 30 mins
 		}
 	}
 
@@ -71,6 +58,8 @@ export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, Log
 
 	public get<T>(player: Player, directory: string, defaultValue?: T): T {
 		let data: Record<string, unknown> = this.getCached(player);
+		if (directory === "") return <T>data;
+
 		const pieces = directory.split("/");
 		for (const piece of pieces)
 			data = <Record<string, unknown>>(data ?? {})[piece];
@@ -124,7 +113,9 @@ export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, Log
 	}
 
 	public addSkipCredit(player: Player): void {
+		Log.info(player, "gained a skip credit!");
 		this.increment(player, "skipCredits");
+		this.set(player, "lastSkipCredit", os.time());
 	}
 
 	public isInvincible(player: Player): boolean {

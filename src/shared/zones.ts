@@ -11,8 +11,8 @@ export const ZONE_NAMES = <const>[
   "Solastir",
   "Artaeum",
   "Apocrypha",
-  "Deadlands",
-  "The Sanguine Sea"
+  // "Deadlands",
+  // "The Sanguine Sea"
 ];
 
 export type ZoneName = (typeof ZONE_NAMES)[number];
