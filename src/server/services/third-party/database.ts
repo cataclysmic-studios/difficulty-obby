@@ -33,7 +33,7 @@ const INITIAL_DATA = {
 	}
 };
 
-type PlayerData = typeof INITIAL_DATA;
+export type PlayerData = typeof INITIAL_DATA;
 
 @Service({ loadOrder: 0 })
 export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, LogStart {
