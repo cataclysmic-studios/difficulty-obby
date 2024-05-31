@@ -1,8 +1,5 @@
 import { Networking } from "@flamework/networking";
 import type { GitHubInfo } from "./structs/github";
-import type { GamepassInfo } from "./structs/roblox-api";
-
-type SoundEffectName = ExcludeKeys<Omit<SoundService["SoundEffects"], "Parent" | "Changed">, SoundGroup | boolean | string | number | Callback | symbol | RBXScriptSignal>;
 
 interface ServerEvents {
   updateBackpackItems(): void;

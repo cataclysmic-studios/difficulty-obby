@@ -1,14 +1,18 @@
 import Log from "shared/logger";
 
-const { floor, log, abs, clamp } = math;
+const { round, floor, log, abs, clamp } = math;
 
 export const isNaN = (n: number) => n !== n;
+export const isEven = (n: number) => n % 2 === 0;
 
 export function doubleSidedLimit(n: number, limit: number) {
   return clamp(n, -limit, limit);
 }
 
-export const isEven = (n: number) => n % 2 === 0;
+export function roundDecimal(n: number, decimals = 0): number {
+  const mult = 10 ** decimals;
+  return round(n * mult + 0.5) / mult;
+}
 
 /**
  * Returns 0 if the number is close enough to 0 by `epsilon`

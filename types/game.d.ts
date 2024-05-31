@@ -1,3 +1,5 @@
+type SoundEffectName = ExcludeKeys<Omit<SoundService["SoundEffects"], "Parent" | "Changed">, SoundGroup | boolean | string | number | Callback | symbol | RBXScriptSignal>;
+
 interface PortalModel extends Model {
   readonly VFX: Folder;
   readonly Collider: Part;
