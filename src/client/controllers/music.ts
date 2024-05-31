@@ -11,9 +11,10 @@ import type { CheckpointsController } from "./checkpoints";
 
 @Controller()
 export class MusicController implements OnInit, LogStart {
+  public currentSong?: Sound;
+
   private songIndex = 0;
   private zoneIndex = 0;
-  private currentSong?: Sound;
   private lastZoneMusic?: Folder;
 
   public constructor(

@@ -31,7 +31,7 @@ export class ControlPanelController implements OnStart {
     let open = false;
 
     this.input
-      .Bind("RightShift", () => {
+      .Bind("Comma", () => {
         if (!Runtime.IsStudio() && !DEVELOPERS.includes(Player.UserId)) return;
         open = !open;
       })

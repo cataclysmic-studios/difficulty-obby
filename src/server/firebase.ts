@@ -5,6 +5,7 @@ import Object from "@rbxts/object-utils";
 
 import { MissingEnvValueException } from "shared/exceptions";
 import Log from "shared/logger";
+import repr from "shared/utility/repr";
 
 const DB_AUTH = $env.string("FIREBASE_AUTH");
 const DB_URL = $env.string("FIREBASE_URL");
@@ -40,8 +41,11 @@ export default class Firebase {
 
   public get<T>(path?: string, defaultValue?: T): T {
     try {
-      Log.info("Getting from Firebase path:", path!)
-      return <T>HTTP.JSONDecode(HTTP.GetAsync(this.getEndpoint(path), true)) ?? defaultValue!;
+      Log.info("Getting from Firebase path:", repr(path));
+      const data = <T>HTTP.JSONDecode(HTTP.GetAsync(this.getEndpoint(path), true));
+      Log.info("Firebase got value:", repr(data));
+      Log.info("Default value:", repr(defaultValue));
+      return data ?? defaultValue!;
     } catch (error) {
       throw Log.fatal(`[Firebase]: ${error}`);
     }

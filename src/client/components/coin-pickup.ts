@@ -30,18 +30,19 @@ export class CoinPickup extends DestroyableComponent<Attributes, BasePart> imple
     let destroyed = false;
     let loaded = false;
     this.janitor.LinkToInstance(this.instance, true);
+    this.janitor.Add(this.instance);
     this.janitor.Add(() => destroyed = true);
 
     const conn = Events.data.updated.connect((directory, value) => {
       if (!endsWith(directory, "dailyCoinsClaimed")) return;
-      conn.Disconnect();
-
       const dailyCoinsClaimed = <Record<string, number[]>>value;
       const zoneCoinsClaimed = dailyCoinsClaimed?.[this.getZoneName()];
       if (zoneCoinsClaimed?.includes(tonumber(this.instance.Name)!))
         this.instance.Destroy();
       else
         this.listenForTouch(() => loaded);
+
+      conn.Disconnect();
     });
 
     const defaultOrientation = this.instance.Orientation;
@@ -71,10 +72,9 @@ export class CoinPickup extends DestroyableComponent<Attributes, BasePart> imple
       this.touchDebounce = true;
       task.delay(5, () => this.touchDebounce = false);
 
-      const zoneName = this.getZoneName();
       this.instance.Destroy();
       Events.data.increment("coins", this.attributes.CoinPickup_Worth);
-      Events.data.addToArray(`dailyCoinsClaimed/${zoneName}`, tonumber(this.instance.Name)!);
+      Events.data.addToArray(`dailyCoinsClaimed/${this.getZoneName()}`, tonumber(this.instance.Name)!);
     }));
   }
 

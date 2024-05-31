@@ -143,7 +143,7 @@ export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, Log
 	private setup(player: Player): void {
 		Log.info(`Initializing ${player}'s data`);
 		Log.info("Directory:", `playerData/${player.UserId}`)
-		const data = db.get<PlayerData>(`playerData/${player.UserId}`, INITIAL_DATA);
+		const data = db.get<PlayerData>(`playerData/${player.UserId}`, table.clone(INITIAL_DATA));
 		this.playerData[tostring(player.UserId)] = data;
 		this.initialize(player, "stage", 0);
 		this.initialize(player, "coins", 0);

@@ -8,8 +8,9 @@ import type { LogStart } from "shared/hooks";
 import { Player } from "shared/utility/client";
 import { DEVELOPERS } from "shared/constants";
 
+import type { IrisController } from "./iris";
 import type { ZonesController } from "./zones";
-import { IrisController } from "./iris";
+import type { MusicController } from "./music";
 
 @Controller()
 export class DebugInfoController implements OnInit, LogStart {
@@ -21,12 +22,13 @@ export class DebugInfoController implements OnInit, LogStart {
 
   public constructor(
     private readonly iris: IrisController,
-    private readonly zone: ZonesController
+    private readonly zone: ZonesController,
+    private readonly music: MusicController
   ) { }
 
   public onInit(): void {
     const windowSize = new Vector2(300, 400);
-    const openAction = new Action("Semicolon", {
+    const openAction = new Action("Comma", {
       Repeat: 2,
       Timing: 0.3,
     });
@@ -46,6 +48,7 @@ export class DebugInfoController implements OnInit, LogStart {
         Iris.Window(["Debug Info"], { size: Iris.State(windowSize) });
 
         Iris.Text([`<b>Current Zone:</b> ${zoneName}`, true, undefined, true]);
+        Iris.Text([`<b>Current Song:</b> ${this.music.currentSong?.Name ?? "None"}`, true, undefined, true]);
 
         Iris.End();
       });
