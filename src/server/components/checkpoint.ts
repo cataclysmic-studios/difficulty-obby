@@ -30,7 +30,7 @@ export class Checkpoint extends BaseComponent<{}, SpawnLocation> implements OnSt
 
       const checkpointStage = tonumber(this.instance.Name)!;
       const currentStage = this.leaderstats.getValue<number>(player, "Stage");
-      const topStage = this.db.get<number>(player, "stage");
+      const topStage = this.db.get<number>(player, "stage", 0);
       if (currentStage > topStage)
         player.Kick("take a look at yourself, hacking on a roblox obby");
 
