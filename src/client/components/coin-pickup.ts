@@ -63,7 +63,7 @@ export class CoinPickup extends DestroyableComponent<Attributes, BasePart> imple
   }
 
   private listenForTouch(isLoaded: () => boolean): void {
-    this.janitor.Add(this.instance.Touched.Once(hit => {
+    this.janitor.Add(this.instance.Touched.Connect(hit => {
       const character = this.character.get();
       if (hit.FindFirstAncestorOfClass("Model") !== character) return;
       if (!isLoaded()) return;

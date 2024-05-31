@@ -140,29 +140,25 @@ export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, Log
 	}
 
 	private setup(player: Player): void {
-		try {
-			Log.info(`Intializing ${player}'s data`)
-			this.playerData[tostring(player.UserId)] = db.get<PlayerData>(`playerData/${player.UserId}`) ?? INITIAL_DATA;
-			this.initialize(player, "stage", 0);
-			this.initialize(player, "coins", 0);
-			this.initialize(player, "ownedItems", []);
-			this.initialize(player, "lastCoinRefresh", os.time());
-			this.initialize(player, "dailyCoinsClaimed", {});
-			this.initializeSettings(player);
+		Log.info(`Intializing ${player}'s data`)
+		this.playerData[tostring(player.UserId)] = db.get<PlayerData>(`playerData/${player.UserId}`) ?? INITIAL_DATA;
+		this.initialize(player, "stage", 0);
+		this.initialize(player, "coins", 0);
+		this.initialize(player, "ownedItems", []);
+		this.initialize(player, "lastCoinRefresh", os.time());
+		this.initialize(player, "dailyCoinsClaimed", {});
+		this.initializeSettings(player);
 
-			if (os.time() - this.get<number>(player, "lastCoinRefresh") >= 24 * 60 * 60) {
-				this.delete(player, "dailyCoinsClaimed");
-				this.set<number>(player, "lastCoinRefresh", os.time());
-			}
-
-			if (Market.UserOwnsGamePassAsync(player.UserId, PassIDs.InfiniteCoins) && this.get<number>(player, "coins") < INF_COINS)
-				this.set(player, "coins", INF_COINS);
-
-			this.loaded.Fire(player);
-			Log.info("Initialized data");
-		} catch (err) {
-			Log.warning(`Failed to initialize ${player.Name}'s data:`, tostring(err));
+		if (os.time() - this.get<number>(player, "lastCoinRefresh") >= 24 * 60 * 60) {
+			this.delete(player, "dailyCoinsClaimed");
+			this.set<number>(player, "lastCoinRefresh", os.time());
 		}
+
+		if (Market.UserOwnsGamePassAsync(player.UserId, PassIDs.InfiniteCoins) && this.get<number>(player, "coins") < INF_COINS)
+			this.set(player, "coins", INF_COINS);
+
+		this.loaded.Fire(player);
+		Log.info("Initialized data");
 	}
 
 	private initialize<T>(player: Player, directory: string, initialValue: T): void {
