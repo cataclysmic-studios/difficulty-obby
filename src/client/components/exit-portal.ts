@@ -1,6 +1,6 @@
 import type { OnStart } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
-import { Players, Workspace as World } from "@rbxts/services";
+import { Workspace as World } from "@rbxts/services";
 
 import { ZONE_NAMES } from "shared/zones";
 import Log from "shared/logger";

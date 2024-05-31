@@ -4,6 +4,7 @@ interface ServerEvents {
   updateBackpackItems(): void;
   stageOffsetUpdated(stage: number, advancing?: boolean): void;
   sendGlobalNotification(message: string): void;
+  nuke(): void;
   data: {
     set(directory: string, value: unknown): void;
     increment(directory: string, amount?: number): void;

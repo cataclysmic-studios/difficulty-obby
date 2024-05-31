@@ -15,6 +15,11 @@ interface Attributes {
 
 @Component({ tag: "CoinPickup" })
 export class CoinPickup extends DestroyableComponent<Attributes, BasePart> implements OnStart {
+  private readonly tweenInfo = new TweenInfoBuilder()
+    .SetTime(1)
+    .SetEasingStyle(Enum.EasingStyle.Linear)
+    .SetEasingDirection(Enum.EasingDirection.InOut);
+
   private touchDebounce = false;
 
   public constructor(
@@ -22,13 +27,7 @@ export class CoinPickup extends DestroyableComponent<Attributes, BasePart> imple
   ) { super(); }
 
   public onStart(): void {
-    const tweenInfo = new TweenInfoBuilder()
-      .SetTime(1)
-      .SetEasingStyle(Enum.EasingStyle.Linear)
-      .SetEasingDirection(Enum.EasingDirection.InOut);
-
     let destroyed = false;
-    let loaded = false;
     this.janitor.LinkToInstance(this.instance, true);
     this.janitor.Add(this.instance);
     this.janitor.Add(() => destroyed = true);
@@ -40,7 +39,7 @@ export class CoinPickup extends DestroyableComponent<Attributes, BasePart> imple
       if (zoneCoinsClaimed?.includes(tonumber(this.instance.Name)!))
         this.instance.Destroy();
       else
-        this.listenForTouch(() => loaded);
+        this.listenForTouch();
 
       conn.Disconnect();
     });
@@ -49,25 +48,22 @@ export class CoinPickup extends DestroyableComponent<Attributes, BasePart> imple
     const defaultPosition = this.instance.Position;
     task.spawn(() => {
       while (!destroyed) {
-        tween(this.instance, tweenInfo, {
+        tween(this.instance, this.tweenInfo, {
           Orientation: defaultOrientation.add(new Vector3(0, 180, 0)),
           Position: defaultPosition.add(new Vector3(0, 1, 0))
         }).Completed.Wait();
-        tween(this.instance, tweenInfo, {
+        tween(this.instance, this.tweenInfo, {
           Orientation: defaultOrientation.add(new Vector3(0, 0, 0)),
           Position: defaultPosition
         }).Completed.Wait();
       }
     });
-
-    loaded = true;
   }
 
-  private listenForTouch(isLoaded: () => boolean): void {
+  private listenForTouch(): void {
     this.janitor.Add(this.instance.Touched.Connect(hit => {
       const character = this.character.get();
       if (hit.FindFirstAncestorOfClass("Model") !== character) return;
-      if (!isLoaded()) return;
       if (this.touchDebounce) return;
       this.touchDebounce = true;
       task.delay(5, () => this.touchDebounce = false);

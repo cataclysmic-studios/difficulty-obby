@@ -12,9 +12,29 @@ import { tween } from "shared/utility/ui";
 
 type RewardHandler = (player: Player) => void;
 
+function nuke(player: Player): void {
+  Events.playSoundEffect.broadcast("NukeAlarm");
+  Events.sendNotification.broadcast(`${player.Name} has sent a nuke!!!`);
+  task.delay(5, () => {
+    Events.playSoundEffect.broadcast("NukeFall");
+    task.delay(4.5, () => {
+      Events.nukeShake.broadcast();
+      Events.playSoundEffect.broadcast("NukeExplode");
+      Events.character.respawn.except(player, false);
+      Lighting.ExposureCompensation = 4;
+      tween(Lighting, new TweenInfo(10), { ExposureCompensation: 0 });
+    });
+  });
+}
+
 @Service()
 export class TransactionsService implements OnInit, LogStart {
   private readonly rewardHandlers: Record<number, RewardHandler> = {
+    [ProductIDs.Nuke]: nuke,
+    [ProductIDs.SkipStage]: player => {
+      this.db.increment(player, "stage");
+      Events.character.respawn(player);
+    },
     [ProductIDs.Coins100]: player => this.db.increment(player, "coins", 100),
     [ProductIDs.Coins250]: player => this.db.increment(player, "coins", 250),
     [ProductIDs.Coins500]: player => this.db.increment(player, "coins", 500),
@@ -23,24 +43,6 @@ export class TransactionsService implements OnInit, LogStart {
     [ProductIDs.Coins4000]: player => this.db.increment(player, "coins", 4000),
     [ProductIDs.Coins10000]: player => this.db.increment(player, "coins", 10000),
     [ProductIDs.Coins25000]: player => this.db.increment(player, "coins", 25000),
-    [ProductIDs.SkipStage]: player => {
-      this.db.increment(player, "stage");
-      Events.character.respawn(player);
-    },
-    [ProductIDs.Nuke]: player => {
-      Events.playSoundEffect.broadcast("NukeAlarm");
-      Events.sendNotification.broadcast(`${player.Name} has sent a nuke!!!`);
-      task.delay(5, () => {
-        Events.playSoundEffect.broadcast("NukeFall");
-        task.delay(4.5, () => {
-          Events.nukeShake.broadcast();
-          Events.playSoundEffect.broadcast("NukeExplode");
-          Events.character.respawn.except(player, false);
-          Lighting.ExposureCompensation = 4;
-          tween(Lighting, new TweenInfo(10), { ExposureCompensation: 0 });
-        });
-      });
-    },
 
     [PassIDs.InfiniteCoins]: player => this.db.set(player, "coins", math.huge),
     [PassIDs.Invincibility]: player => {
@@ -55,6 +57,14 @@ export class TransactionsService implements OnInit, LogStart {
   ) { }
 
   public onInit(): void {
+    let nukeDebounce = false;
+    Events.nuke.connect(player => {
+      if (nukeDebounce) return;
+      nukeDebounce = true;
+      task.delay(1, () => nukeDebounce = false);
+      nuke(player);
+    });
+
     Market.PromptGamePassPurchaseFinished.Connect((player, passID, wasPurchased) => {
       if (!wasPurchased) return;
       this.rewardHandlers[passID]?.(player);

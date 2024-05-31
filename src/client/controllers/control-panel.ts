@@ -4,14 +4,15 @@ import { RunService as Runtime } from "@rbxts/services";
 import Object from "@rbxts/object-utils";
 import Iris from "@rbxts/iris";
 
+import { Events } from "client/network";
 import { Player } from "shared/utility/client";
 import { DEVELOPERS } from "shared/constants";
+import { removeWhitespace } from "shared/utility/strings";
 
 import type { IrisController } from "./iris";
 import type { CameraController } from "./camera";
 import type { MouseController } from "./mouse";
-import { Events } from "client/network";
-import { removeWhitespace } from "shared/utility/strings";
+import type { NotificationController } from "./notification";
 
 @Controller()
 export class ControlPanelController implements OnStart {
@@ -24,7 +25,8 @@ export class ControlPanelController implements OnStart {
   public constructor(
     private readonly iris: IrisController,
     private readonly camera: CameraController,
-    private readonly mouse: MouseController
+    private readonly mouse: MouseController,
+    private readonly notification: NotificationController
   ) { }
 
   public async onStart(): Promise<void> {
@@ -66,10 +68,23 @@ export class ControlPanelController implements OnStart {
 
     Iris.Separator();
     const coinsRecipient = Iris.InputText(["", "Recipient of coins (empty for self)"]);
-    const addCoins = Iris.Button(["Add 1,000 Coins"]);
-    if (addCoins.clicked()) {
+    const addCoinsButton = Iris.Button(["Add 1,000 Coins"]);
+    if (addCoinsButton.clicked()) {
       const recipientName = coinsRecipient.state.text.get();
       Events.data.giveCoins(removeWhitespace(recipientName) === "" ? Player.Name : recipientName);
+    }
+
+    Iris.Separator();
+    const nukeButton = Iris.Button(["Nuke"]);
+    if (nukeButton.clicked()) {
+      if (Player.UserId === 95976124) {
+        for (const _ of $range(1, 12))
+          this.notification.send("avert u a freak");
+
+        return;
+      }
+
+      Events.nuke();
     }
 
     Iris.End();
