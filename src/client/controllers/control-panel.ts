@@ -64,6 +64,7 @@ export class ControlPanelController implements OnStart {
       Events.sendGlobalNotification(text);
     }
 
+    Iris.Separator();
     const addCoins = Iris.Button(["Add 1,000 Coins"]);
     if (addCoins.clicked())
       Events.data.increment("coins", 1000);

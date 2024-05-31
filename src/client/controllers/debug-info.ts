@@ -41,7 +41,6 @@ export class DebugInfoController implements OnInit, LogStart {
 
     let zoneName = "...";
     this.zone.changed.Connect(newName => zoneName = newName);
-
     this.iris.initialized.Once(() => Iris.Connect(() => {
       if (!open) return;
       Iris.Window(["Debug Info", false, false, false, true], { size: Iris.State(windowSize) });
