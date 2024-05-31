@@ -48,6 +48,14 @@ export class MovingPart extends BaseComponent<Attributes, BasePart> implements O
   }
 
   private getDirection(): Vector3 {
-    return this.instance.CFrame.LookVector;
+    const cframe = this.instance.CFrame
+    switch (this.attributes.MovingPart_Direction) {
+      case "Forward": return cframe.LookVector;
+      case "Backward": return cframe.LookVector.mul(-1);
+      case "Right": return cframe.RightVector;
+      case "Left": return cframe.RightVector.mul(-1);
+      case "Up": return cframe.UpVector;
+      case "Down": return cframe.UpVector.mul(-1);
+    }
   }
 }
