@@ -19,7 +19,7 @@ export const enum MultiplierType {
 	Coins
 }
 
-@Service({ loadOrder: 99 })
+@Service({ loadOrder: 0 })
 export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 	public readonly loaded = new Signal<(player: Player) => void>;
 	public readonly updated = new Signal<(player: Player, directory: string, value: unknown) => void>;

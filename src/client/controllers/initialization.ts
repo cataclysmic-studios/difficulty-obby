@@ -9,7 +9,7 @@ export class InitializationController implements OnStart {
     private readonly camera: CameraController
   ) { }
 
-  public async onStart(): Promise<void> {
+  public onStart(): void {
     this.camera.set("Default"); // set to preferred camera
     Events.data.initialize();
   }

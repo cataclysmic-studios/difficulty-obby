@@ -51,7 +51,8 @@ export class StageInfo extends BaseComponent<{}, StageInfoFrame> implements OnSt
 
   public onDataUpdate(directory: string, stage: number): void {
     if (!endsWith(directory, "stage")) return;
-    this.instance.StageNumber.Text = tostring(math.max(stage + this.checkpoints.getStageOffset(), 0));
+    stage = math.max(stage + this.checkpoints.getStageOffset(), 0);
+    this.instance.StageNumber.Text = tostring(stage);
     this.instance.ZoneName.Text = getZoneName(stage);
     this.instance.Visible = true;
   }
