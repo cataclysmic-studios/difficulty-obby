@@ -10,6 +10,7 @@ import { PassIDs } from "shared/structs/product-ids";
 import type { ZoneName } from "shared/zones";
 import Firebase from "server/firebase";
 import Log from "shared/logger";
+import repr from "shared/utility/repr";
 
 const INF_COINS = 999_999_999;
 const db = new Firebase;
@@ -131,7 +132,7 @@ export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, Log
 	}
 
 	private getCached(player: Player): PlayerData {
-		return this.playerData[tostring(player.UserId)] ?? {};
+		return this.playerData[tostring(player.UserId)] ?? INITIAL_DATA;
 	}
 
 	private update(player: Player, fullDirectory: string, value: unknown): void {
@@ -140,8 +141,10 @@ export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, Log
 	}
 
 	private setup(player: Player): void {
-		Log.info(`Intializing ${player}'s data`)
-		this.playerData[tostring(player.UserId)] = db.get<PlayerData>(`playerData/${player.UserId}`) ?? INITIAL_DATA;
+		Log.info(`Initializing ${player}'s data`);
+		Log.info("Directory:", `playerData/${player.UserId}`)
+		const data = db.get<PlayerData>(`playerData/${player.UserId}`, INITIAL_DATA);
+		this.playerData[tostring(player.UserId)] = data;
 		this.initialize(player, "stage", 0);
 		this.initialize(player, "coins", 0);
 		this.initialize(player, "ownedItems", []);
@@ -158,7 +161,6 @@ export class DatabaseService implements OnInit, OnPlayerJoin, OnPlayerLeave, Log
 			this.set(player, "coins", INF_COINS);
 
 		this.loaded.Fire(player);
-		Log.info("Initialized data");
 	}
 
 	private initialize<T>(player: Player, directory: string, initialValue: T): void {

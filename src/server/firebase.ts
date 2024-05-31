@@ -40,6 +40,7 @@ export default class Firebase {
 
   public get<T>(path?: string, defaultValue?: T): T {
     try {
+      Log.info("Getting from Firebase path:", path!)
       return <T>HTTP.JSONDecode(HTTP.GetAsync(this.getEndpoint(path), true)) ?? defaultValue!;
     } catch (error) {
       throw Log.fatal(`[Firebase]: ${error}`);

@@ -6,11 +6,7 @@
 			"import { Controller, type OnInit } from \"@flamework/core\";",
 			"",
 			"@Controller()",
-<<<<<<< HEAD
-			"export class ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g} implements OnInit {",
-=======
 			"export class ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g}Controller implements OnInit {",
->>>>>>> bbd8fa044ba0e79688dbbcc2a56e7121e7c9cf74
 				"\tpublic onInit(): void {",
 					"\t\t$2",
 				"\t}",
@@ -25,11 +21,7 @@
 			"import { Service, type OnInit } from \"@flamework/core\";",
 			"",
 			"@Service()",
-<<<<<<< HEAD
-			"export class ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g} implements OnInit {",
-=======
 			"export class ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g}Service implements OnInit {",
->>>>>>> bbd8fa044ba0e79688dbbcc2a56e7121e7c9cf74
 			"\tpublic onInit(): void {",
 				"\t\t$2",
 			"\t}",
@@ -55,8 +47,6 @@
 		]
 	},
 
-<<<<<<< HEAD
-=======
 	"Singleton": {
 		"prefix":[ "singleton", "ston"],
 		"description": "Create a singleton",
@@ -74,7 +64,6 @@
 		]
 	},
 
->>>>>>> bbd8fa044ba0e79688dbbcc2a56e7121e7c9cf74
 	"UI Component": {
 		"prefix":[ "uicomponent" ],
 		"description": "Create a UI component",

@@ -10,6 +10,7 @@ import { DEVELOPERS } from "shared/constants";
 import type { IrisController } from "./iris";
 import type { CameraController } from "./camera";
 import type { MouseController } from "./mouse";
+import { Events } from "client/network";
 
 @Controller()
 export class ControlPanelController implements OnStart {
@@ -45,9 +46,21 @@ export class ControlPanelController implements OnStart {
       Iris.Window(["Control Panel"], { size: Iris.State(windowSize) });
 
       this.renderCameraTab();
+      this.renderAdminTab();
 
       Iris.End();
     }));
+  }
+
+  private renderAdminTab(): void {
+    Iris.Tree(["Admin"]);
+
+    const notifText = Iris.InputText(["", "Notification message"]);
+    const notifButton = Iris.Button(["Send Global Notification"]);
+    if (notifButton.clicked())
+      Events.sendGlobalNotification(notifText.state.text.get());
+
+    Iris.End();
   }
 
   private renderCameraTab(): void {
