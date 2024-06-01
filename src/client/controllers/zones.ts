@@ -3,7 +3,7 @@ import { SoundService as Sound } from "@rbxts/services";
 import Signal from "@rbxts/signal";
 
 import type { LogStart } from "shared/hooks";
-import { getZoneName, STAGES_PER_ZONE } from "shared/zones";
+import { getZone } from "shared/zones";
 
 import type { CheckpointsController } from "./checkpoints";
 import type { NotificationController } from "./notification";
@@ -22,12 +22,12 @@ export class ZonesController implements OnInit, LogStart {
 
   public onInit(): void {
     this.checkpoints.offsetUpdated.Connect(stage => {
-      const zoneName = getZoneName(stage);
+      const { name: zoneName, stageCount } = getZone(stage);
       if (zoneName === this.lastZoneName) return;
 
       this.lastZoneName = zoneName;
       this.changed.Fire(zoneName, stage);
-      if (math.max(stage - 1, 0) % STAGES_PER_ZONE !== 0) return;
+      if (math.max(stage - 1, 0) % stageCount !== 0) return;
       this.discover(zoneName, stage);
     });
   }

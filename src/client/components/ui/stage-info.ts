@@ -7,7 +7,7 @@ import type { OnDataUpdate } from "client/hooks";
 import type { LogStart } from "shared/hooks";
 import { Events, Functions } from "client/network";
 import { Player, PlayerGui } from "shared/utility/client";
-import { getZoneName, STAGES_PER_ZONE, ZONE_NAMES } from "shared/zones";
+import { getZone, TOTAL_STAGE_COUNT, ZONES } from "shared/zones";
 import { ProductIDs } from "shared/structs/product-ids";
 import type { PlayerData } from "shared/data-models/player-data";
 
@@ -31,7 +31,7 @@ export class StageInfo extends BaseComponent<{}, PlayerGui["Main"]["StageInfo"]>
     this.instance.Previous10Stages.MouseButton1Click.Connect(() => this.checkpoints.subtractStageOffset(10));
     this.instance.Skip.MouseButton1Click.Connect(async () => {
       const data = <PlayerData>await Functions.data.get();
-      if (data.stage >= ((ZONE_NAMES.size() - 1) * STAGES_PER_ZONE) + 1) return; // if we're on max stage don't allow skip
+      if (data.stage >= TOTAL_STAGE_COUNT + 1) return; // if we're on max stage don't allow skip
       if (data.skipCredits > 0)
         Events.data.useSkipCredit();
       else
@@ -43,7 +43,7 @@ export class StageInfo extends BaseComponent<{}, PlayerGui["Main"]["StageInfo"]>
     if (endsWith(directory, "stage")) {
       value = math.max(value + this.checkpoints.getStageOffset(), 0);
       this.instance.StageNumber.Text = tostring(value);
-      this.instance.ZoneName.Text = getZoneName(value);
+      this.instance.ZoneName.Text = getZone(value).name;
       this.instance.Visible = true;
     } else if (endsWith(directory, "skipCredits")) {
       this.instance.Skip.SkipCredits.Visible = value > 0;

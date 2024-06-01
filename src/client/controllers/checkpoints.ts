@@ -7,7 +7,7 @@ import type { LogStart } from "shared/hooks";
 import type { OnDataUpdate } from "client/hooks";
 import { Events } from "client/network";
 import { Player } from "shared/utility/client";
-import { STAGES_PER_ZONE, ZONE_NAMES } from "shared/zones";
+import { ZONES, TOTAL_STAGE_COUNT } from "shared/zones";
 import Log from "shared/logger";
 
 import type { CharacterController } from "./character";
@@ -96,7 +96,7 @@ export class CheckpointsController implements OnInit, OnDataUpdate, LogStart {
   }
 
   public getStage(): number {
-    return clamp(this.stage + this.stageOffset, 0, ZONE_NAMES.size() * STAGES_PER_ZONE + 1);
+    return clamp(this.stage + this.stageOffset, 0, TOTAL_STAGE_COUNT + 1);
   }
 
   private update(advancing = false): void {

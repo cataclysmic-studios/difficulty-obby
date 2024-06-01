@@ -2,7 +2,7 @@ import type { OnStart } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
 import { Workspace as World } from "@rbxts/services";
 
-import { ZONE_NAMES } from "shared/zones";
+import { ZONES } from "shared/zones";
 import Log from "shared/logger";
 
 import type { UIEffectsController } from "client/controllers/ui-effects";
@@ -32,7 +32,7 @@ export class ExitPortal extends BaseComponent<Attributes, PortalModel> implement
       const root = humanoid.RootPart;
       if (root === undefined) return;
 
-      const zoneNumber = (<readonly string[]>ZONE_NAMES).indexOf(zoneName);
+      const zoneNumber = (ZONES.map(zone => <string>zone.name)).indexOf(zoneName);
       if (zoneNumber === -1)
         return Log.warning(`Zone "${zoneName}" does not exist in World.Zones`);
 
