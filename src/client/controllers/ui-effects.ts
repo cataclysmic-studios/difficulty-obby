@@ -2,7 +2,6 @@ import { Controller, type OnInit } from "@flamework/core";
 import { TweenInfoBuilder } from "@rbxts/builders";
 
 import type { LogStart } from "shared/hooks";
-import { Events } from "client/network";
 import { PlayerGui } from "shared/utility/client";
 import { tween } from "shared/utility/ui";
 

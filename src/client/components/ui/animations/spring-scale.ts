@@ -19,10 +19,10 @@ interface Attributes {
   tag: "SpringScaleAnimation",
   defaults: {
     SpringScaleAnimation_ScaleIncrement: 0.15,
-    SpringScaleAnimation_Mass: 5,
-    SpringScaleAnimation_Force: 100,
-    SpringScaleAnimation_Damping: 3,
-    SpringScaleAnimation_Speed: 7.5
+    SpringScaleAnimation_Mass: 12,
+    SpringScaleAnimation_Force: 180,
+    SpringScaleAnimation_Damping: 5,
+    SpringScaleAnimation_Speed: 10
   }
 })
 export class SpringScaleAnimation extends BaseButtonAnimation<Attributes> implements OnStart, OnRender {
@@ -48,6 +48,6 @@ export class SpringScaleAnimation extends BaseButtonAnimation<Attributes> implem
       this.spring.shove(new Vector3(this.scaleIncrement, 0, 0));
 
     const movement = this.spring.update(dt);
-    this.scale.Scale = this.defaultScale + max(flattenNumber(movement.X, 0.025), 0);
+    this.scale.Scale = this.defaultScale + max(flattenNumber(movement.X, 0.06), 0);
   }
 }

@@ -154,10 +154,7 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 		this.initialize(player, "skipCredits", 0);
 		this.initializeSettings(player);
 
-		print("time since coin refresh:", os.time() - this.get<number>(player, "lastCoinRefresh"))
-		print("time required to refresh:", 24 * 60 * 60)
 		if (os.time() - this.get<number>(player, "lastCoinRefresh") >= 24 * 60 * 60) {
-			print("reset daily coins claimed")
 			this.delete(player, "dailyCoinsClaimed");
 			this.set<number>(player, "lastCoinRefresh", os.time());
 		}

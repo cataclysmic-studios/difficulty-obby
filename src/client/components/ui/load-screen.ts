@@ -4,7 +4,6 @@ import { TweenInfoBuilder } from "@rbxts/builders";
 import { StarterGui } from "@rbxts/services";
 
 import type { LogStart } from "shared/hooks";
-import { Functions } from "client/network";
 import { PlayerGui } from "shared/utility/client";
 import { tween } from "shared/utility/ui";
 
