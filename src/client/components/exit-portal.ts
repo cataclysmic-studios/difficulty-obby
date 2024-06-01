@@ -2,7 +2,7 @@ import type { OnStart } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
 import { Workspace as World } from "@rbxts/services";
 
-import { ZONES } from "shared/zones";
+import { TOTAL_STAGE_COUNT, Zone, ZONES } from "shared/zones";
 import Log from "shared/logger";
 
 import type { UIEffectsController } from "client/controllers/ui-effects";
@@ -33,18 +33,24 @@ export class ExitPortal extends BaseComponent<Attributes, PortalModel> implement
       if (root === undefined) return;
 
       const zone = ZONES.find(zone => zone.name === zoneName);
-      const zoneNumber = (ZONES.map(zone => <string>zone.name)).indexOf(zoneName);
+      const zoneNumber = (<readonly Zone[]>ZONES).indexOf(<Zone>zone);
       if (zoneNumber === -1 || zone === undefined)
         return Log.warning(`Zone "${zoneName}" does not exist in World.Zones`);
 
       const defaultWalkSpeed = humanoid.WalkSpeed;
       const defaultJumpHeight = humanoid.JumpHeight;
       const fadeTime = 0.5;
+      let startPointNumber = 0;
+      for (const i of $range(0, zoneNumber - 1)) {
+        const zoneAtIndex = ZONES[i];
+        startPointNumber += zoneAtIndex.stageCount;
+      }
+      startPointNumber = startPointNumber === 0 ? 0 : startPointNumber + 1;
+
 
       humanoid.WalkSpeed = 0;
       humanoid.JumpHeight = 0;
       task.delay(fadeTime, () => {
-        const startPointNumber = zoneNumber === 0 ? 0 : (zoneNumber * zone.stageCount) + 1;
         const destinationZoneSpawn = <SpawnLocation>World.StartPoints.WaitForChild(tostring(startPointNumber));
         root.CFrame = destinationZoneSpawn.CFrame.add(new Vector3(0, 6, 0));
         humanoid.WalkSpeed = defaultWalkSpeed;
