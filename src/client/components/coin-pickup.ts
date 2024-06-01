@@ -44,16 +44,16 @@ export class CoinPickup extends DestroyableComponent<Attributes, BasePart> imple
       conn.Disconnect();
     });
 
-    const defaultOrientation = this.instance.Orientation;
     const defaultPosition = this.instance.Position;
     task.spawn(() => {
+      this.instance.Orientation = new Vector3;
       while (!destroyed) {
         tween(this.instance, this.tweenInfo, {
-          Orientation: defaultOrientation.add(new Vector3(0, 180, 0)),
+          Orientation: new Vector3(0, 180, 0),
           Position: defaultPosition.add(new Vector3(0, 1, 0))
         }).Completed.Wait();
         tween(this.instance, this.tweenInfo, {
-          Orientation: defaultOrientation.add(new Vector3(0, 0, 0)),
+          Orientation: new Vector3(0, 360, 0),
           Position: defaultPosition
         }).Completed.Wait();
       }
