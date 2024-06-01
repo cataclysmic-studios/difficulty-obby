@@ -2,7 +2,7 @@ import { Networking } from "@flamework/networking";
 
 interface ServerEvents {
   stageOffsetUpdated(stage: number, advancing?: boolean): void;
-  sendGlobalNotification(message: string): void;
+  sendGlobalNotification(message: string, lifetime?: number): void;
   nuke(): void;
   data: {
     set(directory: string, value: unknown): void;
@@ -19,10 +19,10 @@ interface ServerEvents {
 }
 
 interface ClientEvents {
+  nukeShake(): void;
   playSoundEffect(soundName: SoundEffectName): void;
   advanceStageOffset(): void;
-  sendNotification(message: string): void;
-  nukeShake(): void;
+  sendNotification(message: string, lifetime?: number): void;
   character: {
     respawn(promptSkip?: boolean): void;
     toggleCustomMovement(on: boolean): void;

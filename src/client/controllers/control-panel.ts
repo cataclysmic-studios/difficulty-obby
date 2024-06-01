@@ -58,17 +58,18 @@ export class ControlPanelController implements OnStart {
   private renderAdminTab(): void {
     Iris.Tree(["Admin"]);
 
+    const lifetime = Iris.SliderNum(["Notification lifetime", 0.2, 2, 10], { number: Iris.State(4) });
     const notifText = Iris.InputText(["", "Notification message"]);
-    const notifButton = Iris.Button(["Send Global Notification"]);
+    const notifButton = Iris.Button(["Send global notification"]);
     if (notifButton.clicked()) {
       const text = notifText.state.text.get();
       if (removeWhitespace(text) === "") return;
-      Events.sendGlobalNotification(text);
+      Events.sendGlobalNotification(text, lifetime.state.number.get());
     }
 
     Iris.Separator();
     const coinsRecipient = Iris.InputText(["", "Recipient of coins (empty for self)"]);
-    const addCoinsButton = Iris.Button(["Add 1,000 Coins"]);
+    const addCoinsButton = Iris.Button(["Add 1,000 coins"]);
     if (addCoinsButton.clicked()) {
       const recipientName = coinsRecipient.state.text.get();
       Events.data.giveCoins(removeWhitespace(recipientName) === "" ? Player.Name : recipientName);

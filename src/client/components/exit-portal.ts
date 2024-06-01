@@ -32,8 +32,9 @@ export class ExitPortal extends BaseComponent<Attributes, PortalModel> implement
       const root = humanoid.RootPart;
       if (root === undefined) return;
 
+      const zone = ZONES.find(zone => zone.name === zoneName);
       const zoneNumber = (ZONES.map(zone => <string>zone.name)).indexOf(zoneName);
-      if (zoneNumber === -1)
+      if (zoneNumber === -1 || zone === undefined)
         return Log.warning(`Zone "${zoneName}" does not exist in World.Zones`);
 
       const defaultWalkSpeed = humanoid.WalkSpeed;
@@ -42,15 +43,15 @@ export class ExitPortal extends BaseComponent<Attributes, PortalModel> implement
 
       humanoid.WalkSpeed = 0;
       humanoid.JumpHeight = 0;
-      await this.uiEffects.blackFade(false, 0.75, fadeTime);
-
-      const startPointNumber = zoneNumber === 0 ? 0 : (zoneNumber * 20) + 1;
-      const destinationZoneSpawn = <SpawnLocation>World.StartPoints.WaitForChild(tostring(startPointNumber));
-      root.CFrame = destinationZoneSpawn.CFrame.add(new Vector3(0, 6, 0));
       task.delay(fadeTime, () => {
+        const startPointNumber = zoneNumber === 0 ? 0 : (zoneNumber * zone.stageCount) + 1;
+        const destinationZoneSpawn = <SpawnLocation>World.StartPoints.WaitForChild(tostring(startPointNumber));
+        root.CFrame = destinationZoneSpawn.CFrame.add(new Vector3(0, 6, 0));
         humanoid.WalkSpeed = defaultWalkSpeed;
         humanoid.JumpHeight = defaultJumpHeight;
       });
+
+      this.uiEffects.blackFade(false, 0.75, fadeTime);
     });
   }
 }

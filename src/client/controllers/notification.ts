@@ -17,10 +17,10 @@ export class NotificationController implements OnInit {
     .SetEasingStyle(Enum.EasingStyle.Quad);
 
   public onInit(): void {
-    Events.sendNotification.connect(message => this.send(message));
+    Events.sendNotification.connect((message, lifetime) => this.send(message, undefined, lifetime));
   }
 
-  public send(message: string, clickCallback?: Callback): void {
+  public send(message: string, clickCallback?: Callback, lifetime = 4): void {
     if (removeWhitespace(message) === "") return;
 
     const janitor = new Janitor;
@@ -35,7 +35,7 @@ export class NotificationController implements OnInit {
     Sound.SoundEffects.Notification.Play();
     janitor.Add(tween(notificationLabel, this.tweenInfo, {
       Position: UDim2.fromScale(0.5, 0)
-    }).Completed.Once(() => task.delay(4, () => {
+    }).Completed.Once(() => task.delay(lifetime, () => {
       janitor.Add(tween(notificationLabel, this.tweenInfo, {
         TextTransparency: 1
       }));
