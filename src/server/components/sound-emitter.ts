@@ -6,7 +6,13 @@ interface Attributes {
   readonly SoundEmitter_MaximumTime: number;
 }
 
-@Component({ tag: "SoundEmitter" })
+@Component({
+  tag: "SoundEmitter",
+  defaults: {
+    SoundEmitter_MinimumTime: 1,
+    SoundEmitter_MaximumTime: 10
+  }
+})
 export class SoundEmitter extends BaseComponent<Attributes, BasePart> implements OnStart {
   public onStart(): void {
     const sounds = this.instance.GetChildren().filter((i): i is Sound => i.IsA("Sound"));

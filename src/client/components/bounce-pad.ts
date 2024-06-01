@@ -16,13 +16,13 @@ export class BouncePad extends BaseComponent<Attributes, BasePart> implements On
     this.instance.Touched.Connect(hit => {
       const character = hit.FindFirstAncestorOfClass("Model");
       const humanoid = character?.FindFirstChildOfClass("Humanoid");
-      if (humanoid === undefined || humanoid.RootPart === undefined) return;
+      if (character === undefined || humanoid === undefined || humanoid.RootPart === undefined) return;
       if (debounce) return;
       debounce = true;
       task.delay(0.25, () => debounce = false);
 
       boing.Play();
-      humanoid.RootPart.ApplyImpulse(new Vector3(0, this.attributes.BouncePad_Force, 0).mul(100));
+      humanoid.RootPart.AssemblyLinearVelocity = humanoid.RootPart.AssemblyLinearVelocity.add(new Vector3(0, this.attributes.BouncePad_Force * 3, 0));
     });
   }
 }
