@@ -15,7 +15,7 @@ interface Attributes {
 })
 export class SpinningPart extends BaseComponent<Attributes, BasePart> implements OnPhysics {
   public onPhysics(dt: number): void {
-    const speed = this.attributes.SpinningPart_Speed * dt * 60;
+    const speed = this.attributes.SpinningPart_Speed * dt * 600;
     let x = 0;
     let y = 0;
     let z = 0;
@@ -34,6 +34,6 @@ export class SpinningPart extends BaseComponent<Attributes, BasePart> implements
       }
     }
 
-    this.instance.Orientation = this.instance.Orientation.add(new Vector3(x, y, z));
+    this.instance.Orientation = this.instance.Orientation.Lerp(this.instance.Orientation.add(new Vector3(x, y, z)), 0.1);
   }
 }
