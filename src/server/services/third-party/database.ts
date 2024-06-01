@@ -33,13 +33,13 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 		Events.data.addToArray.connect((player, directory, value) => this.addToArray(player, directory, value));
 		Events.data.initialize.connect(player => {
 			this.setup(player);
-			while (Players.GetPlayers().map(p => p.Name).includes(player.Name)) {
+			do {
 				const timeSinceLastCredit = os.time() - this.get<number>(player, "lastSkipCredit", 0);
 				const time = max(30 * 60 - timeSinceLastCredit, 0);
 				task.wait(time); // every 30 mins
 				if (player.IsInGroup(3510882))
 					this.addSkipCredit(player);
-			}
+			} while (Players.GetPlayers().map(p => p.Name).includes(player.Name));
 		});
 		Events.data.giveCoins.connect((_, username) => {
 			const player = Players.GetPlayers().find(player => player.Name === username);
@@ -154,7 +154,10 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 		this.initialize(player, "skipCredits", 0);
 		this.initializeSettings(player);
 
+		print("time since coin refresh:", os.time() - this.get<number>(player, "lastCoinRefresh"))
+		print("time required to refresh:", 24 * 60 * 60)
 		if (os.time() - this.get<number>(player, "lastCoinRefresh") >= 24 * 60 * 60) {
+			print("reset daily coins claimed")
 			this.delete(player, "dailyCoinsClaimed");
 			this.set<number>(player, "lastCoinRefresh", os.time());
 		}
@@ -169,7 +172,7 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 		this.set(player, directory, this.get(player, directory, initialValue));
 	}
 
-	private initializeSettings(player: Player) {
+	private initializeSettings(player: Player): void {
 		this.initialize(player, "settings/soundEffects", true);
 		this.initialize(player, "settings/music", true);
 		this.initialize(player, "settings/boomboxes", true);
