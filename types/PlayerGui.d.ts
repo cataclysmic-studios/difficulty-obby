@@ -1,5 +1,16 @@
 interface PlayerGui extends BasePlayerGui {
   Main: ScreenGui & {
+    StageInfo: Frame & {
+      StageNumber: TextLabel;
+      ZoneName: TextLabel;
+      NextStage: TextButton;
+      PreviousStage: TextButton;
+      Next10Stages: TextButton;
+      Previous10Stages: TextButton;
+      Skip: ImageButton & {
+        SkipCredits: TextLabel;
+      };
+    };
     Settings: Frame & {
       Title: TextLabel & {
         UIStroke: UIStroke;

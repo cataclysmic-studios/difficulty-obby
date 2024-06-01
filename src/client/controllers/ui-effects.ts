@@ -13,8 +13,6 @@ export class UIEffectsController implements OnInit, LogStart {
   private readonly whiteFrame = new Instance("Frame", this.screen);
 
   public onInit(): void {
-    Events.uiEffects.blackFade.connect((timeBetween, fadeTime) => this.blackFade(false, timeBetween, fadeTime));
-
     this.screen.Name = "UIEffects";
     this.screen.DisplayOrder = 10;
     this.screen.ScreenInsets = Enum.ScreenInsets.DeviceSafeInsets;

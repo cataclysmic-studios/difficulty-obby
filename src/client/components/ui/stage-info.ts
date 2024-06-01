@@ -13,21 +13,11 @@ import type { PlayerData } from "shared/data-models/player-data";
 
 import type { CheckpointsController } from "client/controllers/checkpoints";
 
-interface StageInfoFrame extends Frame {
-  StageNumber: TextLabel;
-  ZoneName: TextLabel;
-  NextStage: TextButton;
-  PreviousStage: TextButton;
-  Next10Stages: TextButton;
-  Previous10Stages: TextButton;
-  Skip: ImageButton;
-}
-
 @Component({
   tag: "StageInfo",
   ancestorWhitelist: [PlayerGui]
 })
-export class StageInfo extends BaseComponent<{}, StageInfoFrame> implements OnStart, OnDataUpdate, LogStart {
+export class StageInfo extends BaseComponent<{}, PlayerGui["Main"]["StageInfo"]> implements OnStart, OnDataUpdate, LogStart {
   public constructor(
     private readonly checkpoints: CheckpointsController
   ) { super(); }
@@ -49,11 +39,15 @@ export class StageInfo extends BaseComponent<{}, StageInfoFrame> implements OnSt
     });
   }
 
-  public onDataUpdate(directory: string, stage: number): void {
-    if (!endsWith(directory, "stage")) return;
-    stage = math.max(stage + this.checkpoints.getStageOffset(), 0);
-    this.instance.StageNumber.Text = tostring(stage);
-    this.instance.ZoneName.Text = getZoneName(stage);
-    this.instance.Visible = true;
+  public onDataUpdate(directory: string, value: number): void {
+    if (endsWith(directory, "stage")) {
+      value = math.max(value + this.checkpoints.getStageOffset(), 0);
+      this.instance.StageNumber.Text = tostring(value);
+      this.instance.ZoneName.Text = getZoneName(value);
+      this.instance.Visible = true;
+    } else if (endsWith(directory, "skipCredits")) {
+      this.instance.Skip.SkipCredits.Visible = value > 0;
+      this.instance.Skip.SkipCredits.Text = tostring(value);
+    }
   }
 }
