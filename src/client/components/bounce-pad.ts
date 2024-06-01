@@ -21,8 +21,9 @@ export class BouncePad extends BaseComponent<Attributes, BasePart> implements On
       debounce = true;
       task.delay(0.25, () => debounce = false);
 
+      const currentVelocity = humanoid.RootPart.AssemblyLinearVelocity;
+      humanoid.RootPart.AssemblyLinearVelocity = new Vector3(currentVelocity.X, this.attributes.BouncePad_Force * 3, currentVelocity.Z);
       boing.Play();
-      humanoid.RootPart.AssemblyLinearVelocity = humanoid.RootPart.AssemblyLinearVelocity.add(new Vector3(0, this.attributes.BouncePad_Force * 3, 0));
     });
   }
 }
