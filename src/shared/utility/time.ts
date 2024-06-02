@@ -22,9 +22,9 @@ const timePatterns = {
   d, day: d, days: d,
   w, week: w, weeks: w
 };
+
 // Takes a remaining time string (e.g. 1d 5h 10s) and
 // converts it to the amount of time it represents in seconds.
-
 export function toSeconds(time: string): number {
   let seconds = 0;
   for (const [value, unit] of time.gsub(" ", "")[0].gmatch("(%d+)(%a)")) {

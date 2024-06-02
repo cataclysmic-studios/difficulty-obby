@@ -7,6 +7,6 @@ export const BOOSTERS: Booster[] = [
   {
     name: "Double Coins",
     length: "10 minutes",
-    icon: "rbxassetid://0"
+    icon: "rbxassetid://17703681433"
   }
 ]

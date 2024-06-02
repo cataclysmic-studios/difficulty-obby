@@ -30,10 +30,11 @@ export class BoostersPage extends BaseComponent<{}, PlayerGui["Main"]["Boosters"
       task.spawn(() => this.createBoosterFrame(booster));
   }
 
-  private createBoosterFrame({ name, icon }: Booster): void {
+  private createBoosterFrame({ name, icon, length }: Booster): void {
     let debounce = false;
     const consumableFrame = Assets.UI.Consumable.Clone();
     consumableFrame.Title.Text = name;
+    consumableFrame.Length.Text = length;
     consumableFrame.Icon.Image = icon;
     consumableFrame.Use.MouseButton1Click.Connect(async () => {
       if (debounce) return;

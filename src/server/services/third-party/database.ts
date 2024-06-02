@@ -7,8 +7,10 @@ import type { LogStart } from "shared/hooks";
 import type { OnPlayerLeave } from "server/hooks";
 import { Events, Functions } from "server/network";
 import { PassIDs } from "shared/structs/product-ids";
-import { type PlayerData, INITIAL_DATA } from "shared/data-models/player-data";
+import { type PlayerData, ActiveBooster, INITIAL_DATA } from "shared/data-models/player-data";
 import Firebase from "server/firebase";
+import { BOOSTERS } from "shared/constants";
+import { toSeconds } from "shared/utility/time";
 
 const { max } = math;
 
@@ -104,8 +106,12 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 	}
 
 	public deleteFromArray<T extends defined = defined>(player: Player, directory: string, value: T): void {
+		this.filterFromArray(player, directory, v => v !== value);
+	}
+
+	public filterFromArray<T extends defined = defined>(player: Player, directory: string, filter: (value: T, index: number) => boolean): void {
 		const array = this.get<T[]>(player, directory, []);
-		this.set(player, directory, array.filter(v => v !== value));
+		this.set(player, directory, array.filter(filter));
 	}
 
 	public delete(player: Player, directory: string): void {
@@ -133,10 +139,22 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 	public getMultiplier(player: Player, multiplierType: MultiplierType): number {
 		switch (multiplierType) {
 			case MultiplierType.Coins: {
-				const doubleCoins = Market.UserOwnsGamePassAsync(player.UserId, PassIDs.DoubleCoins);
-				return doubleCoins ? 2 : 1;
+				const doubleCoinsPass = Market.UserOwnsGamePassAsync(player.UserId, PassIDs.DoubleCoins) ? 1 : 0;
+				const doubleCoinsBooster = this.isBoosterActive(player, "Double Coins") ? 1 : 0;
+				return 1 + doubleCoinsPass + doubleCoinsBooster;
 			}
 		}
+	}
+
+	public isBoosterActive(player: Player, name: string): boolean {
+		const activeBoosters = this.get<ActiveBooster[]>(player, "activeBoosters", []).sort((a, b) => a.activatedTimestamp < b.activatedTimestamp);
+		const activeBooster = activeBoosters.find(booster => booster.name === name);
+		const booster = BOOSTERS.find(booster => booster.name === name);
+		if (booster === undefined || activeBooster === undefined) return false;
+
+		const boosterLength = toSeconds(booster.length);
+		const timeSinceActivation = os.time() - activeBooster.activatedTimestamp;
+		return timeSinceActivation < boosterLength;
 	}
 
 	private getCached(player: Player): PlayerData {
