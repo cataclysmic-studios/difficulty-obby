@@ -6,6 +6,7 @@ import { type Zone, ZONES } from "shared/zones";
 import Log from "shared/logger";
 
 import type { UIEffectsController } from "client/controllers/ui-effects";
+import { Player } from "shared/utility/client";
 
 interface Attributes {
   readonly ExitPortal_DestinationZone: string;
@@ -25,6 +26,7 @@ export class ExitPortal extends BaseComponent<Attributes, PortalModel> implement
       const character = hit.FindFirstAncestorOfClass("Model");
       const humanoid = character?.FindFirstChildOfClass("Humanoid");
       if (humanoid === undefined) return;
+      if (character?.Name !== Player.Name) return;
       if (debounce) return;
       debounce = true;
       task.delay(1, () => debounce = false);
@@ -46,7 +48,6 @@ export class ExitPortal extends BaseComponent<Attributes, PortalModel> implement
         startPointNumber += zoneAtIndex.stageCount;
       }
       startPointNumber = startPointNumber === 0 ? 0 : startPointNumber + 1;
-
 
       humanoid.WalkSpeed = 0;
       humanoid.JumpHeight = 0;
