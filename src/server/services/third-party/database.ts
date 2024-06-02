@@ -81,9 +81,9 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 		this.update(player, this.getDirectoryForPlayer(player, directory), value);
 	}
 
-	public increment(player: Player, directory: string, amount = 1): number {
+	public increment(player: Player, directory: string, amount = 1, incrementing = true): number {
 		const incrementingCoins = endsWith(directory, "coins");
-		if (incrementingCoins) {
+		if (incrementingCoins && incrementing) {
 			Events.playSoundEffect(player, "GainCoins");
 			const coinMultiplier = this.getMultiplier(player, MultiplierType.Coins);
 			amount *= coinMultiplier;
@@ -96,7 +96,7 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 	}
 
 	public decrement(player: Player, directory: string, amount = 1): number {
-		return this.increment(player, directory, -amount);
+		return this.increment(player, directory, -amount, false);
 	}
 
 	public addToArray<T extends defined = defined>(player: Player, directory: string, value: T): void {
