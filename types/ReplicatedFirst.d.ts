@@ -1,6 +1,9 @@
 interface ReplicatedFirst extends Instance {
   Assets: Folder & {
     UI: Folder & {
+      Nametag: BillboardGui & {
+        Prefix: TextLabel;
+      };
       TimerUI: BillboardGui & {
         Countdown: TextLabel;
       };

@@ -47,17 +47,14 @@ export class MusicController implements OnInit, LogStart {
       return this.failedToFindSong();
 
     janitor.Add(this.currentSong.Ended.Once(() => {
-      Log.info(`Ended song "${this.currentSong!.Name}"`);
       janitor.Cleanup();
       this.nextSong();
     }));
     janitor.Add(this.currentSong.Stopped.Once(() => {
-      Log.info(`Stopped song "${this.currentSong!.Name}"`);
       janitor.Cleanup();
       this.nextSong();
     }));
     this.currentSong.Play();
-    Log.info(`Played song "${this.currentSong.Name}"`);
   }
 
   private async nextSong(): Promise<void> {
