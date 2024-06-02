@@ -39,5 +39,6 @@ export class CharacterService implements OnInit, OnCharacterAdd {
   public toggleDefaultMovement(player: Player, on: boolean): void {
     player.DevComputerMovementMode = on ? Enum.DevComputerMovementMode.KeyboardMouse : Enum.DevComputerMovementMode.Scriptable;
     player.DevTouchMovementMode = on ? Enum.DevTouchMovementMode.DynamicThumbstick : Enum.DevTouchMovementMode.Scriptable;
+    player.DevEnableMouseLock = true;
   }
 }

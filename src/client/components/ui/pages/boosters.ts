@@ -6,7 +6,7 @@ import { Events, Functions } from "client/network";
 import { PlayerGui } from "shared/utility/client";
 import { Assets } from "shared/utility/instances";
 import { BOOSTERS } from "shared/constants";
-import type { Booster } from "shared/structs/boosters";
+import type { Booster } from "shared/structs/player-items";
 
 import type { NotificationController } from "client/controllers/notification";
 

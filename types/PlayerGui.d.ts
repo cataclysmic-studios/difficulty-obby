@@ -32,6 +32,104 @@ interface PlayerGui extends BasePlayerGui {
       UIAspectRatioConstraint: UIAspectRatioConstraint;
       UIPadding: UIPadding;
     };
+    Crates: Frame & {
+      List: Frame & {
+        UIPadding: UIPadding;
+        Pro: Frame & {
+          UIPadding: UIPadding;
+          UICorner: UICorner;
+          UIAspectRatioConstraint: UIAspectRatioConstraint;
+          Title: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          Price: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          Open: TextButton & {
+            UIGradient: UIGradient;
+            UICorner: UICorner;
+            UIStroke: UIStroke;
+            Title: TextLabel & {
+              UIStroke: UIStroke;
+            };
+            UIPadding: UIPadding;
+          };
+          UIStroke: UIStroke;
+          Icon: ImageLabel & {
+            UIAspectRatioConstraint: UIAspectRatioConstraint;
+          };
+          UIGradient: UIGradient;
+        };
+        UIListLayout: UIListLayout;
+        Beast: Frame & {
+          UIPadding: UIPadding;
+          UICorner: UICorner;
+          UIAspectRatioConstraint: UIAspectRatioConstraint;
+          Title: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          Price: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          Open: TextButton & {
+            UIGradient: UIGradient;
+            UICorner: UICorner;
+            UIStroke: UIStroke;
+            Title: TextLabel & {
+              UIStroke: UIStroke;
+            };
+            UIPadding: UIPadding;
+          };
+          UIStroke: UIStroke;
+          Icon: ImageLabel & {
+            UIAspectRatioConstraint: UIAspectRatioConstraint;
+          };
+          UIGradient: UIGradient;
+        };
+        Noob: Frame & {
+          UIPadding: UIPadding;
+          UICorner: UICorner;
+          UIAspectRatioConstraint: UIAspectRatioConstraint;
+          Title: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          Price: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          Open: TextButton & {
+            UIGradient: UIGradient;
+            UICorner: UICorner;
+            UIStroke: UIStroke;
+            Title: TextLabel & {
+              UIStroke: UIStroke;
+            };
+            UIPadding: UIPadding;
+          };
+          UIStroke: UIStroke;
+          Icon: ImageLabel & {
+            UIAspectRatioConstraint: UIAspectRatioConstraint;
+          };
+          UIGradient: UIGradient;
+        };
+      };
+      Title: TextLabel & {
+        UIStroke: UIStroke;
+      };
+      UIGradient: UIGradient;
+      Close: ImageButton & {
+        UIGradient: UIGradient;
+        UICorner: UICorner;
+        UIStroke: UIStroke;
+        UIAspectRatioConstraint: UIAspectRatioConstraint;
+        Icon: ImageLabel;
+      };
+      UICorner: UICorner;
+      UIStroke: UIStroke & {
+        UIGradient: UIGradient;
+      };
+      UIAspectRatioConstraint: UIAspectRatioConstraint;
+      UIPadding: UIPadding;
+    };
     Boosters: Frame & {
       Title: TextLabel & {
         UIStroke: UIStroke;

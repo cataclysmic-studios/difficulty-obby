@@ -20,16 +20,20 @@ interface Attributes {
 export class PageRoute extends DestroyableComponent<Attributes, GuiButton> implements OnStart {
   public onStart(): void {
     this.janitor.Add(this.instance.MouseButton1Click.Connect(() => {
-      const screen = this.instance.FindFirstAncestorOfClass("ScreenGui")!;
-      const frames = screen.GetChildren().filter((i): i is Frame => i.IsA("Frame"));
-      const destination = <Frame>screen.WaitForChild(this.attributes.PageRoute_Destination);
-      if (this.attributes.PageRoute_Exclusive)
-        for (const frame of frames) {
-          if (frame === destination) continue;
-          frame.Visible = false;
-        }
-
-      destination.Visible = true;
+      this.setPage();
     }));
+  }
+
+  private setPage(destination = this.attributes.PageRoute_Destination, exclusive = this.attributes.PageRoute_Exclusive) {
+    const screen = this.instance.FindFirstAncestorOfClass("ScreenGui")!;
+    const frames = screen.GetChildren().filter((i): i is Frame => i.IsA("Frame"));
+    const destinationFrame = <Frame>screen.WaitForChild(destination);
+    if (exclusive)
+      for (const frame of frames) {
+        if (frame === destinationFrame) continue;
+        frame.Visible = false;
+      }
+
+    destinationFrame.Visible = true;
   }
 }
