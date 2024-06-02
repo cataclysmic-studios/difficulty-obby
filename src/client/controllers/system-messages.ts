@@ -3,14 +3,18 @@ import { TextChatService } from "@rbxts/services";
 
 const { floor } = math;
 
+const INTERVAL = 5 * 60;
+
 @Controller()
 export class SystemMessagesController implements OnInit {
   public onInit(): void {
     const messages = [
       "Like the game and join the group for a free stage skip every 30 minutes!",
       "Invite your friends for a free 50 coins!",
-      "Join the Discord server to leave any suggestions!",
-      "If you find a bug, we'd very much appreciate if you let us know!"
+      "Come back later for more zones!",
+      "Join the Discord server to leave any suggestions or bug reports!",
+      "If you enjoy the game, liking it helps us out a ton!",
+      "Check out the products we have to offer in the shop!",
     ];
 
     let i = 0;
@@ -22,7 +26,7 @@ export class SystemMessagesController implements OnInit {
         channel.DisplaySystemMessage(`<font color="rgb(${floor(color.R * 255)}, ${floor(color.G * 255)}, ${floor(color.B * 255)})"><b>[SYSTEM]:</b>  ${messages[i]}</font>`);
         i += 1;
         i %= messages.size();
-        task.wait(300);
+        task.wait(INTERVAL);
       }
     });
   }
