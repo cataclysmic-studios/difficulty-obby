@@ -14,7 +14,9 @@ interface Attributes {
 @Component({
   tag: "MovingPart",
   defaults: {
-    MovingPart_Delay: 0
+    MovingPart_Delay: 0,
+    MovingPart_Time: 1,
+    MovingPart_Direction: "Forward"
   }
 })
 export class MovingPart extends BaseComponent<Attributes, BasePart> implements OnStart, OnTick {

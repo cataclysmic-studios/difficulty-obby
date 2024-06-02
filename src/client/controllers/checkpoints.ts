@@ -16,6 +16,8 @@ import type { UIEffectsController } from "./ui-effects";
 
 const { clamp } = math;
 
+const STAGE_ARROW_COOLDOWN = 0.1;
+
 @Controller({ loadOrder: 2 })
 export class CheckpointsController implements OnInit, OnDataUpdate, LogStart {
   public readonly offsetUpdated = new Signal<(newStage: number) => void>;
@@ -53,7 +55,7 @@ export class CheckpointsController implements OnInit, OnDataUpdate, LogStart {
   public addStageOffset(offset = 1, advancing = false): void {
     if (this.offsetDebounce) return
     this.offsetDebounce = true;
-    task.delay(0.35, () => this.offsetDebounce = false);
+    task.delay(STAGE_ARROW_COOLDOWN, () => this.offsetDebounce = false);
 
     if (this.getStage() + offset > this.stage) return;
     this.stageOffset += offset;
@@ -63,7 +65,7 @@ export class CheckpointsController implements OnInit, OnDataUpdate, LogStart {
   public subtractStageOffset(offset = 1): void {
     if (this.offsetDebounce) return
     this.offsetDebounce = true;
-    task.delay(0.35, () => this.offsetDebounce = false);
+    task.delay(STAGE_ARROW_COOLDOWN, () => this.offsetDebounce = false);
 
     if (this.getStage() - offset < 0) return;
     this.stageOffset -= offset;
