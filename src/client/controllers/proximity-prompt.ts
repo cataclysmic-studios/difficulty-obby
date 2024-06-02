@@ -1,4 +1,5 @@
 import { Controller, type OnInit } from "@flamework/core";
+import { UserInputService as UserInput } from "@rbxts/services";
 import { TweenInfoBuilder } from "@rbxts/builders";
 import type { RawActionEntry } from "@rbxts/gamejoy";
 import Signal from "@rbxts/signal";
@@ -7,28 +8,55 @@ import type { LogStart } from "shared/hooks";
 import { InputInfluenced } from "client/classes/input-influenced";
 import { PlayerGui } from "shared/utility/client";
 import { tween } from "shared/utility/ui";
+import { Union } from "@rbxts/gamejoy/out/Actions";
 
 @Controller()
 export class ProximityPromptController extends InputInfluenced implements OnInit, LogStart {
   public readonly activated = new Signal<(actionID?: string) => void>;
 
-  private readonly keybind: RawActionEntry = "E";
+  private readonly keybind = new Union(["E", "ButtonX"]);
   private readonly label = PlayerGui.Main.Main.ProximityPrompt;
   private readonly defaultStrokeTrans = this.label.UIStroke.Transparency;
   private readonly tweenInfo = new TweenInfoBuilder().SetTime(0.2);
   private currentID?: string;
+  private lastActionText?: string;
   private on = this.label.Visible;
 
   public onInit(): void {
-    this.input.Bind(this.keybind, () => {
-      if (!this.on) return;
-      this.activated.Fire(this.currentID);
+    UserInput.GamepadConnected.Connect(() => {
+      if (this.lastActionText === undefined || this.currentID === undefined) return;
+      this.setAction(this.lastActionText, this.currentID);
     });
+    UserInput.GamepadDisconnected.Connect(() => {
+      if (this.lastActionText === undefined || this.currentID === undefined) return;
+      this.setAction(this.lastActionText, this.currentID);
+    });
+
+    this.input.Bind(this.keybind, () => this.activate());
+    if (this.hasTouchscreen())
+      this.label.MouseButton1Click.Connect(() => this.activate());
+  }
+
+  private hasTouchscreen(): boolean {
+    return UserInput.TouchEnabled;
+  }
+
+  private hasGamepad(): boolean {
+    return UserInput.GamepadEnabled;
+  }
+
+  private activate(): void {
+    if (!this.on) return;
+    this.activated.Fire(this.currentID);
   }
 
   public setAction(actionText: string, actionID: string): void {
+    const [keyboardKey, gamepadButton] = this.keybind.Content;
     this.currentID = actionID;
-    this.label.Text = `[${this.keybind}] ${actionText}`;
+    this.lastActionText = actionText;
+
+    const [bindName] = (this.hasGamepad() ? gamepadButton : keyboardKey).Name.gsub("Button", "");
+    this.label.Text = this.hasTouchscreen() ? `Tap here to ${actionText}` : `[${bindName}] ${actionText}`;
   }
 
   public toggle(on: boolean): void {

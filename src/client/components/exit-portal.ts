@@ -2,7 +2,7 @@ import type { OnStart } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
 import { Workspace as World } from "@rbxts/services";
 
-import { TOTAL_STAGE_COUNT, Zone, ZONES } from "shared/zones";
+import { type Zone, ZONES } from "shared/zones";
 import Log from "shared/logger";
 
 import type { UIEffectsController } from "client/controllers/ui-effects";
