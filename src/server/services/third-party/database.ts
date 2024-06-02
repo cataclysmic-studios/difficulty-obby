@@ -103,6 +103,11 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 		this.set(player, directory, array);
 	}
 
+	public deleteFromArray<T extends defined = defined>(player: Player, directory: string, value: T): void {
+		const array = this.get<T[]>(player, directory, []);
+		this.set(player, directory, array.filter(v => v !== value));
+	}
+
 	public delete(player: Player, directory: string): void {
 		this.set(player, directory, undefined);
 	}
@@ -149,6 +154,8 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 		this.initialize(player, "stage", 0);
 		this.initialize(player, "coins", 0);
 		this.initialize(player, "ownedItems", []);
+		this.initialize(player, "ownedBoosters", []);
+		this.initialize(player, "activeBoosters", []);
 		this.initialize(player, "lastCoinRefresh", os.time());
 		this.initialize(player, "dailyCoinsClaimed", {});
 		this.initialize(player, "skipCredits", 0);

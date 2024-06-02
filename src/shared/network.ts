@@ -1,6 +1,7 @@
 import { Networking } from "@flamework/networking";
 
 interface ServerEvents {
+  useBooster(name: string): void;
   stageOffsetUpdated(stage: number, advancing?: boolean): void;
   sendGlobalNotification(message: string, lifetime?: number): void;
   nuke(): void;
@@ -39,6 +40,7 @@ interface ClientEvents {
 }
 
 interface ServerFunctions {
+  isBoosterActive(name: string): boolean;
   data: {
     initialize(): void;
     get(directory?: string, defaultValue?: unknown): unknown;
