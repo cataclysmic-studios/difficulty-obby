@@ -1,6 +1,7 @@
 import { Networking } from "@flamework/networking";
 
 interface ServerEvents {
+  rewardBooster(): void
   useBooster(name: string): void;
   stageOffsetUpdated(stage: number, advancing?: boolean): void;
   sendGlobalNotification(message: string, lifetime?: number): void;

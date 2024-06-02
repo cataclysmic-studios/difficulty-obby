@@ -8,6 +8,8 @@ import type { ActiveBooster } from "shared/data-models/player-data";
 import type { DatabaseService } from "./third-party/database";
 import type { SchedulingService } from "./scheduling";
 
+const CANNOT_FIND = "ok brah that's not a real booster";
+
 @Service()
 export class BoosterService implements OnInit {
   public constructor(
@@ -17,6 +19,10 @@ export class BoosterService implements OnInit {
 
   public onInit(): void {
     Events.useBooster.connect((player, name) => this.use(player, name));
+    Events.rewardBooster.connect(player => {
+      const booster = BOOSTERS[math.random(0, BOOSTERS.size() - 1)];
+      this.reward(player, booster.name);
+    });
     Functions.isBoosterActive.setCallback((player, name) => this.db.isBoosterActive(player, name));
 
     this.scheduling.every.second.Connect(() => {
@@ -30,10 +36,18 @@ export class BoosterService implements OnInit {
     });
   }
 
+  public reward(player: Player, name: string): void {
+    const booster = BOOSTERS.find(booster => booster.name === name);
+    if (booster === undefined)
+      player.Kick(CANNOT_FIND);
+
+    this.db.addToArray<string>(player, "ownedBoosters", name);
+  }
+
   public use(player: Player, name: string): void {
     const booster = BOOSTERS.find(booster => booster.name === name);
     if (booster === undefined)
-      player.Kick("ok brah that's not a real booster");
+      player.Kick(CANNOT_FIND);
 
     this.db.deleteFromArray(player, "ownedBoosters", name);
     this.db.addToArray<ActiveBooster>(player, "activeBoosters", {

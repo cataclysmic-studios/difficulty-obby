@@ -1,5 +1,6 @@
 interface PlayerGui extends BasePlayerGui {
   Main: ScreenGui & {
+    BoosterNote: TextLabel;
     StageInfo: Frame & {
       StageNumber: TextLabel;
       ZoneName: TextLabel;
