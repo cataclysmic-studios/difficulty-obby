@@ -45,7 +45,45 @@ interface PlayerGui extends BasePlayerGui {
       List: Frame & {
         UIGridLayout: UIGridLayout;
         UIPadding: UIPadding;
+        Day1: TextButton & {
+          Claimed: ImageLabel;
+          GrayedOut: Frame;
+          Icon: ImageLabel & {
+            UIAspectRatioConstraint: UIAspectRatioConstraint;
+          };
+          Note: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          UIGradient: UIGradient;
+          Title: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          UICorner: UICorner;
+          UIStroke: UIStroke;
+          UIAspectRatioConstraint: UIAspectRatioConstraint;
+          UIPadding: UIPadding;
+        };
+        Day2: TextButton & {
+          Claimed: ImageLabel;
+          GrayedOut: Frame;
+          Icon: ImageLabel & {
+            UIAspectRatioConstraint: UIAspectRatioConstraint;
+          };
+          Note: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          UIGradient: UIGradient;
+          Title: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          UICorner: UICorner;
+          UIStroke: UIStroke;
+          UIAspectRatioConstraint: UIAspectRatioConstraint;
+          UIPadding: UIPadding;
+        };
         Day3: TextButton & {
+          Claimed: ImageLabel;
+          GrayedOut: Frame;
           Icon: ImageLabel & {
             UIAspectRatioConstraint: UIAspectRatioConstraint;
           };
@@ -62,6 +100,8 @@ interface PlayerGui extends BasePlayerGui {
           UIPadding: UIPadding;
         };
         Day4: TextButton & {
+          Claimed: ImageLabel;
+          GrayedOut: Frame;
           Icon: ImageLabel & {
             UIAspectRatioConstraint: UIAspectRatioConstraint;
           };
@@ -78,6 +118,8 @@ interface PlayerGui extends BasePlayerGui {
           UIPadding: UIPadding;
         };
         Day5: TextButton & {
+          Claimed: ImageLabel;
+          GrayedOut: Frame;
           Note: TextLabel & {
             UIStroke: UIStroke;
           };
@@ -91,6 +133,8 @@ interface PlayerGui extends BasePlayerGui {
           UIPadding: UIPadding;
         };
         Day6: TextButton & {
+          Claimed: ImageLabel;
+          GrayedOut: Frame;
           Note: TextLabel & {
             UIStroke: UIStroke;
           };
@@ -105,6 +149,8 @@ interface PlayerGui extends BasePlayerGui {
         };
         NoGrid: Folder & {
           Day7: TextButton & {
+            Claimed: ImageLabel;
+            GrayedOut: Frame;
             Note: TextLabel & {
               UIStroke: UIStroke;
             };

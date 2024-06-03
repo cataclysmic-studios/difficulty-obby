@@ -19,6 +19,7 @@ export const INITIAL_DATA = {
   skipCredits: 0,
   lastLogin: 0,
   loginStreak: 0,
+  claimedDaily: false,
   settings: {
     soundEffects: true,
     music: true,

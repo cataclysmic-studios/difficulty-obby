@@ -7,9 +7,9 @@ import type { OnDataUpdate } from "client/hooks";
 import { Events, Functions } from "client/network";
 import { Player, PlayerGui } from "shared/utility/client";
 import { ProductIDs } from "shared/structs/product-ids";
+import { CrateName } from "shared/structs/player-items";
 
 import type { CratesController } from "client/controllers/crates";
-import { CrateName } from "shared/structs/player-items";
 
 @Component({
   tag: "CratesPage",

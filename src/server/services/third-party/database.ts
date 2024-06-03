@@ -184,6 +184,7 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 		this.initialize(player, "skipCredits", 0);
 		this.initialize(player, "lastLogin", 0);
 		this.initialize(player, "loginStreak", 0);
+		this.initialize(player, "claimedDaily", false);
 		this.initializeSettings(player);
 
 		if (os.time() - this.get<number>(player, "lastCoinRefresh") >= 24 * 60 * 60) {
