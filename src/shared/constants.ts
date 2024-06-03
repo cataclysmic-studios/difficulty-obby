@@ -57,3 +57,5 @@ export const RARITY_WORTH = {
   [Rarity.Legendary]: 200,
   [Rarity.Mythic]: 250
 }
+
+export const EMPTY_IMAGE = "rbxassetid://5168609593";

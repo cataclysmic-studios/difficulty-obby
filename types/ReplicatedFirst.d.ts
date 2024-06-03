@@ -59,6 +59,26 @@ interface ReplicatedFirst extends Instance {
         };
       };
       Price: TextLabel;
+      Equippable: Frame & {
+        UIPadding: UIPadding;
+        UIGradient: UIGradient;
+        Title: TextLabel & {
+          UIStroke: UIStroke;
+        };
+        Icon: ImageLabel;
+        UICorner: UICorner;
+        UIStroke: UIStroke;
+        UIAspectRatioConstraint: UIAspectRatioConstraint;
+        Equip: TextButton & {
+          UIGradient: UIGradient;
+          UICorner: UICorner;
+          UIStroke: UIStroke;
+          Title: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          UIPadding: UIPadding;
+        };
+      };
       Consumable: Frame & {
         UIPadding: UIPadding;
         UIGradient: UIGradient;

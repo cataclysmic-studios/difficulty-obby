@@ -173,6 +173,7 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 		this.playerData[tostring(player.UserId)] = data;
 		this.initialize(player, "stage", 0);
 		this.initialize(player, "coins", 0);
+		this.initialize(player, "equippedTrail", undefined);
 		this.initialize(player, "ownedItems", []);
 		this.initialize(player, "ownedCrates", []);
 		this.initialize(player, "ownedTrails", []);

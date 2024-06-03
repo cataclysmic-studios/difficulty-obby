@@ -8,6 +8,7 @@ export interface ActiveBooster {
 export const INITIAL_DATA = {
   stage: 0,
   coins: 0,
+  equippedTrail: <Maybe<string>>undefined,
   ownedItems: <string[]>[],
   ownedCrates: <string[]>[],
   ownedTrails: <string[]>[],

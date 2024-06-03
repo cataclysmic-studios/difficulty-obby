@@ -139,6 +139,26 @@ interface PlayerGui extends BasePlayerGui {
       UIAspectRatioConstraint: UIAspectRatioConstraint;
       UIPadding: UIPadding;
     };
+    Trails: Frame & {
+      Title: TextLabel & {
+        UIStroke: UIStroke;
+      };
+      UIGradient: UIGradient;
+      Close: ImageButton & {
+        UIGradient: UIGradient;
+        UICorner: UICorner;
+        UIStroke: UIStroke;
+        UIAspectRatioConstraint: UIAspectRatioConstraint;
+        Icon: ImageLabel;
+      };
+      List: ScrollingFrame;
+      UICorner: UICorner;
+      UIStroke: UIStroke & {
+        UIGradient: UIGradient;
+      };
+      UIAspectRatioConstraint: UIAspectRatioConstraint;
+      UIPadding: UIPadding;
+    };
     Boosters: Frame & {
       Title: TextLabel & {
         UIStroke: UIStroke;

@@ -5,12 +5,12 @@ import { Events, Functions } from "client/network";
 import { Player, PlayerGui } from "shared/utility/client";
 import { Assets } from "shared/utility/instances";
 import { pascalCaseToSpaced, removeWhitespace } from "shared/utility/strings";
+import { commaFormat } from "shared/utility/numbers";
 import { type CrateName, Rarity } from "shared/structs/player-items";
-import { CRATES, RARITY_WORTH } from "shared/constants";
+import { CRATES, EMPTY_IMAGE, RARITY_WORTH } from "shared/constants";
 
 import type { CameraController } from "./camera";
 import type { NotificationController } from "./notification";
-import { commaFormat } from "shared/utility/numbers";
 
 @Controller()
 export class CratesController {
@@ -32,7 +32,7 @@ export class CratesController {
     const noIcon = removeWhitespace(icon) === "";
     this.rewardCard.Title.Text = item.Name;
     this.rewardCard.ItemType.Text = pascalCaseToSpaced(item.ClassName).upper();
-    this.rewardCard.Icon.Image = noIcon ? "rbxassetid://5168609593" : icon;
+    this.rewardCard.Icon.Image = noIcon ? EMPTY_IMAGE : icon;
     if (noIcon)
       this.compensateNoIcon(item);
 
