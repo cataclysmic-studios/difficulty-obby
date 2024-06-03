@@ -17,12 +17,13 @@ export class TrailService implements OnCharacterAdd, OnDataUpdate, LogStart {
     a1.Position = new Vector3(0, -1, 0);
   }
 
-  public onDataUpdate(player: Player, directory: string, equippedTrail: string): void {
+  public onDataUpdate(player: Player, directory: string, equippedTrail: Maybe<string>): void {
     if (!endsWith(directory, "equippedTrail")) return;
     if (player.Character === undefined && Players.GetPlayers().includes(player))
       player.CharacterAdded.Wait();
 
     const character = <CharacterModel>player.Character;
+    character.Torso.FindFirstChildOfClass("Trail")?.Destroy();
     const trail = Assets.CrateRewards.Trails.GetDescendants().find((i): i is Trail => i.IsA("Trail") && i.Name === equippedTrail)?.Clone();
     if (trail === undefined) return;
 
@@ -30,7 +31,6 @@ export class TrailService implements OnCharacterAdd, OnDataUpdate, LogStart {
     const a1 = <Attachment>character.Torso.WaitForChild("Attachment1", 5);
     if (a0 === undefined || a1 === undefined) return;
 
-    character.Torso.FindFirstChildOfClass("Trail")?.Destroy();
     trail.Parent = character.Torso;
     trail.Attachment0 = a0;
     trail.Attachment1 = a1;

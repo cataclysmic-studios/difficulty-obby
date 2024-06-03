@@ -19,6 +19,7 @@ export class TrailsPage extends BaseComponent<{}, PlayerGui["Main"]["Trails"]> i
   public async onDataUpdate(directory: string, trailNames: string[]): Promise<void> {
     if (endsWith(directory, "equippedTrail")) {
       const trailName = <string><unknown>trailNames;
+      if (trailName === undefined) return;
       for (const frame of this.instance.List.GetChildren().filter((i): i is typeof Assets.UI.Equippable => i.IsA("Frame")))
         frame.Equip.Title.Text = frame.Title.Text === trailName ? "Unequip" : "Equip";
 
@@ -57,8 +58,9 @@ export class TrailsPage extends BaseComponent<{}, PlayerGui["Main"]["Trails"]> i
       debounce = true;
       task.delay(0.2, () => debounce = false);
 
-      equippableFrame.Equip.Title.Text = equippableFrame.Equip.Title.Text === "Equip" ? "Unequip" : "Equip";
-      Events.data.set("equippedTrail", trailName);
+      const unequipping = equippableFrame.Equip.Title.Text === "Unequip"
+      equippableFrame.Equip.Title.Text = unequipping ? "Equip" : "Unequip";
+      Events.data.set("equippedTrail", unequipping ? undefined : trailName);
     });
     equippableFrame.Parent = this.instance.List;
     return conn;
