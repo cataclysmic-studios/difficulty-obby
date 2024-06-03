@@ -1,11 +1,12 @@
 import { Service } from "@flamework/core";
 
 import type { OnPlayerJoin } from "server/hooks";
+import type { LogStart } from "shared/hooks";
 import { Assets } from "shared/utility/instances";
 import { DEVELOPERS } from "shared/constants";
 
 @Service({ loadOrder: 0 })
-export class NametagService implements OnPlayerJoin {
+export class NametagService implements OnPlayerJoin, LogStart {
   public onPlayerJoin(player: Player): void {
     if (!DEVELOPERS.includes(player.UserId)) return;
     player.CharacterAdded.Connect(character => {

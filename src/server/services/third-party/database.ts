@@ -7,10 +7,10 @@ import type { LogStart } from "shared/hooks";
 import type { OnPlayerLeave } from "server/hooks";
 import { Events, Functions } from "server/network";
 import { PassIDs } from "shared/structs/product-ids";
-import { type PlayerData, ActiveBooster, INITIAL_DATA } from "shared/data-models/player-data";
-import Firebase from "server/firebase";
-import { BOOSTERS } from "shared/constants";
 import { toSeconds } from "shared/utility/time";
+import { type PlayerData, ActiveBooster, INITIAL_DATA } from "shared/data-models/player-data";
+import { BOOSTERS } from "shared/constants";
+import Firebase from "server/firebase";
 
 const { max } = math;
 

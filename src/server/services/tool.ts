@@ -1,12 +1,13 @@
 import { Service, type OnInit } from "@flamework/core";
 
+import type { LogStart } from "shared/hooks";
 import { Assets } from "shared/utility/instances";
 import { endsWith } from "@rbxts/string-utils";
 
 import type { DatabaseService } from "./third-party/database";
 
 @Service()
-export class ToolService implements OnInit {
+export class ToolService implements OnInit, LogStart {
   public constructor(
     private readonly db: DatabaseService
   ) { }

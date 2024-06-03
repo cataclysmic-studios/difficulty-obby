@@ -45,6 +45,7 @@ interface NPCModel extends Model {
 interface CharacterModel extends Model {
   Humanoid: Humanoid;
   Head: Part;
+  Torso: Part;
 }
 
 interface ToggleSwitchButton extends ImageButton {

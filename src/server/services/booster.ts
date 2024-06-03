@@ -1,6 +1,7 @@
 import { Service, type OnInit } from "@flamework/core";
 import { Players } from "@rbxts/services";
 
+import type { LogStart } from "shared/hooks";
 import { Events, Functions } from "server/network";
 import { BOOSTERS } from "shared/constants";
 import type { ActiveBooster } from "shared/data-models/player-data";
@@ -11,7 +12,7 @@ import type { SchedulingService } from "./scheduling";
 const CANNOT_FIND = "ok brah that's not a real booster";
 
 @Service()
-export class BoosterService implements OnInit {
+export class BoosterService implements OnInit, LogStart {
   public constructor(
     private readonly db: DatabaseService,
     private readonly scheduling: SchedulingService
