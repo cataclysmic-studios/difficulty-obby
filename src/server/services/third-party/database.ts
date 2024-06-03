@@ -175,6 +175,7 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 		this.initialize(player, "coins", 0);
 		this.initialize(player, "ownedItems", []);
 		this.initialize(player, "ownedCrates", []);
+		this.initialize(player, "ownedTrails", []);
 		this.initialize(player, "ownedBoosters", []);
 		this.initialize(player, "activeBoosters", []);
 		this.initialize(player, "lastCoinRefresh", os.time());

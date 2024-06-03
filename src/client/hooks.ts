@@ -1,3 +1,3 @@
 export interface OnDataUpdate<T = unknown> {
-  onDataUpdate(directory: string, value: T): void;
+  onDataUpdate(directory: string, value: T): void | Promise<void>;
 }

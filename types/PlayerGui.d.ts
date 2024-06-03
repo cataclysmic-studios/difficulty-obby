@@ -1,4 +1,13 @@
 interface PlayerGui extends BasePlayerGui {
+  OpeningCrate: ScreenGui & {
+    Title: TextLabel;
+    RewardCard: Frame & {
+      Claim: TextButton;
+      Icon: ImageLabel;
+      ItemType: TextLabel;
+      Title: TextLabel
+    };
+  };
   Main: ScreenGui & {
     BoosterNote: TextLabel;
     StageInfo: Frame & {

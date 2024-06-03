@@ -13,10 +13,15 @@ export const enum CrateName {
   Beast = "Beast"
 }
 
-interface CrateLoot {
-
+export enum Rarity {
+  Common = "Common",
+  Uncommon = "Uncommon",
+  Rare = "Rare",
+  Epic = "Epic",
+  Legendary = "Legendary",
+  Mythic = "Mythic"
 }
 
 export interface Crate extends Item<CrateName> {
-  readonly loot: CrateLoot[]
+  readonly rarityChances: Record<Rarity, number>;
 }

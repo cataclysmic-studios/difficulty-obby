@@ -10,6 +10,7 @@ export const INITIAL_DATA = {
   coins: 0,
   ownedItems: <string[]>[],
   ownedCrates: <string[]>[],
+  ownedTrails: <string[]>[],
   ownedBoosters: <string[]>[],
   activeBoosters: <ActiveBooster[]>[],
   lastCoinRefresh: os.time(),

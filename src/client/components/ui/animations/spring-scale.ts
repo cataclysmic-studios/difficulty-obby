@@ -48,6 +48,6 @@ export class SpringScaleAnimation extends BaseButtonAnimation<Attributes> implem
       this.spring.shove(new Vector3(this.scaleIncrement, 0, 0));
 
     const movement = this.spring.update(dt);
-    this.scale.Scale = this.defaultScale + max(flattenNumber(movement.X, 0.06), 0);
+    this.scale.Scale = this.defaultScale + max(flattenNumber(movement.X, 0.01), 0);
   }
 }

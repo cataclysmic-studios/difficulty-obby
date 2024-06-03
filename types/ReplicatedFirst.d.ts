@@ -1,5 +1,17 @@
+interface RarityFolders extends Folder {
+  Common: Folder;
+  Uncommon: Folder;
+  Rare: Folder;
+  Epic: Folder;
+  Legendary: Folder;
+  Mythic: Folder;
+}
+
 interface ReplicatedFirst extends Instance {
   Assets: Folder & {
+    CrateRewards: Folder & {
+      Trails: RarityFolders;
+    };
     UI: Folder & {
       Nametag: BillboardGui & {
         Prefix: TextLabel;
