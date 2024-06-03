@@ -17,6 +17,8 @@ export const INITIAL_DATA = {
   lastCoinRefresh: os.time(),
   dailyCoinsClaimed: <Record<ZoneName, number[]>>{},
   skipCredits: 0,
+  lastLogin: 0,
+  loginStreak: 0,
   settings: {
     soundEffects: true,
     music: true,

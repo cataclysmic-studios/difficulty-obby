@@ -1,4 +1,4 @@
-import { CrateName, Rarity, type Booster, type Crate } from "./structs/player-items";
+import { CrateName, DailyReward, DailyRewardType, Rarity, type Booster, type Crate } from "./structs/player-items";
 
 export const CREATOR_ID = game.CreatorType === Enum.CreatorType.User ? game.CreatorId : 44966864; // add your user ID here if you're the creator
 export const DEVELOPERS = [CREATOR_ID, 101313060, 95976124]; // add extra developer user IDs here
@@ -46,6 +46,40 @@ export const CRATES: Crate[] = [
       [Rarity.Mythic]: 4
     }
   }
+];
+
+export const DAILY_REWARDS: (DailyReward | DailyReward[])[] = [
+  { // 1
+    type: DailyRewardType.Coins,
+    value: 50
+  }, { // 2
+    type: DailyRewardType.Skip,
+    value: 3
+  }, { // 3
+    type: DailyRewardType.Crate,
+    value: CrateName.Noob
+  }, { // 4
+    type: DailyRewardType.Booster,
+    value: [2, "Double Coins"]
+  }, [{ // 5
+    type: DailyRewardType.Coins,
+    value: 125
+  }, {
+    type: DailyRewardType.Skip,
+    value: 1
+  }], [{
+    type: DailyRewardType.Crate,
+    value: CrateName.Pro
+  }, { // 4
+    type: DailyRewardType.Booster,
+    value: [1, "Double Coins"]
+  }], [{
+    type: DailyRewardType.Crate,
+    value: CrateName.Beast
+  }, { // 4
+    type: DailyRewardType.Coins,
+    value: 75
+  }]
 ];
 
 // in coins

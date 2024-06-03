@@ -25,3 +25,22 @@ export enum Rarity {
 export interface Crate extends Item<CrateName> {
   readonly rarityChances: Record<Rarity, number>;
 }
+
+export const enum DailyRewardType {
+  Coins = "Coins",
+  Crate = "Crate",
+  Skip = "Skip",
+  Booster = "Booster"
+}
+
+interface DailyRewardValueTypes {
+  [DailyRewardType.Coins]: number;
+  [DailyRewardType.Crate]: CrateName;
+  [DailyRewardType.Skip]: number;
+  [DailyRewardType.Booster]: [amount: number, name: string];
+}
+
+export interface DailyReward<T extends DailyRewardType = DailyRewardType> {
+  readonly type: T;
+  readonly value: DailyRewardValueTypes[T];
+}

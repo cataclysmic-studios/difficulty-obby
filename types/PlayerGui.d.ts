@@ -41,6 +41,101 @@ interface PlayerGui extends BasePlayerGui {
       UIAspectRatioConstraint: UIAspectRatioConstraint;
       UIPadding: UIPadding;
     };
+    DailyRewards: Frame & {
+      List: Frame & {
+        UIGridLayout: UIGridLayout;
+        UIPadding: UIPadding;
+        Day3: TextButton & {
+          Icon: ImageLabel & {
+            UIAspectRatioConstraint: UIAspectRatioConstraint;
+          };
+          Note: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          UIGradient: UIGradient;
+          Title: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          UICorner: UICorner;
+          UIStroke: UIStroke;
+          UIAspectRatioConstraint: UIAspectRatioConstraint;
+          UIPadding: UIPadding;
+        };
+        Day4: TextButton & {
+          Icon: ImageLabel & {
+            UIAspectRatioConstraint: UIAspectRatioConstraint;
+          };
+          Note: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          UIGradient: UIGradient;
+          Title: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          UICorner: UICorner;
+          UIStroke: UIStroke;
+          UIAspectRatioConstraint: UIAspectRatioConstraint;
+          UIPadding: UIPadding;
+        };
+        Day5: TextButton & {
+          Note: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          UIGradient: UIGradient;
+          Title: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          UICorner: UICorner;
+          UIStroke: UIStroke;
+          UIAspectRatioConstraint: UIAspectRatioConstraint;
+          UIPadding: UIPadding;
+        };
+        Day6: TextButton & {
+          Note: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          UIGradient: UIGradient;
+          Title: TextLabel & {
+            UIStroke: UIStroke;
+          };
+          UICorner: UICorner;
+          UIStroke: UIStroke;
+          UIAspectRatioConstraint: UIAspectRatioConstraint;
+          UIPadding: UIPadding;
+        };
+        NoGrid: Folder & {
+          Day7: TextButton & {
+            Note: TextLabel & {
+              UIStroke: UIStroke;
+            };
+            UIPadding: UIPadding;
+            Title: TextLabel & {
+              UIStroke: UIStroke;
+            };
+            UICorner: UICorner;
+            UIStroke: UIStroke;
+            UIGradient: UIGradient;
+          };
+        };
+      };
+      Title: TextLabel & {
+        UIStroke: UIStroke;
+      };
+      UIGradient: UIGradient;
+      Close: ImageButton & {
+        UIGradient: UIGradient;
+        UICorner: UICorner;
+        UIStroke: UIStroke;
+        UIAspectRatioConstraint: UIAspectRatioConstraint;
+        Icon: ImageLabel;
+      };
+      UICorner: UICorner;
+      UIStroke: UIStroke & {
+        UIGradient: UIGradient;
+      };
+      UIAspectRatioConstraint: UIAspectRatioConstraint;
+      UIPadding: UIPadding;
+    };
     Crates: Frame & {
       List: Frame & {
         UIPadding: UIPadding;
