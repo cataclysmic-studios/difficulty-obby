@@ -52,8 +52,8 @@ export class TrailsPage extends BaseComponent<{}, PlayerGui["Main"]["Trails"]> i
     equippableFrame.Title.Text = trailName;
     equippableFrame.UIGradient.Color = new ColorSequence([new ColorSequenceKeypoint(0, rarityColorA), new ColorSequenceKeypoint(1, rarityColorB)]);
     equippableFrame.Icon.Image = noIcon ? EMPTY_IMAGE : trail.Texture;
-    if (noIcon)
-      equippableFrame.Icon.ImageColor3 = typeOf(trail.Color) === "Color3" ? <Color3><unknown>trail.Color : trail.Color.Keypoints[0].Value;
+    equippableFrame.Icon.UIGradient.Transparency;
+    equippableFrame.Icon.UIGradient.Color = noIcon ? trail.Color : new ColorSequence(new Color3(1, 1, 1));
 
     const isEquipped = await Functions.data.get("equippedTrail") === trailName;
     equippableFrame.Equip.Title.Text = isEquipped ? "Unequip" : "Equip";

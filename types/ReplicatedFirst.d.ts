@@ -65,7 +65,9 @@ interface ReplicatedFirst extends Instance {
         Title: TextLabel & {
           UIStroke: UIStroke;
         };
-        Icon: ImageLabel;
+        Icon: ImageLabel & {
+          UIGradient: UIGradient;
+        };
         UICorner: UICorner;
         UIStroke: UIStroke;
         UIAspectRatioConstraint: UIAspectRatioConstraint;

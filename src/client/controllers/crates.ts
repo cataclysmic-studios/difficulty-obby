@@ -64,7 +64,8 @@ export class CratesController {
   private compensateNoIcon(item: Instance): void {
     switch (item.ClassName) {
       case "Trail": {
-        this.rewardCard.Icon.ImageColor3 = (<Trail>item).Color.Keypoints[0].Value;
+        this.rewardCard.Icon.UIGradient.Transparency = new NumberSequence(0);
+        this.rewardCard.Icon.UIGradient.Color = (<Trail>item).Color;
         break;
       }
 

@@ -4,7 +4,9 @@ interface PlayerGui extends BasePlayerGui {
     RewardCard: Frame & {
       UIGradient: UIGradient;
       Claim: TextButton;
-      Icon: ImageLabel;
+      Icon: ImageLabel & {
+        UIGradient: UIGradient;
+      };
       ItemType: TextLabel;
       Title: TextLabel
     };
