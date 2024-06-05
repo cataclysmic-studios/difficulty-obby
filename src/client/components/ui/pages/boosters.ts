@@ -50,7 +50,7 @@ export class BoostersPage extends BaseComponent<{}, PlayerGui["Main"]["Boosters"
         return this.notification.send(`${name} booster is already active.`);
 
       consumableFrame.Destroy();
-      Events.useBooster(name);
+      Events.data.useBooster(name);
     });
     consumableFrame.Parent = this.instance.List;
     return conn;

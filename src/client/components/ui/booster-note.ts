@@ -20,7 +20,7 @@ export class BoosterNote extends BaseComponent<{}, TextLabel> implements OnStart
         this.instance.Text = `Play ${lastMinute ? secondsUntil : minutesUntil} more ${lastMinute ? "seconds" : "minutes"} for a free booster!`;
         secondsUntil -= 1;
         if (secondsUntil <= 0) {
-          Events.rewardBooster();
+          Events.data.rewardBooster();
           secondsUntil = INTERVAL
         }
       } while (task.wait(1));

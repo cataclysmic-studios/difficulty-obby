@@ -1,12 +1,14 @@
 import { Networking } from "@flamework/networking";
 
 interface ServerEvents {
-  rewardBooster(): void
-  useBooster(name: string): void;
   stageOffsetUpdated(stage: number, advancing?: boolean): void;
   sendGlobalNotification(message: string, lifetime?: number): void;
   nuke(): void;
   data: {
+    updateLoginStreak(): void;
+    rewardBooster(): void
+    useBooster(name: string): void;
+    useSkipCredit(): void;
     set(directory: string, value: unknown): void;
     increment(directory: string, amount?: number): void;
     giveCoins(username: string): void;
@@ -14,7 +16,6 @@ interface ServerEvents {
     addToArray(directory: string, value: defined): void;
     deleteFromArray(directory: string, value: defined): void;
     initialize(): void;
-    useSkipCredit(): void;
   };
   character: {
     toggleDefaultMovement(on: boolean): void;

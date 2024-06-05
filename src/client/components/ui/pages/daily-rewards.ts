@@ -1,11 +1,12 @@
+import type { OnStart } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
 import { Janitor } from "@rbxts/janitor";
 import { endsWith } from "@rbxts/string-utils";
 
 import type { OnDataUpdate } from "client/hooks";
 import { Events, Functions } from "client/network";
-import { DAILY_REWARDS } from "shared/constants";
 import { CrateName, DailyReward, DailyRewardType } from "shared/structs/player-items";
+import { DAILY_REWARDS } from "shared/constants";
 import { PlayerGui } from "shared/utility/client";
 
 const { clamp } = math;
@@ -14,12 +15,22 @@ const { clamp } = math;
   tag: "DailyRewardsPage",
   ancestorWhitelist: [PlayerGui]
 })
-export class DailyRewardsPage extends BaseComponent<{}, PlayerGui["Main"]["DailyRewards"]> implements OnDataUpdate {
+export class DailyRewardsPage extends BaseComponent<{}, PlayerGui["Main"]["DailyRewards"]> implements OnStart, OnDataUpdate {
   private readonly updateJanitor = new Janitor;
+
+  private lastStreak?: number
+
+  public onStart(): void {
+    this.instance.GetPropertyChangedSignal("Visible").Connect(() => {
+      if (!this.instance.Visible) return;
+      Events.data.updateLoginStreak();
+    });
+  }
 
   public async onDataUpdate(directory: string, loginStreak: number): Promise<void> {
     type DayButton = typeof this.instance.List.Day1;
     if (!endsWith(directory, "loginStreak")) return;
+    if (loginStreak === this.lastStreak) return;
 
     this.updateJanitor.Cleanup();
     const day = clamp(loginStreak + 1, 1, 7);
@@ -27,15 +38,14 @@ export class DailyRewardsPage extends BaseComponent<{}, PlayerGui["Main"]["Daily
     const buttons = this.instance.List.GetChildren().filter((i): i is DayButton => i.IsA("TextButton"));
     buttons.push(<DayButton>this.instance.List.NoGrid.Day7);
 
+    const alreadyClaimed = <boolean>await Functions.data.get("claimedDaily", false);
     const dayButton = <DayButton>this.instance.List.WaitForChild(`Day${day}`);
     for (const button of buttons) {
-      if (button.LayoutOrder < day)
-        button.Claimed.Visible = true;
-      else
-        button.GrayedOut.Visible = button.Name !== dayButton.Name
+      button.GrayedOut.Visible = button.Name !== dayButton.Name && button.LayoutOrder > day
+      button.Claimed.Visible = button.LayoutOrder === day ? alreadyClaimed : button.LayoutOrder < day;
     }
 
-    const alreadyClaimed = <boolean>await Functions.data.get("claimedDaily", false);
+    this.lastStreak = loginStreak;
     if (alreadyClaimed) {
       dayButton.Claimed.Visible = true;
       return;

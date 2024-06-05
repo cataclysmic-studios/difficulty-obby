@@ -19,8 +19,8 @@ export class BoosterService implements OnInit, LogStart {
   ) { }
 
   public onInit(): void {
-    Events.useBooster.connect((player, name) => this.use(player, name));
-    Events.rewardBooster.connect(player => {
+    Events.data.useBooster.connect((player, name) => this.use(player, name));
+    Events.data.rewardBooster.connect(player => {
       const booster = BOOSTERS[math.random(0, BOOSTERS.size() - 1)];
       this.reward(player, booster.name);
     });

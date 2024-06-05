@@ -24,10 +24,11 @@ export class CratesController {
   public open(name: CrateName): void {
     this.toggleAllUI(false);
     const itemRarity = this.getWonRarity(name);
-    const rewardFolders = Assets.CrateRewards.GetChildren().filter((i): i is RarityFolders => i.IsA("Folder"));
-    const rewardFolder = rewardFolders[rewardFolders.size() === 1 ? 0 : math.random(0, rewardFolders.size() - 1)];
+    const excludeTemporarily = ["Emotes"];
+    const rewardFolders = Assets.CrateRewards.GetChildren().filter((i): i is RarityFolders => i.IsA("Folder") && !excludeTemporarily.includes(i.Name));
+    const rewardFolder = rewardFolders[math.random(1, rewardFolders.size()) - 1];
     const items = rewardFolder[itemRarity].GetChildren();
-    const item = items[items.size() === 1 ? 0 : math.random(0, items.size() - 1)];
+    const item = items[math.random(1, items.size()) - 1];
     const icon = this.getItemIcon(item);
     const noIcon = removeWhitespace(icon) === "";
     this.rewardCard.Title.Text = item.Name;
@@ -51,8 +52,8 @@ export class CratesController {
           if (ownedTrails.includes(item.Name))
             return this.gotDuplicate(itemRarity);
 
-          Events.data.addToArray("ownedTrails", item.Name);;
-          break
+          Events.data.addToArray("ownedTrails", item.Name);
+          break;
         }
       }
     });
@@ -62,6 +63,7 @@ export class CratesController {
     switch (item.ClassName) {
       case "Trail": {
         this.rewardCard.Icon.ImageColor3 = (<Trail>item).Color.Keypoints[0].Value;
+        break;
       }
 
       default: break;
