@@ -20,8 +20,8 @@ const { EasingStyle } = Enum;
   }
 })
 export class RotationAnimation extends ButtonTweenAnimation<Attributes> implements OnStart {
-  private readonly defaultRotation = this.instance.Rotation;
   protected override readonly includeClick = false;
+  private readonly defaultRotation = this.instance.Rotation;
 
   protected readonly tweenInfo = new TweenInfoBuilder()
     .SetEasingStyle(EasingStyle.Quad)
