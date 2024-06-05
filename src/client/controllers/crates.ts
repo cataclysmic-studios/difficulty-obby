@@ -7,7 +7,7 @@ import { Assets } from "shared/utility/instances";
 import { pascalCaseToSpaced, removeWhitespace } from "shared/utility/strings";
 import { commaFormat } from "shared/utility/numbers";
 import { type CrateName, Rarity } from "shared/structs/player-items";
-import { CRATES, EMPTY_IMAGE, RARITY_WORTH } from "shared/constants";
+import { CRATES, EMPTY_IMAGE, RARITY_COLORS, RARITY_WORTH } from "shared/constants";
 
 import type { CameraController } from "./camera";
 import type { NotificationController } from "./notification";
@@ -31,8 +31,10 @@ export class CratesController {
     const item = items[math.random(1, items.size()) - 1];
     const icon = this.getItemIcon(item);
     const noIcon = removeWhitespace(icon) === "";
+    const [rarityColorA, rarityColorB] = RARITY_COLORS[itemRarity];
     this.rewardCard.Title.Text = item.Name;
     this.rewardCard.ItemType.Text = pascalCaseToSpaced(item.ClassName).upper();
+    this.rewardCard.UIGradient.Color = new ColorSequence([new ColorSequenceKeypoint(0, rarityColorA), new ColorSequenceKeypoint(1, rarityColorB)]);
     this.rewardCard.Icon.Image = noIcon ? EMPTY_IMAGE : icon;
     if (noIcon)
       this.compensateNoIcon(item);

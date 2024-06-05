@@ -2,6 +2,7 @@ interface PlayerGui extends BasePlayerGui {
   OpeningCrate: ScreenGui & {
     Title: TextLabel;
     RewardCard: Frame & {
+      UIGradient: UIGradient;
       Claim: TextButton;
       Icon: ImageLabel;
       ItemType: TextLabel;

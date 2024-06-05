@@ -7,7 +7,8 @@ import { Events, Functions } from "client/network";
 import { PlayerGui } from "shared/utility/client";
 import { Assets } from "shared/utility/instances";
 import { removeWhitespace } from "shared/utility/strings";
-import { EMPTY_IMAGE } from "shared/constants";
+import { EMPTY_IMAGE, RARITY_COLORS } from "shared/constants";
+import { Rarity } from "shared/structs/player-items";
 
 @Component({
   tag: "TrailsPage",
@@ -46,7 +47,10 @@ export class TrailsPage extends BaseComponent<{}, PlayerGui["Main"]["Trails"]> i
 
     let debounce = false;
     const noIcon = removeWhitespace(trail.Texture) === "";
+    const rarity = <Rarity>trail.Parent?.Name;
+    const [rarityColorA, rarityColorB] = RARITY_COLORS[rarity];
     equippableFrame.Title.Text = trailName;
+    equippableFrame.UIGradient.Color = new ColorSequence([new ColorSequenceKeypoint(0, rarityColorA), new ColorSequenceKeypoint(1, rarityColorB)]);
     equippableFrame.Icon.Image = noIcon ? EMPTY_IMAGE : trail.Texture;
     if (noIcon)
       equippableFrame.Icon.ImageColor3 = typeOf(trail.Color) === "Color3" ? <Color3><unknown>trail.Color : trail.Color.Keypoints[0].Value;
@@ -62,6 +66,7 @@ export class TrailsPage extends BaseComponent<{}, PlayerGui["Main"]["Trails"]> i
       equippableFrame.Equip.Title.Text = unequipping ? "Equip" : "Unequip";
       Events.data.set("equippedTrail", unequipping ? undefined : trailName);
     });
+
     equippableFrame.Parent = this.instance.List;
     return conn;
   }

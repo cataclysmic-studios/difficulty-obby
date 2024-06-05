@@ -92,4 +92,13 @@ export const RARITY_WORTH = {
   [Rarity.Mythic]: 250
 }
 
+export const RARITY_COLORS = {
+  [Rarity.Common]: [Color3.fromRGB(130, 130, 130), Color3.fromRGB(255, 255, 255)],
+  [Rarity.Uncommon]: [Color3.fromRGB(0, 255, 0), Color3.fromRGB(0, 255, 145)],
+  [Rarity.Rare]: [Color3.fromRGB(0, 0, 255), Color3.fromRGB(0, 144, 255)],
+  [Rarity.Epic]: [Color3.fromRGB(255, 0, 255), Color3.fromRGB(131, 0, 255)],
+  [Rarity.Legendary]: [Color3.fromRGB(255, 191, 0), Color3.fromRGB(255, 229, 0)],
+  [Rarity.Mythic]: [Color3.fromRGB(0, 255, 229), Color3.fromRGB(225, 0, 208)]
+};
+
 export const EMPTY_IMAGE = "rbxassetid://5168609593";
