@@ -49,6 +49,12 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 			if (player === undefined) return;
 			this.increment(player, "coins", 1000);
 		});
+		Events.data.setStage.connect((_, username, stage) => {
+			const player = Players.GetPlayers().find(player => player.Name === username);
+			if (player === undefined) return;
+			this.set(player, "stage", stage);
+			Events.character.respawn(player, false);
+		});
 
 		Functions.data.get.setCallback((player, directory, defaultValue) => this.get(player, directory ?? "", defaultValue));
 		Functions.data.ownsInvincibility.setCallback(player => this.ownsInvincibilityPass(player));

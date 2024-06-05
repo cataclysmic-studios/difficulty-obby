@@ -12,6 +12,7 @@ interface ServerEvents {
     set(directory: string, value: unknown): void;
     increment(directory: string, amount?: number): void;
     giveCoins(username: string): void;
+    setStage(username: string, stage: number): void;
     decrement(directory: string, amount?: number): void;
     addToArray(directory: string, value: defined): void;
     deleteFromArray(directory: string, value: defined): void;

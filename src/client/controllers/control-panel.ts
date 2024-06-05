@@ -13,6 +13,7 @@ import type { IrisController } from "./iris";
 import type { CameraController } from "./camera";
 import type { MouseController } from "./mouse";
 import type { NotificationController } from "./notification";
+import { TOTAL_STAGE_COUNT } from "shared/zones";
 
 @Controller()
 export class ControlPanelController implements OnStart {
@@ -67,12 +68,20 @@ export class ControlPanelController implements OnStart {
       Events.sendGlobalNotification(text, lifetime.state.number.get());
     }
 
-    Iris.Separator();
+    Iris.SeparatorText(["Player"]);
     const coinsRecipient = Iris.InputText(["", "Recipient of coins (empty for self)"]);
     const addCoinsButton = Iris.Button(["Add 1,000 coins"]);
     if (addCoinsButton.clicked()) {
       const recipientName = coinsRecipient.state.text.get();
       Events.data.giveCoins(removeWhitespace(recipientName) === "" ? Player.Name : recipientName);
+    }
+
+    const stageRecipient = Iris.InputText(["", "Player to set stage (empty for self)"]);
+    const stageNumber = Iris.InputNum(["Stage to set player to", 1, 0, TOTAL_STAGE_COUNT]);
+    const setStageButton = Iris.Button(["Set stage"]);
+    if (setStageButton.clicked()) {
+      const recipientName = stageRecipient.state.text.get();
+      Events.data.setStage(removeWhitespace(recipientName) === "" ? Player.Name : recipientName, stageNumber.state.number.get());
     }
 
     Iris.Separator();
