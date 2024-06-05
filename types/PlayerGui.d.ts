@@ -46,140 +46,53 @@ interface PlayerGui extends BasePlayerGui {
     };
     DailyRewards: Frame & {
       List: Frame & {
-        UIGridLayout: UIGridLayout;
-        UIPadding: UIPadding;
         Day1: TextButton & {
           Claimed: ImageLabel;
           GrayedOut: Frame;
-          Icon: ImageLabel & {
-            UIAspectRatioConstraint: UIAspectRatioConstraint;
-          };
-          Note: TextLabel & {
-            UIStroke: UIStroke;
-          };
-          UIGradient: UIGradient;
-          Title: TextLabel & {
-            UIStroke: UIStroke;
-          };
-          UICorner: UICorner;
-          UIPadding: UIPadding;
+          Note: TextLabel;
+          Title: TextLabel;
         };
         Day2: TextButton & {
           Claimed: ImageLabel;
           GrayedOut: Frame;
-          Icon: ImageLabel & {
-            UIAspectRatioConstraint: UIAspectRatioConstraint;
-          };
-          Note: TextLabel & {
-            UIStroke: UIStroke;
-          };
-          UIGradient: UIGradient;
-          Title: TextLabel & {
-            UIStroke: UIStroke;
-          };
-          UICorner: UICorner;
-          UIPadding: UIPadding;
+          Note: TextLabel;
+          Title: TextLabel;
         };
         Day3: TextButton & {
           Claimed: ImageLabel;
           GrayedOut: Frame;
-          Icon: ImageLabel & {
-            UIAspectRatioConstraint: UIAspectRatioConstraint;
-          };
-          Note: TextLabel & {
-            UIStroke: UIStroke;
-          };
-          UIGradient: UIGradient;
-          Title: TextLabel & {
-            UIStroke: UIStroke;
-          };
-          UICorner: UICorner;
-          UIPadding: UIPadding;
+          Note: TextLabel;
+          Title: TextLabel;
         };
         Day4: TextButton & {
           Claimed: ImageLabel;
           GrayedOut: Frame;
-          Icon: ImageLabel & {
-            UIAspectRatioConstraint: UIAspectRatioConstraint;
-          };
-          Note: TextLabel & {
-            UIStroke: UIStroke;
-          };
-          UIGradient: UIGradient;
-          Title: TextLabel & {
-            UIStroke: UIStroke;
-          };
-          UICorner: UICorner;
-          UIPadding: UIPadding;
+          Note: TextLabel;
+          Title: TextLabel;
         };
         Day5: TextButton & {
           Claimed: ImageLabel;
           GrayedOut: Frame;
-          Icon: ImageLabel & {
-            UIAspectRatioConstraint: UIAspectRatioConstraint;
-          };
-          Note: TextLabel & {
-            UIStroke: UIStroke;
-          };
-          UIGradient: UIGradient;
-          Title: TextLabel & {
-            UIStroke: UIStroke;
-          };
-          UICorner: UICorner;
-          UIPadding: UIPadding;
+          Note: TextLabel;
+          Title: TextLabel;
         };
         Day6: TextButton & {
           Claimed: ImageLabel;
           GrayedOut: Frame;
-          Icon: ImageLabel & {
-            UIAspectRatioConstraint: UIAspectRatioConstraint;
-          };
-          Note: TextLabel & {
-            UIStroke: UIStroke;
-          };
-          UIGradient: UIGradient;
-          Title: TextLabel & {
-            UIStroke: UIStroke;
-          };
-          UICorner: UICorner;
-          UIPadding: UIPadding;
+          Note: TextLabel;
+          Title: TextLabel;
         };
         NoGrid: Folder & {
           Day7: TextButton & {
             Claimed: ImageLabel;
             GrayedOut: Frame;
-            Icon: ImageLabel & {
-              UIAspectRatioConstraint: UIAspectRatioConstraint;
-            };
-            Note: TextLabel & {
-              UIStroke: UIStroke;
-            };
-            UIPadding: UIPadding;
-            Title: TextLabel & {
-              UIStroke: UIStroke;
-            };
-            UICorner: UICorner;
-            UIGradient: UIGradient;
+            Note: TextLabel;
+            Title: TextLabel;
           };
         };
       };
-      Title: TextLabel & {
-        UIStroke: UIStroke;
-      };
-      UIGradient: UIGradient;
-      Close: ImageButton & {
-        UIGradient: UIGradient;
-        UICorner: UICorner;
-        UIStroke: UIStroke;
-        UIAspectRatioConstraint: UIAspectRatioConstraint;
-        Icon: ImageLabel;
-      };
-      UICorner: UICorner;
-      UIStroke: UIStroke & {
-        UIGradient: UIGradient;
-      };
-      UIAspectRatioConstraint: UIAspectRatioConstraint;
-      UIPadding: UIPadding;
+      Title: TextLabel;
+      Close: ImageButton;
     };
     Crates: Frame & {
       List: Frame & {

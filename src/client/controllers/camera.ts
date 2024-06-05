@@ -1,7 +1,9 @@
 import { Controller, OnRender, type OnInit } from "@flamework/core";
 import { Workspace as World } from "@rbxts/services";
+import CameraShaker from "@rbxts/camera-shaker";
 
 import type { LogStart } from "shared/hooks";
+import { Events } from "client/network";
 import { InputInfluenced } from "client/classes/input-influenced";
 
 import { DefaultCamera } from "client/components/cameras/default";
@@ -10,8 +12,6 @@ import { AerialCamera } from "client/components/cameras/aerial";
 import { FixedCamera } from "client/components/cameras/fixed";
 import { FlyOnTheWallCamera } from "client/components/cameras/fly-on-the-wall";
 import type { CameraControllerComponent } from "client/base-components/camera-controller-component";
-import { Events } from "client/network";
-import CameraShaker from "@rbxts/camera-shaker";
 
 // add new camera components here
 interface Cameras {

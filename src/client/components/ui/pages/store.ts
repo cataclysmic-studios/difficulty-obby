@@ -1,6 +1,5 @@
 import type { OnStart } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
-import { endsWith } from "@rbxts/string-utils";
 import Signal from "@rbxts/signal";
 
 import { Events, Functions } from "client/network";

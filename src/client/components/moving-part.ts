@@ -1,8 +1,8 @@
 import type { OnStart, OnTick } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
+import { TweenInfoBuilder } from "@rbxts/builders";
 
 import { tween } from "shared/utility/ui";
-import { TweenInfoBuilder } from "@rbxts/builders";
 
 interface Attributes {
   MovingPart_Distance: number;

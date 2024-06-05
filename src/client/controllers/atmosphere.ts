@@ -1,7 +1,7 @@
 import { Controller, type OnInit } from "@flamework/core";
 import { Lighting } from "@rbxts/services";
 
-import { LogStart } from "shared/hooks";
+import type { LogStart } from "shared/hooks";
 import { getZoneModel } from "shared/zones";
 
 import type { ZonesController } from "./zones";

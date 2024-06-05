@@ -9,10 +9,10 @@ import { pascalCaseToSpaced, removeWhitespace } from "shared/utility/strings";
 import { commaFormat } from "shared/utility/numbers";
 import { type CrateName, Rarity } from "shared/structs/player-items";
 import { CRATES, EMPTY_IMAGE, RARITY_COLORS, RARITY_WORTH } from "shared/constants";
+import SmoothValue from "shared/classes/smooth-value";
 
 import type { CameraController } from "./camera";
 import type { NotificationController } from "./notification";
-import SmoothValue from "shared/classes/smooth-value";
 
 @Controller()
 export class CratesController implements OnInit, OnRender {

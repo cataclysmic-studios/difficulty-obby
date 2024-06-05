@@ -1,11 +1,12 @@
 import type { OnStart } from "@flamework/core";
 import { Component } from "@flamework/components";
 import { SoundService as Sound } from "@rbxts/services";
-
-import type { CharacterController } from "client/controllers/character";
-import DestroyableComponent from "shared/base-components/destroyable";
-import { tween } from "shared/utility/ui";
 import { TweenInfoBuilder } from "@rbxts/builders";
+
+import { tween } from "shared/utility/ui";
+
+import DestroyableComponent from "shared/base-components/destroyable";
+import type { CharacterController } from "client/controllers/character";
 
 interface Attributes {
   BreakablePart_StableLength: number;

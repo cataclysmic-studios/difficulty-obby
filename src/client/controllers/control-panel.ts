@@ -7,13 +7,13 @@ import Iris from "@rbxts/iris";
 import { Events } from "client/network";
 import { Player } from "shared/utility/client";
 import { DEVELOPERS } from "shared/constants";
+import { TOTAL_STAGE_COUNT } from "shared/zones";
 import { removeWhitespace } from "shared/utility/strings";
 
 import type { IrisController } from "./iris";
 import type { CameraController } from "./camera";
 import type { MouseController } from "./mouse";
 import type { NotificationController } from "./notification";
-import { TOTAL_STAGE_COUNT } from "shared/zones";
 
 @Controller()
 export class ControlPanelController implements OnStart {

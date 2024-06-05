@@ -5,9 +5,9 @@ import { endsWith } from "@rbxts/string-utils";
 
 import type { OnDataUpdate } from "client/hooks";
 import { Events, Functions } from "client/network";
-import { CrateName, DailyReward, DailyRewardType } from "shared/structs/player-items";
-import { DAILY_REWARDS } from "shared/constants";
 import { PlayerGui } from "shared/utility/client";
+import { CrateName, type DailyReward, DailyRewardType } from "shared/structs/player-items";
+import { DAILY_REWARDS } from "shared/constants";
 
 const { clamp } = math;
 

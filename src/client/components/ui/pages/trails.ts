@@ -8,7 +8,7 @@ import { PlayerGui } from "shared/utility/client";
 import { Assets } from "shared/utility/instances";
 import { removeWhitespace } from "shared/utility/strings";
 import { EMPTY_IMAGE, RARITY_COLORS } from "shared/constants";
-import { Rarity } from "shared/structs/player-items";
+import type { Rarity } from "shared/structs/player-items";
 
 @Component({
   tag: "TrailsPage",

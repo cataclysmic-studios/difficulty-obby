@@ -7,7 +7,7 @@ import type { LogStart } from "shared/hooks";
 import type { OnDataUpdate } from "client/hooks";
 import { Events } from "client/network";
 import { Player } from "shared/utility/client";
-import { ZONES, TOTAL_STAGE_COUNT } from "shared/zones";
+import { TOTAL_STAGE_COUNT } from "shared/zones";
 import Log from "shared/logger";
 
 import type { CharacterController } from "./character";

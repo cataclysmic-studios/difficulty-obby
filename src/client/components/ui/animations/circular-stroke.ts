@@ -1,10 +1,10 @@
 import { OnStart } from "@flamework/core";
 import { Component } from "@flamework/components";
 import { TweenInfoBuilder } from "@rbxts/builders";
+import { Janitor } from "@rbxts/janitor";
 
 import { tween } from "shared/utility/ui";
 import ButtonTweenAnimation from "client/base-components/button-tween-animation";
-import { Janitor } from "@rbxts/janitor";
 
 interface Attributes {
   PrimaryColor: Color3;

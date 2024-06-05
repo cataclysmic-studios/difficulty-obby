@@ -2,10 +2,11 @@ import type { OnStart } from "@flamework/core";
 import { Component, BaseComponent, type Components } from "@flamework/components";
 import { RunService as Runtime } from "@rbxts/services";
 
-import type { TimedPart } from "./timed-part";
-import type { SoundEffectsController } from "client/controllers/sound-effects";
 import { Assets } from "shared/utility/instances";
 import { roundDecimal } from "shared/utility/numbers";
+
+import type { TimedPart } from "./timed-part";
+import type { SoundEffectsController } from "client/controllers/sound-effects";
 
 const { clamp } = math;
 

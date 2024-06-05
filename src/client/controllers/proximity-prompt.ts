@@ -1,14 +1,13 @@
 import { Controller, type OnInit } from "@flamework/core";
 import { UserInputService as UserInput } from "@rbxts/services";
 import { TweenInfoBuilder } from "@rbxts/builders";
-import type { RawActionEntry } from "@rbxts/gamejoy";
+import { Union } from "@rbxts/gamejoy/out/Actions";
 import Signal from "@rbxts/signal";
 
 import type { LogStart } from "shared/hooks";
-import { InputInfluenced } from "client/classes/input-influenced";
 import { PlayerGui } from "shared/utility/client";
+import { InputInfluenced } from "client/classes/input-influenced";
 import { tween } from "shared/utility/ui";
-import { Union } from "@rbxts/gamejoy/out/Actions";
 
 @Controller()
 export class ProximityPromptController extends InputInfluenced implements OnInit, LogStart {
