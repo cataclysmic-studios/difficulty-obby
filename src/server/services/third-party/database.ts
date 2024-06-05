@@ -33,6 +33,7 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 		Events.data.increment.connect((player, directory, amount) => this.increment(player, directory, amount));
 		Events.data.decrement.connect((player, directory, amount) => this.decrement(player, directory, amount));
 		Events.data.addToArray.connect((player, directory, value) => this.addToArray(player, directory, value));
+		Events.data.deleteFromArray.connect((player, directory, value) => this.deleteFromArray(player, directory, value));
 		Events.data.initialize.connect(player => {
 			this.setup(player);
 			do {

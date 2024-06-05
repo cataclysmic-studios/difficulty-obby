@@ -1,4 +1,5 @@
-import { Controller } from "@flamework/core";
+import { Controller, OnInit, type OnRender } from "@flamework/core";
+import { Workspace as World, ContentProvider } from "@rbxts/services";
 import Object from "@rbxts/object-utils";
 
 import { Events, Functions } from "client/network";
@@ -11,15 +12,26 @@ import { CRATES, EMPTY_IMAGE, RARITY_COLORS, RARITY_WORTH } from "shared/constan
 
 import type { CameraController } from "./camera";
 import type { NotificationController } from "./notification";
+import SmoothValue from "shared/classes/smooth-value";
 
 @Controller()
-export class CratesController {
+export class CratesController implements OnInit, OnRender {
   private readonly rewardCard = PlayerGui.OpeningCrate.RewardCard;
+  private readonly fovOffset = new SmoothValue(0, 4);
 
   public constructor(
     private readonly camera: CameraController,
     private readonly notification: NotificationController
   ) { }
+
+  public onInit(): void {
+    ContentProvider.PreloadAsync([Assets.Crate.Animation]);
+  }
+
+  public onRender(dt: number): void {
+    if (this.camera.currentName !== "Fixed") return;
+    this.camera.getCurrent().instance.FieldOfView = 70 + this.fovOffset.update(dt);
+  }
 
   public open(name: CrateName): void {
     this.toggleAllUI(false);
@@ -39,11 +51,27 @@ export class CratesController {
     if (noIcon)
       this.compensateNoIcon(item);
 
-    // set to crate camera
-    // do animation
-    task.wait(5); // temp
-    this.toggleCrateUI(true);
+    const crate = Assets.Crate.Clone();
+    crate.PivotTo(World.Crates.CratePosition.CFrame);
+    crate.Parent = World.Crates;
+    const animation = crate.AnimationController.Animator.LoadAnimation(crate.Animation);
+    animation.GetMarkerReachedSignal("ZoomIn").Once(() => this.fovOffset.setTarget(-25));
+    animation.GetMarkerReachedSignal("ZoomOut").Once(() => this.fovOffset.zeroize());
+    animation.GetMarkerReachedSignal("Thud1").Once(() => crate.Thud1.Play());
+    animation.GetMarkerReachedSignal("Thud2").Once(() => crate.Thud2.Play());
+    animation.GetMarkerReachedSignal("Slide").Once(() => crate.Slide.Play());
+    animation.GetMarkerReachedSignal("Shake").Once(() => crate.Shake.Play());
+    animation.GetMarkerReachedSignal("Swoosh").Once(() => crate.Swoosh.Play());
+    animation.GetMarkerReachedSignal("Explode").Once(() => crate.Explode.Play());
 
+    animation.Play();
+    task.delay(animation.Length * 0.9, () => animation.Stop(5));
+    this.camera.get("Fixed").setCFrame(World.Crates.CameraPart.CFrame);
+    this.camera.set("Fixed");
+    animation.Stopped.Wait();
+    crate.Destroy();
+
+    this.toggleCrateUI(true);
     this.rewardCard.Claim.MouseButton1Click.Once(async () => {
       this.camera.set("Default");
       this.toggleCrateUI(false);

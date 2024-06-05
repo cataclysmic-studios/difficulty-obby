@@ -9,6 +9,19 @@ interface RarityFolders extends Folder {
 
 interface ReplicatedFirst extends Instance {
   Assets: Folder & {
+    Crate: Model & {
+      Root: Part;
+      Thud1: Sound;
+      Thud2: Sound;
+      Slide: Sound;
+      Shake: Sound;
+      Swoosh: Sound;
+      Explode: Sound;
+      Animation: Animation;
+      AnimationController: AnimationController & {
+        Animator: Animator
+      };
+    }
     CrateRewards: Folder & {
       Trails: RarityFolders;
     };

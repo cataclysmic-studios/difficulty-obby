@@ -9,6 +9,8 @@ import type { CharacterController } from "client/controllers/character";
 
 @Component({ tag: "FlyOnTheWallCamera" })
 export class FlyOnTheWallCamera extends CameraControllerComponent implements OnRender {
+  private subject?: BasePart;
+
   public static create(controller: CameraController): FlyOnTheWallCamera {
     const components = Dependency<Components>();
     const camera = World.CurrentCamera!.Clone();
@@ -24,10 +26,14 @@ export class FlyOnTheWallCamera extends CameraControllerComponent implements OnR
   ) { super(); }
 
   public onRender(dt: number): void {
-    const root = this.character.getRoot();
-    if (root === undefined) return;
+    const subject = this.subject ?? this.character.getRoot();
+    if (subject === undefined) return;
 
-    this.lookAt(root.Position);
+    this.lookAt(subject.Position);
+  }
+
+  public setSubject(subject?: BasePart): void {
+    this.subject = subject;
   }
 
   public override toggle(on: boolean): void {
