@@ -14,25 +14,21 @@ export class DailyRewardService implements OnInit, LogStart {
   ) { }
 
   public onInit(): void {
-    Events.data.updateLoginStreak.connect(player => {
-      const claimedDaily = this.db.get<boolean>(player, "claimedDaily", false);
-      if (claimedDaily) return;
-      this.updateStreak(player);
-    });
-
-    this.db.loaded.Connect(player => {
-      this.db.set(player, "lastLogin", os.time());
-      this.updateStreak(player);
-    });
+    this.db.loaded.Connect(player => this.updateStreak(player));
+    Events.data.updateLoginStreak.connect(player => this.updateStreak(player));
   }
 
   private updateStreak(player: Player): void {
     const lastLogin = this.db.get<number>(player, "lastLogin", 0);
-    if (os.time() - lastLogin < ONE_DAY)
-      this.db.increment(player, "loginStreak");
-    else {
-      this.db.set(player, "loginStreak", 0);
+    const timeSinceLastLogin = os.time() - lastLogin;
+
+    if (timeSinceLastLogin >= ONE_DAY) {
+      this.db.set(player, "lastLogin", os.time());
       this.db.set(player, "claimedDaily", false);
+      if (timeSinceLastLogin < ONE_DAY * 2)
+        this.db.increment(player, "loginStreak");
+      else
+        this.db.set(player, "loginStreak", 0);
     }
   }
 }

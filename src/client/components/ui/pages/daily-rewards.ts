@@ -28,18 +28,20 @@ export class DailyRewardsPage extends BaseComponent<{}, PlayerGui["Main"]["Daily
   }
 
   public async onDataUpdate(directory: string, loginStreak: number): Promise<void> {
-    type DayButton = typeof this.instance.List.Day1;
+    const list = this.instance.List;
+    type DayButton = typeof list.Day1;
     if (!endsWith(directory, "loginStreak")) return;
     if (loginStreak === this.lastStreak) return;
 
     this.updateJanitor.Cleanup();
     const day = clamp(loginStreak + 1, 1, 7);
     const reward = DAILY_REWARDS[day - 1];
-    const buttons = this.instance.List.GetChildren().filter((i): i is DayButton => i.IsA("TextButton"));
-    buttons.push(<DayButton>this.instance.List.NoGrid.Day7);
+    const buttons = list.GetChildren().filter((i): i is DayButton => i.IsA("TextButton"));
+    buttons.push(<DayButton>list.NoGrid.Day7);
 
     const alreadyClaimed = <boolean>await Functions.data.get("claimedDaily", false);
-    const dayButton = <DayButton>this.instance.List.WaitForChild(`Day${day}`);
+    const dayName = `Day${day}`;
+    const dayButton = <DayButton>(day === 7 ? list.NoGrid.Day7 : list.WaitForChild(dayName));
     for (const button of buttons) {
       button.GrayedOut.Visible = button.Name !== dayButton.Name && button.LayoutOrder > day
       button.Claimed.Visible = button.LayoutOrder === day ? alreadyClaimed : button.LayoutOrder < day;
