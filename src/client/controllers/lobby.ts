@@ -16,7 +16,8 @@ export class LobbyController implements OnInit {
   ) { }
 
   public onInit(): void {
-    this.checkpoints.inLobbyUpdated.Connect(inLobby => {
+    this.checkpoints.inLobbyUpdated.Connect((inLobby, onlyUpdateButton) => {
+      if (onlyUpdateButton) return;
       const zoneName = <TextLabel>PlayerGui.WaitForChild("Main").WaitForChild("Main").WaitForChild("StageInfo").WaitForChild("ZoneName")
       zoneName.Visible = !inLobby;
       Sound.ZoneMusic.Volume = inLobby ? 0 : this.defaultZoneMusicVolume;

@@ -5,7 +5,9 @@ import { CollectionService } from "@rbxts/services";
 import { Player } from "shared/utility/client";
 import Log from "shared/logger";
 
+import type { CheckpointsController } from "client/controllers/checkpoints";
 import type { UIEffectsController } from "client/controllers/ui-effects";
+import { Events } from "client/network";
 
 interface Attributes {
   readonly TeleportPortal_DestinationTag: string;
@@ -14,6 +16,7 @@ interface Attributes {
 @Component({ tag: "TeleportPortal" })
 export class TeleportPortal extends BaseComponent<Attributes, PortalModel> implements OnStart {
   public constructor(
+    private readonly checkpoints: CheckpointsController,
     private readonly uiEffects: UIEffectsController
   ) { super(); }
 
@@ -45,6 +48,14 @@ export class TeleportPortal extends BaseComponent<Attributes, PortalModel> imple
         root.CFrame = destinationPart.CFrame.add(new Vector3(0, 6, 0));
         humanoid.WalkSpeed = defaultWalkSpeed;
         humanoid.JumpHeight = defaultJumpHeight;
+
+        this.checkpoints.inLobby = false;
+        this.checkpoints.updateInLobby(true);
+        if (this.instance.HasTag("PvPPortal")) {
+          this.checkpoints.inLobbyUpdated.Once(() => Events.tools.updateBackpack());
+          Events.tools.clearBackpack();
+          Events.tools.addItemToBackpack("PvPSword", "ExtraItems");
+        }
       });
 
       this.uiEffects.blackFade(false, 0.75, fadeTime);

@@ -1,9 +1,15 @@
 import { Networking } from "@flamework/networking";
+import type { Assets } from "./utility/instances";
 
 interface ServerEvents {
   stageOffsetUpdated(stage: number, advancing?: boolean): void;
   sendGlobalNotification(message: string, lifetime?: number): void;
   nuke(): void;
+  tools: {
+    clearBackpack(): void;
+    updateBackpack(): void;
+    addItemToBackpack(itemName: string, itemList?: ExtractKeys<typeof Assets, Folder>): void
+  };
   data: {
     updateLoginStreak(): void;
     rewardBooster(): void
