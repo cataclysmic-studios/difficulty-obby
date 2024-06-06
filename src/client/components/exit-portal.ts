@@ -6,6 +6,7 @@ import { Player } from "shared/utility/client";
 import { type Zone, ZONES } from "shared/zones";
 import Log from "shared/logger";
 
+import type { CheckpointsController } from "client/controllers/checkpoints";
 import type { UIEffectsController } from "client/controllers/ui-effects";
 
 interface Attributes {
@@ -15,6 +16,7 @@ interface Attributes {
 @Component({ tag: "ExitPortal" })
 export class ExitPortal extends BaseComponent<Attributes, PortalModel> implements OnStart {
   public constructor(
+    private readonly checkpoints: CheckpointsController,
     private readonly uiEffects: UIEffectsController
   ) { super(); }
 
@@ -56,6 +58,7 @@ export class ExitPortal extends BaseComponent<Attributes, PortalModel> implement
         root.CFrame = destinationZoneSpawn.CFrame.add(new Vector3(0, 6, 0));
         humanoid.WalkSpeed = defaultWalkSpeed;
         humanoid.JumpHeight = defaultJumpHeight;
+        this.checkpoints.subtractStageOffset(this.checkpoints.stage);
       });
 
       this.uiEffects.blackFade(false, 0.75, fadeTime);
