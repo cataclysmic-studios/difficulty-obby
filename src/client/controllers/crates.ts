@@ -70,7 +70,7 @@ export class CratesController implements OnInit, OnRender {
     this.camera.set("Fixed");
     animation.Stopped.Wait();
     if (crate.Explode.IsPlaying)
-      crate.Explode.Ended.Wait();
+      task.wait(0.5);
 
     crate.Destroy();
     this.toggleCrateUI(true);

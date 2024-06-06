@@ -21,6 +21,8 @@ const STAGE_ARROW_COOLDOWN = 0.1;
 @Controller({ loadOrder: 2 })
 export class CheckpointsController implements OnInit, OnDataUpdate, LogStart {
   public readonly offsetUpdated = new Signal<(newStage: number) => void>;
+  public readonly inLobbyUpdated = new Signal<(inLobby: boolean) => void>;
+  public inLobby = true;
   public stage = 0;
 
   private stageOffset = 0;
@@ -37,6 +39,7 @@ export class CheckpointsController implements OnInit, OnDataUpdate, LogStart {
   public onInit(): void {
     Events.character.respawn.connect(promptSkip => this.respawn(promptSkip));
     Events.advanceStageOffset.connect(() => this.addStageOffset(1, true));
+    this.updateInLobby();
   }
 
   public onDataUpdate(directory: string, stage: number): void {
@@ -46,7 +49,9 @@ export class CheckpointsController implements OnInit, OnDataUpdate, LogStart {
     this.firstStageTry = true;
     this.update(true);
 
-    if (this.firstStageUpdate) {
+    if (this.firstStageUpdate && stage !== 0) {
+      this.inLobby = false;
+      this.updateInLobby();
       this.respawn(false);
       this.firstStageUpdate = false;
     }
@@ -99,6 +104,10 @@ export class CheckpointsController implements OnInit, OnDataUpdate, LogStart {
 
   public getStage(): number {
     return clamp(this.stage + this.stageOffset, 0, TOTAL_STAGE_COUNT + 1);
+  }
+
+  public updateInLobby(): void {
+    this.inLobbyUpdated.Fire(this.inLobby);
   }
 
   private update(advancing = false): void {

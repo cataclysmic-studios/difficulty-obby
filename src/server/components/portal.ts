@@ -9,8 +9,8 @@ interface Attributes {
 @Component({ tag: "Portal" })
 export class Portal extends BaseComponent<Attributes, PortalModel> implements OnStart {
   public onStart(): void {
-    const zoneName = this.instance.HasTag("ExitPortal") ? this.attributes.ExitPortal_DestinationZone! : this.instance.FindFirstAncestorOfClass("Folder")!.Name;
-    this.instance.ZoneName.GUI.Title.Text = zoneName;
+    if (this.instance.HasTag("ExitPortal"))
+      this.instance.ZoneName.GUI.Title.Text = this.attributes.ExitPortal_DestinationZone!;
 
     const ambienceSound = Sound.SoundEffects.Portal.Clone();
     ambienceSound.Parent = this.instance.Collider;

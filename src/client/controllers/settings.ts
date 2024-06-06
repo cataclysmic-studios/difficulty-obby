@@ -11,7 +11,7 @@ type SettingValue = boolean;
 
 @Controller()
 export class SettingsController implements OnInit, LogStart {
-  private readonly originalMusicVolume = Sound.Music.Volume;
+  private readonly originalMusicVolume = Sound.ZoneMusic.Volume;
   private readonly originalFXVolume = Sound.SoundEffects.Volume;
   private readonly originalBoomboxVolume = Sound.Boombox.Volume;
 
@@ -30,7 +30,7 @@ export class SettingsController implements OnInit, LogStart {
   private updateSetting(name: string, value: SettingValue): void {
     switch (name) {
       case "music": {
-        Sound.Music.Volume = value ? this.originalMusicVolume : 0;
+        Sound.ZoneMusic.Volume = value ? this.originalMusicVolume : 0;
         break;
       }
       case "soundEffects": {

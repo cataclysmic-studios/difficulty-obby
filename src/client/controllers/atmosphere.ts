@@ -5,20 +5,22 @@ import type { LogStart } from "shared/hooks";
 import { getZoneModel } from "shared/zones";
 
 import type { ZonesController } from "./zones";
+import { CheckpointsController } from "./checkpoints";
 
 @Controller({ loadOrder: 0 })
 export class AtmosphereController implements OnInit, LogStart {
   private currentAmbience?: Sound
 
   public constructor(
-    private readonly zone: ZonesController
+    private readonly zone: ZonesController,
+    private readonly checkpoints: CheckpointsController
   ) { }
 
   public onInit(): void {
-    this.zone.changed.Connect((_, stage) => this.update(stage));
+    this.zone.changed.Connect(() => this.update());
   }
 
-  public update(stage: number): void {
+  public update(stage = this.checkpoints.getStage()): void {
     const zoneModel = getZoneModel(stage);
     const zoneLighting = zoneModel.WaitForChild("Lighting");
     const ambience = <Sound>zoneModel.WaitForChild("Ambience");

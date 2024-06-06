@@ -1,5 +1,5 @@
 interface SoundService extends Instance {
-  Music: SoundGroup;
+  ZoneMusic: SoundGroup;
   Boombox: SoundGroup;
   SoundEffects: SoundGroup & {
     TimerTick: Sound;

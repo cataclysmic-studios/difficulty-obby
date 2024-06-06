@@ -7,10 +7,10 @@ const INTERVAL = 10 * 60;
 export class RaceService implements OnInit {
   public onInit(): void {
     task.spawn(() => {
-      while (true) {
-        task.wait(INTERVAL);
-        Events.sendRaceNotification.broadcast("Obby race is starting. Click to join!", 8);
-      }
+      // while (true) {
+      //   task.wait(INTERVAL);
+      //   Events.sendRaceNotification.broadcast("Obby race is starting. Click to join!", 8);
+      // }
     });
   }
 }

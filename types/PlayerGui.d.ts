@@ -12,16 +12,44 @@ interface PlayerGui extends BasePlayerGui {
     };
   };
   Main: ScreenGui & {
-    BoosterNote: TextLabel;
-    StageInfo: Frame & {
-      StageNumber: TextLabel;
-      ZoneName: TextLabel;
-      NextStage: TextButton;
-      PreviousStage: TextButton;
-      Next10Stages: TextButton;
-      Previous10Stages: TextButton;
-      Skip: ImageButton & {
-        SkipCredits: TextLabel;
+    Main: Frame & {
+      BoosterNote: TextLabel;
+      StageInfo: Frame & {
+        StageNumber: TextLabel;
+        ZoneName: TextLabel;
+        NextStage: TextButton;
+        PreviousStage: TextButton;
+        Next10Stages: TextButton;
+        Previous10Stages: TextButton;
+        Skip: ImageButton & {
+          SkipCredits: TextLabel;
+        };
+      };
+      ProximityPrompt: TextButton & {
+        UIStroke: UIStroke;
+      };
+      LeftButtons: Frame;
+      RightButtons: Frame & {
+        UIListLayout: UIListLayout;
+        Shop: ImageButton & {
+          UIGradient: UIGradient;
+          UICorner: UICorner;
+          UIStroke: UIStroke & {
+            UIGradient: UIGradient;
+          };
+          Icon: ImageLabel;
+          UIAspectRatioConstraint: UIAspectRatioConstraint;
+        };
+        Settings: ImageButton & {
+          UIGradient: UIGradient;
+          UICorner: UICorner;
+          UIStroke: UIStroke & {
+            UIGradient: UIGradient;
+          };
+          Icon: ImageLabel;
+          UIAspectRatioConstraint: UIAspectRatioConstraint;
+        };
+        UIAspectRatioConstraint: UIAspectRatioConstraint;
       };
     };
     Settings: Frame & {
@@ -271,33 +299,6 @@ interface PlayerGui extends BasePlayerGui {
       };
       UIAspectRatioConstraint: UIAspectRatioConstraint;
       UIPadding: UIPadding;
-    };
-    Main: Frame & {
-      ProximityPrompt: TextButton & {
-        UIStroke: UIStroke;
-      };
-      Buttons: Frame & {
-        UIListLayout: UIListLayout;
-        Shop: ImageButton & {
-          UIGradient: UIGradient;
-          UICorner: UICorner;
-          UIStroke: UIStroke & {
-            UIGradient: UIGradient;
-          };
-          Icon: ImageLabel;
-          UIAspectRatioConstraint: UIAspectRatioConstraint;
-        };
-        Settings: ImageButton & {
-          UIGradient: UIGradient;
-          UICorner: UICorner;
-          UIStroke: UIStroke & {
-            UIGradient: UIGradient;
-          };
-          Icon: ImageLabel;
-          UIAspectRatioConstraint: UIAspectRatioConstraint;
-        };
-        UIAspectRatioConstraint: UIAspectRatioConstraint;
-      };
     };
     UIPadding: UIPadding;
   };

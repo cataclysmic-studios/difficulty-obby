@@ -78,7 +78,7 @@ export class MusicController implements OnInit, LogStart {
     if (zoneName === undefined)
       return <Folder><unknown>undefined;
 
-    return <Folder>Sound.Music.FindFirstChild(zoneName)!;
+    return <Folder>Sound.ZoneMusic.FindFirstChild(zoneName)!;
   }
 
   private failedToFindMusic(): void {

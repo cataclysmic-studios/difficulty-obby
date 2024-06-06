@@ -12,8 +12,7 @@ import type { NotificationController } from "./notification";
 export class ZonesController implements OnInit, LogStart {
   public readonly discovered = new Signal<(zoneName: string, currentStage: number) => void>;
   public readonly changed = new Signal<(zoneName: string, currentStage: number) => void>;
-
-  private lastZoneName?: string;
+  public lastZoneName?: string;
 
   public constructor(
     private readonly checkpoints: CheckpointsController,
@@ -30,6 +29,12 @@ export class ZonesController implements OnInit, LogStart {
       if (math.max(stage - 1, 0) % stageCount !== 0) return;
       this.discover(zoneName, stage);
     });
+  }
+
+  public fireChange(): void {
+    const stage = this.checkpoints.getStage();
+    const { name: zoneName } = getZone(stage);
+    this.changed.Fire(zoneName, stage);
   }
 
   private discover(name: string, stage: number): void {
