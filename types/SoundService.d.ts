@@ -1,4 +1,5 @@
 interface SoundService extends Instance {
+  LobbyMusic: SoundGroup;
   ZoneMusic: SoundGroup;
   Boombox: SoundGroup;
   SoundEffects: SoundGroup & {
