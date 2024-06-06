@@ -110,7 +110,12 @@ export class CheckpointsController implements OnInit, OnDataUpdate, LogStart {
     return clamp(this.stage + this.stageOffset, 0, TOTAL_STAGE_COUNT + 1);
   }
 
-  public updateInLobby(onlyUpdateButton = false): void {
+  public setInLobby(inLobby: boolean, onlyUpdateButton?: boolean): void {
+    this.inLobby = inLobby;
+    this.updateInLobby(onlyUpdateButton);
+  }
+
+  private updateInLobby(onlyUpdateButton = false): void {
     this.inLobbyUpdated.Fire(this.inLobby, onlyUpdateButton);
   }
 

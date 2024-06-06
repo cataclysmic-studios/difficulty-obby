@@ -54,8 +54,7 @@ export class TeleportPortal extends BaseComponent<Attributes, PortalModel> imple
         humanoid.WalkSpeed = defaultWalkSpeed;
         humanoid.JumpHeight = defaultJumpHeight;
 
-        this.checkpoints.inLobby = false;
-        this.checkpoints.updateInLobby(true);
+        this.checkpoints.setInLobby(false, true);
         if (this.instance.HasTag("PvPPortal")) {
           this.checkpoints.inLobbyUpdated.Once(() => Events.tools.updateBackpack());
           Events.tools.clearBackpack();

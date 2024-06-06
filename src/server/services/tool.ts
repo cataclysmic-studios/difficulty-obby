@@ -33,10 +33,10 @@ export class ToolService implements OnInit, LogStart {
 
   public clearBackpack(player: Player): void {
     task.spawn(() => {
-      player.Character?.GetChildren().forEach(i => {
-        if (i.IsA("Tool"))
-          i.Destroy();
-      });
+      for (const i of player.Character!.GetChildren()) {
+        if (!i.IsA("Tool")) continue;
+        i.Destroy();
+      }
     });
     player.WaitForChild("Backpack").ClearAllChildren();
     player.WaitForChild("StarterGear").ClearAllChildren();

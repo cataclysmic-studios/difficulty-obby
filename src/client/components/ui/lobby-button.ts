@@ -21,10 +21,10 @@ export class LobbyButton extends BaseComponent<{}, ImageButton & { Icon: ImageLa
   ) { super(); }
 
   public onStart(): void {
+    this.character.mustGet().Humanoid.Died.Connect(() => this.checkpoints.setInLobby(true));
     this.checkpoints.inLobbyUpdated.Connect(() => this.updateIcon());
     this.instance.MouseButton1Click.Connect(() => {
-      this.checkpoints.inLobby = !this.checkpoints.inLobby;
-      this.checkpoints.updateInLobby();
+      this.checkpoints.setInLobby(!this.checkpoints.inLobby);
       if (this.checkpoints.inLobby)
         this.character.teleport(World.Lobby.Dark.SpawnLocation.CFrame);
       else
