@@ -32,6 +32,6 @@ export class LobbyButton extends BaseComponent<{}, ImageButton & { Icon: ImageLa
   }
 
   private updateIcon(inLobby: boolean): void {
-    this.instance.Icon.Image = inLobby ? this.obbyIcon : this.lobbyIcon;
+    this.instance.Icon.Image = inLobby && !this.checkpoints.notLobbyNotObby ? this.obbyIcon : this.lobbyIcon;
   }
 }

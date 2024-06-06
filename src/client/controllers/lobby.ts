@@ -19,8 +19,8 @@ export class LobbyController implements OnInit, OnCharacterAdd {
   ) { }
 
   public onInit(): void {
-    this.checkpoints.inLobbyUpdated.Connect(async (inLobby, onlyUpdateButton) => {
-      if (onlyUpdateButton) return;
+    this.checkpoints.inLobbyUpdated.Connect(async inLobby => {
+      if (this.checkpoints.notLobbyNotObby) return;
       const zoneName = <TextLabel>PlayerGui.WaitForChild("Main").WaitForChild("Main").WaitForChild("StageInfo").WaitForChild("ZoneName")
       const zoneMusicEnabled = await this.settings.get<boolean>("music");
       zoneName.Visible = !inLobby;

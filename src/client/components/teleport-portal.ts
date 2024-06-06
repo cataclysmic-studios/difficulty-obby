@@ -53,7 +53,8 @@ export class TeleportPortal extends DestroyableComponent<Attributes, PortalModel
         root.CFrame = destinationPart.CFrame.add(new Vector3(0, 6, 0));
         humanoid.WalkSpeed = defaultWalkSpeed;
 
-        this.checkpoints.setInLobby(false, true);
+        this.checkpoints.notLobbyNotObby = true;
+        this.checkpoints.updateInLobby();
         if (this.instance.HasTag("PvPPortal")) {
           Events.tools.addItemToBackpack("PvPSword", "ExtraItems", true);
           let lobbyUpdateDebounce = false;
