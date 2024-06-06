@@ -211,6 +211,7 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 
 	private initializeSettings(player: Player): void {
 		this.initialize(player, "settings/soundEffects", true);
+		this.initialize(player, "settings/lobbyMusic", true);
 		this.initialize(player, "settings/music", true);
 		this.initialize(player, "settings/boomboxes", true);
 		this.initialize(player, "settings/hidePlayers", false);
