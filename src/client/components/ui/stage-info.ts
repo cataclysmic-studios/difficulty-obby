@@ -7,7 +7,7 @@ import type { OnDataUpdate } from "client/hooks";
 import type { LogStart } from "shared/hooks";
 import { Events, Functions } from "client/network";
 import { Player, PlayerGui } from "shared/utility/client";
-import { getZone, TOTAL_STAGE_COUNT, ZONES } from "shared/zones";
+import { getZone, TOTAL_STAGE_COUNT } from "shared/zones";
 import { ProductIDs } from "shared/structs/product-ids";
 import type { PlayerData } from "shared/data-models/player-data";
 
@@ -17,7 +17,7 @@ import type { CheckpointsController } from "client/controllers/checkpoints";
   tag: "StageInfo",
   ancestorWhitelist: [PlayerGui]
 })
-export class StageInfo extends BaseComponent<{}, PlayerGui["Main"]["StageInfo"]> implements OnStart, OnDataUpdate, LogStart {
+export class StageInfo extends BaseComponent<{}, PlayerGui["Main"]["Main"]["StageInfo"]> implements OnStart, OnDataUpdate, LogStart {
   public constructor(
     private readonly checkpoints: CheckpointsController
   ) { super(); }

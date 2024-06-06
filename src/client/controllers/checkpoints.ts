@@ -65,6 +65,8 @@ export class CheckpointsController implements OnInit, OnDataUpdate, LogStart {
     if (this.getStage() + offset > this.stage) return;
     this.stageOffset += offset;
     this.update(advancing);
+    this.inLobby = false;
+    this.updateInLobby();
   }
 
   public subtractStageOffset(offset = 1): void {
@@ -75,6 +77,8 @@ export class CheckpointsController implements OnInit, OnDataUpdate, LogStart {
     if (this.getStage() - offset < 0) return;
     this.stageOffset -= offset;
     this.update();
+    this.inLobby = false;
+    this.updateInLobby();
   }
 
   public respawn(promptSkip = true): void {
