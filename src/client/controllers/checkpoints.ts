@@ -111,7 +111,9 @@ export class CheckpointsController implements OnInit, OnDataUpdate, LogStart {
   }
 
   public setInLobby(inLobby: boolean, onlyUpdateButton?: boolean): void {
-    this.inLobby = inLobby;
+    if (!onlyUpdateButton)
+      this.inLobby = inLobby;
+
     this.updateInLobby(onlyUpdateButton);
   }
 

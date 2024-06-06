@@ -38,16 +38,16 @@ export class ToolService implements OnInit, LogStart {
       if (!i.IsA("Tool")) continue;
       i.Destroy();
     }
+
+    do task.wait(0.1); while (player.WaitForChild("Backpack").GetChildren().size() > 0);
   }
 
   public addItemToBackpack(player: Player, itemName: string, itemList: ExtractKeys<typeof Assets, Folder> = "StoreItems", clearFirst = false): void {
-    if (clearFirst) {
+    if (clearFirst)
       this.clearBackpack(player);
-      do task.wait(0.1); while (player.WaitForChild("Backpack").GetChildren().size() > 0);
-    }
 
-    const storeItem = <Tool>Assets[itemList].WaitForChild(itemName);
-    const clone = storeItem.Clone();
+    const tool = <Tool>Assets[itemList].WaitForChild(itemName);
+    const clone = tool.Clone();
     clone.Parent = player.WaitForChild("Backpack");
     for (const child of clone.GetChildren()) {
       if (!child.IsA("Script")) continue;
@@ -55,6 +55,6 @@ export class ToolService implements OnInit, LogStart {
     }
 
     if (itemList !== "StoreItems") return;
-    storeItem.Clone().Parent = player.WaitForChild("StarterGear");
+    tool.Clone().Parent = player.WaitForChild("StarterGear");
   }
 }
