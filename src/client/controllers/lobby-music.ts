@@ -19,8 +19,8 @@ export class LobbyMusicController implements OnInit, LogStart {
 
   public onInit(): void {
     this.checkpoints.inLobbyUpdated.Connect(inLobby => {
-      if (this.checkpoints.notLobbyNotObby) return;
       if (inLobby) {
+        if (this.checkpoints.notLobbyNotObby) return;
         if (!this.currentSong?.IsPlaying)
           this.playCurrentSong();
       } else
