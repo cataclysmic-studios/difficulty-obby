@@ -58,14 +58,12 @@ export class TeleportPortal extends DestroyableComponent<Attributes, PortalModel
         if (this.instance.HasTag("PvPPortal")) {
           Events.tools.addItemToBackpack("PvPSword", "ExtraItems", true);
           let lobbyUpdateDebounce = false;
-          const conn = this.checkpoints.inLobbyUpdated.Connect(inLobby => {
+          const conn = this.checkpoints.inLobbyUpdated.Connect(() => {
             if (lobbyUpdateDebounce) return;
             lobbyUpdateDebounce = true;
             task.delay(0.4, () => lobbyUpdateDebounce = false);
-
-            if (!inLobby) return;
             conn.Disconnect();
-            Events.tools.updateBackpack()
+            Events.tools.updateBackpack();
           });
         }
       });
