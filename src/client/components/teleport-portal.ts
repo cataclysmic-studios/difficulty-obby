@@ -41,9 +41,14 @@ export class TeleportPortal extends BaseComponent<Attributes, PortalModel> imple
       humanoid.WalkSpeed = 0;
       humanoid.JumpHeight = 0;
       task.delay(fadeTime, () => {
-        const [destinationPart] = <Part[]>CollectionService.GetTagged(this.attributes.TeleportPortal_DestinationTag);
-        if (destinationPart === undefined)
-          return Log.warning(`Failed to find destination part for TeleportPortal, tag was "${this.attributes.TeleportPortal_DestinationTag}"`);
+        const destinationParts = <Part[]>CollectionService.GetTagged(this.attributes.TeleportPortal_DestinationTag);
+        let destinationPart: Part;
+        if (destinationParts.size() <= 1) {
+          destinationPart = destinationParts[0];
+          if (destinationPart === undefined)
+            return Log.warning(`Failed to find destination part for TeleportPortal, tag was "${this.attributes.TeleportPortal_DestinationTag}"`);
+        } else
+          destinationPart = destinationParts[math.random(0, destinationParts.size() - 1)];
 
         root.CFrame = destinationPart.CFrame.add(new Vector3(0, 6, 0));
         humanoid.WalkSpeed = defaultWalkSpeed;
