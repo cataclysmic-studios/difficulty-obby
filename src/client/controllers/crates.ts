@@ -64,13 +64,15 @@ export class CratesController implements OnInit, OnRender {
     animation.GetMarkerReachedSignal("Swoosh").Once(() => crate.Swoosh.Play());
     animation.GetMarkerReachedSignal("Explode").Once(() => crate.Explode.Play());
 
-    animation.Play();
+    animation.Play(0);
     task.delay(animation.Length * 0.9, () => animation.Stop(5));
     this.camera.get("Fixed").setCFrame(World.Crates.CameraPart.CFrame);
     this.camera.set("Fixed");
     animation.Stopped.Wait();
-    crate.Destroy();
+    if (crate.Explode.IsPlaying)
+      crate.Explode.Ended.Wait();
 
+    crate.Destroy();
     this.toggleCrateUI(true);
     this.rewardCard.Claim.MouseButton1Click.Once(async () => {
       this.camera.set("Default");

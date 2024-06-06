@@ -4,6 +4,10 @@ import { Player } from "shared/utility/client";
 
 @Controller()
 export class CharacterController {
+  public teleport(cframe: CFrame): void {
+    this.mustGetRoot().CFrame = cframe;
+  }
+
   public get(): Maybe<CharacterModel> {
     return <Maybe<CharacterModel>>Player.Character;
   }

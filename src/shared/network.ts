@@ -28,6 +28,7 @@ interface ClientEvents {
   playSoundEffect(soundName: SoundEffectName): void;
   advanceStageOffset(): void;
   sendNotification(message: string, lifetime?: number): void;
+  sendRaceNotification(message: string, lifetime?: number): void;
   character: {
     respawn(promptSkip?: boolean): void;
     toggleCustomMovement(on: boolean): void;
