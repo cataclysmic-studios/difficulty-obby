@@ -33,6 +33,9 @@ export class DailyRewardsPage extends BaseComponent<{}, PlayerGui["Main"]["Daily
     if (!endsWith(directory, "loginStreak")) return;
     if (loginStreak === this.lastStreak) return;
 
+    const dailyRewardsButton = PlayerGui.Main.Main.LeftButtons.DailyRewards;
+    dailyRewardsButton.Notification.Visible = false;
+
     this.updateJanitor.Cleanup();
     const day = clamp(loginStreak + 1, 1, 7);
     const reward = DAILY_REWARDS[day - 1];
@@ -53,6 +56,8 @@ export class DailyRewardsPage extends BaseComponent<{}, PlayerGui["Main"]["Daily
       return;
     }
 
+    dailyRewardsButton.Notification.Visible = true;
+    dailyRewardsButton.MouseButton1Click.Once(() => dailyRewardsButton.Notification.Visible = false);
     this.updateJanitor.Add(dayButton.MouseButton1Click.Connect(() => {
       this.updateJanitor.Cleanup();
 

@@ -28,7 +28,18 @@ interface PlayerGui extends BasePlayerGui {
       ProximityPrompt: TextButton & {
         UIStroke: UIStroke;
       };
-      LeftButtons: Frame;
+      LeftButtons: Frame & {
+        DailyRewards: ImageButton & {
+          Notification: TextLabel;
+          UIGradient: UIGradient;
+          UICorner: UICorner;
+          UIStroke: UIStroke & {
+            UIGradient: UIGradient;
+          };
+          Icon: ImageLabel;
+          UIAspectRatioConstraint: UIAspectRatioConstraint;
+        };
+      };
       RightButtons: Frame & {
         UIListLayout: UIListLayout;
         Shop: ImageButton & {
