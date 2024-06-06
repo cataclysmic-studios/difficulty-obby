@@ -42,15 +42,11 @@ export class TransactionsService implements OnInit, LogStart {
     [ProductIDs.Coins25000]: player => this.db.increment(player, "coins", 25000),
 
     [PassIDs.InfiniteCoins]: player => this.db.set(player, "coins", math.huge),
-    [PassIDs.Invincibility]: player => {
-      player.SetAttribute("OwnsInvincibility", true);
-      this.character.updateInvincibility(player, true);
-    }
+    [PassIDs.Invincibility]: player => player.SetAttribute("OwnsInvincibility", true)
   }
 
   public constructor(
-    private readonly db: DatabaseService,
-    private readonly character: CharacterService
+    private readonly db: DatabaseService
   ) { }
 
   public onInit(): void {
