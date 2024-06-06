@@ -20,10 +20,11 @@ export class LobbyButton extends BaseComponent<{}, ImageButton & { Icon: ImageLa
     private readonly checkpoints: CheckpointsController
   ) { super(); }
 
+  // fuck this code
   public onStart(): void {
     this.checkpoints.inLobbyUpdated.Connect(inLobby => this.updateIcon(inLobby));
     this.instance.MouseButton1Click.Connect(() => {
-      this.checkpoints.setInLobby(!this.checkpoints.inLobby);
+      this.checkpoints.setInLobby(this.checkpoints.notLobbyNotObby ? true : !this.checkpoints.inLobby);
       if (this.checkpoints.inLobby)
         this.character.teleport(World.Lobby.Dark.SpawnLocation.CFrame);
       else
