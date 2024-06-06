@@ -2,7 +2,6 @@ import type { OnStart } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
 import { Workspace as World } from "@rbxts/services";
 
-import type { OnCharacterAdd } from "shared/hooks";
 import { PlayerGui } from "shared/utility/client";
 
 import type { CharacterController } from "client/controllers/character";
@@ -12,7 +11,7 @@ import type { CheckpointsController } from "client/controllers/checkpoints";
   tag: "LobbyButton",
   ancestorWhitelist: [PlayerGui]
 })
-export class LobbyButton extends BaseComponent<{}, ImageButton & { Icon: ImageLabel; }> implements OnStart, OnCharacterAdd {
+export class LobbyButton extends BaseComponent<{}, ImageButton & { Icon: ImageLabel; }> implements OnStart {
   private readonly lobbyIcon = "rbxassetid://6034798461";
   private readonly obbyIcon = "rbxassetid://17748200905";
 
@@ -22,7 +21,7 @@ export class LobbyButton extends BaseComponent<{}, ImageButton & { Icon: ImageLa
   ) { super(); }
 
   public onStart(): void {
-    this.checkpoints.inLobbyUpdated.Connect(() => this.updateIcon());
+    this.checkpoints.inLobbyUpdated.Connect(inLobby => this.updateIcon(inLobby));
     this.instance.MouseButton1Click.Connect(() => {
       this.checkpoints.setInLobby(!this.checkpoints.inLobby);
       if (this.checkpoints.inLobby)
@@ -32,11 +31,7 @@ export class LobbyButton extends BaseComponent<{}, ImageButton & { Icon: ImageLa
     });
   }
 
-  public onCharacterAdd(character: CharacterModel): void {
-    character.Humanoid.Died.Connect(() => this.checkpoints.setInLobby(true));
-  }
-
-  private updateIcon(): void {
-    this.instance.Icon.Image = this.checkpoints.inLobby ? this.obbyIcon : this.lobbyIcon;
+  private updateIcon(inLobby: boolean): void {
+    this.instance.Icon.Image = inLobby ? this.obbyIcon : this.lobbyIcon;
   }
 }

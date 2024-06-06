@@ -1,6 +1,7 @@
 import { Controller, type OnInit } from "@flamework/core";
 import { SoundService as Sound } from "@rbxts/services";
 
+import type { OnCharacterAdd } from "shared/hooks";
 import { PlayerGui } from "shared/utility/client";
 
 import type { CheckpointsController } from "./checkpoints";
@@ -8,7 +9,7 @@ import type { AtmosphereController } from "./atmosphere";
 import type { SettingsController } from "./settings";
 
 @Controller()
-export class LobbyController implements OnInit {
+export class LobbyController implements OnInit, OnCharacterAdd {
   private readonly defaultZoneMusicVolume = Sound.ZoneMusic.Volume;
 
   public constructor(
@@ -25,6 +26,14 @@ export class LobbyController implements OnInit {
       zoneName.Visible = !inLobby;
       Sound.ZoneMusic.Volume = (inLobby || !zoneMusicEnabled) ? 0 : this.defaultZoneMusicVolume;
       this.atmosphere.update(inLobby ? 0 : undefined);
+    });
+  }
+
+  public onCharacterAdd(character: CharacterModel): void {
+    let debounce = false;
+    character.Humanoid.Died.Once(() => {
+      print("died")
+      this.checkpoints.setInLobby(true);
     });
   }
 }

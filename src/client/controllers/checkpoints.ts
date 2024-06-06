@@ -114,11 +114,11 @@ export class CheckpointsController implements OnInit, OnDataUpdate, LogStart {
     if (!onlyUpdateButton)
       this.inLobby = inLobby;
 
-    this.updateInLobby(onlyUpdateButton);
+    this.updateInLobby(onlyUpdateButton, onlyUpdateButton ? inLobby : undefined);
   }
 
-  private updateInLobby(onlyUpdateButton = false): void {
-    this.inLobbyUpdated.Fire(this.inLobby, onlyUpdateButton);
+  private updateInLobby(onlyUpdateButton = false, overrideInLobby?: boolean): void {
+    this.inLobbyUpdated.Fire(overrideInLobby ?? this.inLobby, onlyUpdateButton);
   }
 
   private update(advancing = false): void {

@@ -38,8 +38,7 @@ export class ToolService implements OnInit, LogStart {
       if (!i.IsA("Tool")) continue;
       i.Destroy();
     }
-
-    do task.wait(0.1); while (player.WaitForChild("Backpack").GetChildren().size() > 0);
+    while (player.WaitForChild("Backpack").GetChildren().size() > 0) { }
   }
 
   public addItemToBackpack(player: Player, itemName: string, itemList: ExtractKeys<typeof Assets, Folder> = "StoreItems", clearFirst = false): void {

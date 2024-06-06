@@ -31,7 +31,7 @@ export class ExitPortal extends BaseComponent<Attributes, PortalModel> implement
       if (character?.Name !== Player.Name) return;
       if (debounce) return;
       debounce = true;
-      task.delay(1, () => debounce = false);
+      task.delay(1.5, () => debounce = false);
 
       const root = humanoid.RootPart;
       if (root === undefined) return;
