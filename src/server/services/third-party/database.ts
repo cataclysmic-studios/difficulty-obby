@@ -1,6 +1,6 @@
 import { type OnInit, Service } from "@flamework/core";
 import { endsWith, startsWith } from "@rbxts/string-utils";
-import { MarketplaceService as Market, Players } from "@rbxts/services";
+import { MarketplaceService as Market, Players, ReplicatedStorage } from "@rbxts/services";
 import Signal from "@rbxts/signal";
 
 import type { LogStart } from "shared/hooks";
@@ -58,6 +58,8 @@ export class DatabaseService implements OnInit, OnPlayerLeave, LogStart {
 
 		Functions.data.get.setCallback((player, directory, defaultValue) => this.get(player, directory ?? "", defaultValue));
 		Functions.data.ownsInvincibility.setCallback(player => this.ownsInvincibilityPass(player));
+
+		ReplicatedStorage.SwordKill.Event.Connect((killer: Player) => this.increment(killer, "coins", 5));
 	}
 
 	public onPlayerLeave(player: Player): void {

@@ -30,10 +30,6 @@ export class LobbyController implements OnInit, OnCharacterAdd {
   }
 
   public onCharacterAdd(character: CharacterModel): void {
-    let debounce = false;
-    character.Humanoid.Died.Once(() => {
-      print("died")
-      this.checkpoints.setInLobby(true);
-    });
+    character.Humanoid.Died.Once(() => this.checkpoints.setInLobby(true));
   }
 }
