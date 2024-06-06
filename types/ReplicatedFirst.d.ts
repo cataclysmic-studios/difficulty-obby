@@ -9,6 +9,7 @@ interface RarityFolders extends Folder {
 
 interface ReplicatedFirst extends Instance {
   Assets: Folder & {
+    PvPSword: Tool;
     Crate: Model & {
       Root: Part;
       Thud1: Sound;
