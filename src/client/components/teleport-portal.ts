@@ -35,7 +35,7 @@ export class TeleportPortal extends BaseComponent<Attributes, PortalModel> imple
       const root = humanoid.RootPart;
       if (root === undefined) return;
 
-      const defaultWalkSpeed = humanoid.WalkSpeed;
+      const defaultWalkSpeed = 16;
       const defaultJumpHeight = humanoid.JumpHeight;
       const fadeTime = 0.5;
       humanoid.WalkSpeed = 0;
@@ -56,9 +56,11 @@ export class TeleportPortal extends BaseComponent<Attributes, PortalModel> imple
 
         this.checkpoints.setInLobby(false, true);
         if (this.instance.HasTag("PvPPortal")) {
-          this.checkpoints.inLobbyUpdated.Once(() => Events.tools.updateBackpack());
-          Events.tools.clearBackpack();
-          Events.tools.addItemToBackpack("PvPSword", "ExtraItems");
+          Events.tools.addItemToBackpack("PvPSword", "ExtraItems", true);
+          this.checkpoints.inLobbyUpdated.Once((_, onlyUpdateButton) => {
+            if (onlyUpdateButton) return;
+            Events.tools.updateBackpack();
+          });
         }
       });
 

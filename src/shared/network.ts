@@ -8,7 +8,7 @@ interface ServerEvents {
   tools: {
     clearBackpack(): void;
     updateBackpack(): void;
-    addItemToBackpack(itemName: string, itemList?: ExtractKeys<typeof Assets, Folder>): void
+    addItemToBackpack(itemName: string, itemList?: ExtractKeys<typeof Assets, Folder>, clearFirst?: boolean): void
   };
   data: {
     updateLoginStreak(): void;

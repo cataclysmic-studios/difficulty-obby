@@ -20,7 +20,7 @@ export class ToolService implements OnInit, LogStart {
     });
     Events.tools.clearBackpack.connect(player => this.clearBackpack(player));
     Events.tools.updateBackpack.connect(player => this.updateBackpack(player));
-    Events.tools.addItemToBackpack.connect((player, itemName, itemList) => this.addItemToBackpack(player, itemName, itemList));
+    Events.tools.addItemToBackpack.connect((player, itemName, itemList, clearFirst) => this.addItemToBackpack(player, itemName, itemList, clearFirst));
   }
 
   public updateBackpack(player: Player) {
@@ -32,19 +32,29 @@ export class ToolService implements OnInit, LogStart {
   }
 
   public clearBackpack(player: Player): void {
-    task.spawn(() => {
-      for (const i of player.Character!.GetChildren()) {
-        if (!i.IsA("Tool")) continue;
-        i.Destroy();
-      }
-    });
     player.WaitForChild("Backpack").ClearAllChildren();
     player.WaitForChild("StarterGear").ClearAllChildren();
+    for (const i of player.Character!.GetChildren()) {
+      if (!i.IsA("Tool")) continue;
+      i.Destroy();
+    }
   }
 
-  public addItemToBackpack(player: Player, itemName: string, itemList: ExtractKeys<typeof Assets, Folder> = "StoreItems"): void {
+  public addItemToBackpack(player: Player, itemName: string, itemList: ExtractKeys<typeof Assets, Folder> = "StoreItems", clearFirst = false): void {
+    if (clearFirst) {
+      this.clearBackpack(player);
+      do task.wait(0.1); while (player.WaitForChild("Backpack").GetChildren().size() > 0);
+    }
+
     const storeItem = <Tool>Assets[itemList].WaitForChild(itemName);
-    storeItem.Clone().Parent = player.WaitForChild("Backpack");
+    const clone = storeItem.Clone();
+    clone.Parent = player.WaitForChild("Backpack");
+    for (const child of clone.GetChildren()) {
+      if (!child.IsA("Script")) continue;
+      child.Enabled = true;
+    }
+
+    if (itemList !== "StoreItems") return;
     storeItem.Clone().Parent = player.WaitForChild("StarterGear");
   }
 }
