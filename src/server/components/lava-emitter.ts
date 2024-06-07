@@ -1,6 +1,7 @@
 import type { OnStart } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
 import { TweenInfoBuilder } from "@rbxts/builders";
+
 import { tween } from "shared/utility/ui";
 
 interface Attributes {
@@ -51,5 +52,11 @@ export class LavaEmitter extends BaseComponent<Attributes, LavaEmitterModel> imp
 
     tween(this.instance.Collider.Light, this.lightTweenInfo, { Brightness: on ? this.lightBrightness : 0 });
     this.instance.Particle.Attachment.Flames.Enabled = on;
+    task.delay(0.5, () => {
+      if (on)
+        this.instance.Collider.AddTag("KillPart");
+      else
+        this.instance.Collider.RemoveTag("KillPart");
+    });
   }
 }
