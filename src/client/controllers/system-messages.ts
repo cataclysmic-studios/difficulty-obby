@@ -12,6 +12,7 @@ export class SystemMessagesController implements OnInit {
       "Like the game and join the group for a free stage skip every 30 minutes!",
       "Invite your friends for a free 50 coins!",
       "Come back later for more zones!",
+      "Play sword fighting PvP in the lobby for coins!",
       "Join the Discord server to leave any suggestions or bug reports!",
       "If you enjoy the game, liking it helps us out a ton!",
       "Check out the products we have to offer in the shop!",
