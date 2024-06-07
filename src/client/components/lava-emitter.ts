@@ -14,7 +14,9 @@ interface LavaEmitterModel extends Model {
     Light: PointLight;
   };
   Particle: Part & {
-    Attachment: Attachment;
+    Attachment: Attachment & {
+      Flames: ParticleEmitter;
+    };
   };
 };
 
@@ -42,16 +44,12 @@ export class LavaEmitter extends BaseComponent<Attributes, LavaEmitterModel> imp
   }
 
   private toggle(on: boolean): void {
-    const effects = this.instance.Particle.Attachment.GetChildren()
-      .filter((i): i is ParticleEmitter => i.IsA("ParticleEmitter"));
-
     if (on)
       this.instance.Collider.Fire.Play();
     else
       this.instance.Collider.Fire.Stop();
 
     tween(this.instance.Collider.Light, this.lightTweenInfo, { Brightness: on ? this.lightBrightness : 0 });
-    for (const fx of effects)
-      fx.Enabled = on;
+    this.instance.Particle.Attachment.Flames.Enabled = on;
   }
 }
